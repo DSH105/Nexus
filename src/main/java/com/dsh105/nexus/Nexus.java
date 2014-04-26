@@ -96,4 +96,8 @@ public class Nexus extends PircBotX {
     public Config getConfig() {
         return config;
     }
+
+    public CommandManager getCommandManager() {
+        return commandManager;
+    }
 }

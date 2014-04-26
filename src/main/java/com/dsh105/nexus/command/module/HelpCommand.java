@@ -15,36 +15,24 @@
  * along with Nexus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.dsh105.nexus.command;
+package com.dsh105.nexus.command.module;
 
 import com.dsh105.nexus.Nexus;
+import com.dsh105.nexus.command.CommandModule;
 import org.pircbotx.Channel;
 import org.pircbotx.User;
 
-public abstract class CommandModule {
+public class HelpCommand extends CommandModule {
 
-    private String command;
-
-    public String getCommand() {
-        return command;
-    }
-
-    protected void setCommand(String command) {
-        this.command = command;
-    }
-
-    public abstract void onCommand(Channel channel, User sender, String[] args);
-
-    public abstract String getHelp();
-
-    protected boolean checkPerm(Channel channel, User sender) {
-        if (channel.getName().equals(Nexus.ADMIN_CHANNEL) && channel.isOp(sender)) {
-            return true;
+    @Override
+    public void onCommand(Channel channel, User sender, String[] args) {
+        for (CommandModule module : Nexus.getInstance().getCommandManager().getRegisteredCommands()) {
+            sender.sendMessage(Nexus.getInstance().getConfig().getCommandPrefix() + module.getCommand() + " - " + module.getHelp());
         }
-        return hasPermission(channel, sender);
     }
 
-    public boolean hasPermission(Channel channel, User sender) {
-        return true;
+    @Override
+    public String getHelp() {
+        return "Show this help information";
     }
 }

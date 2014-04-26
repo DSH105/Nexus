@@ -18,12 +18,14 @@
 package com.dsh105.nexus.command;
 
 import com.dsh105.nexus.Nexus;
+import com.dsh105.nexus.command.module.HelpCommand;
 import com.dsh105.nexus.util.StringUtil;
 import org.pircbotx.Channel;
 import org.pircbotx.User;
 import org.pircbotx.hooks.ListenerAdapter;
 import org.pircbotx.hooks.events.MessageEvent;
 
+import java.util.Collection;
 import java.util.HashMap;
 
 public class CommandManager extends ListenerAdapter<Nexus> {
@@ -31,7 +33,7 @@ public class CommandManager extends ListenerAdapter<Nexus> {
     private HashMap<String, CommandModule> modules = new HashMap<>();
 
     public void registerDefaults() {
-
+        this.register("help", new HelpCommand());
     }
 
     public void register(String subCommand, CommandModule module) {
@@ -65,4 +67,7 @@ public class CommandManager extends ListenerAdapter<Nexus> {
         }
     }
 
+    public Collection<CommandModule> getRegisteredCommands() {
+        return modules.values();
+    }
 }
