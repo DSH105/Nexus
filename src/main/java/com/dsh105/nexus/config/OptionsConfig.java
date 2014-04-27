@@ -52,6 +52,7 @@ public class OptionsConfig extends YamlConfig {
         this.options.put("github-key", "");
         this.options.put("channels", channels);
         this.options.put("admins", admins);
+        this.options.put("ready", false);
     }
 
     @Override
@@ -68,6 +69,8 @@ public class OptionsConfig extends YamlConfig {
     public int getPort() {
         return get("port", 5555);
     }
+
+    public boolean isReady() { return get("ready", false); }
 
     public String getAccountPassword() {
         return get("account-password", "");
