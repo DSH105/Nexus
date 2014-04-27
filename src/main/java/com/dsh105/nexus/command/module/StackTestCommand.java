@@ -17,26 +17,21 @@
 
 package com.dsh105.nexus.command.module;
 
-import com.dsh105.nexus.Nexus;
 import com.dsh105.nexus.command.Command;
 import com.dsh105.nexus.command.CommandModule;
 import com.dsh105.nexus.command.CommandPerformEvent;
-import org.pircbotx.Colors;
 
-@Command(command = "help", needsChannel = false)
-public class HelpCommand extends CommandModule {
+@Command(command = "stack", needsChannel = false)
+public class StackTestCommand extends CommandModule {
 
     @Override
     public boolean onCommand(CommandPerformEvent event) {
-        for (CommandModule module : Nexus.getInstance().getCommandManager().getRegisteredCommands()) {
-            event.respond(Colors.BOLD + Nexus.getInstance().getConfig().getCommandPrefix() + module.getCommand() + Colors.NORMAL + " - " + module.getHelp(), true);
-            return true;
-        }
-        return false;
+        event.respond("Testing 123");
+        throw new RuntimeException("This is a lovely new stacktrace for you to read! :D");
     }
 
     @Override
     public String getHelp() {
-        return "Show this help information";
+        return "Test the stack!";
     }
 }

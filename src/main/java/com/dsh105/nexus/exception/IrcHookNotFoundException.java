@@ -15,18 +15,8 @@
  * along with Nexus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.dsh105.nexus.hook.github;
+package com.dsh105.nexus.exception;
 
-import java.util.ArrayList;
-import java.util.TimerTask;
+public class IrcHookNotFoundException extends RuntimeException {
 
-public class IssueNotifier extends TimerTask {
-
-    private ArrayList<String> repositories = new ArrayList<>();
-    private int lastIssue;
-
-    @Override
-    public void run() {
-
-    }
 }

@@ -19,6 +19,7 @@ package com.dsh105.nexus.command;
 
 import com.dsh105.nexus.Nexus;
 import com.dsh105.nexus.command.module.HelpCommand;
+import com.dsh105.nexus.command.module.StackTestCommand;
 import org.pircbotx.Channel;
 import org.pircbotx.Colors;
 import org.pircbotx.User;
@@ -32,6 +33,7 @@ public class CommandManager {
 
     public void registerDefaults() {
         this.register(new HelpCommand());
+        this.register(new StackTestCommand());
     }
 
     public void register(CommandModule module) {
@@ -64,19 +66,25 @@ public class CommandManager {
     }
 
     public boolean onCommand(CommandPerformEvent event) {
-        CommandModule module = this.getModuleFor(event.getCommand());
-        if (module != null && module.checkPerm(event.getChannel(), event.getSender())) {
-            if (module.getCommandInfo().needsChannel() && event.isInPrivateMessage()) {
-                event.respond("You cannot perform " + Colors.BOLD + Colors.UNDERLINE + Nexus.getInstance().getConfig().getCommandPrefix() + module.getCommand() + " " + event.getArgs() + Colors.NORMAL + " here.");
-                return true;
-            }
-            if (!module.onCommand(event)) {
-                Suggestion suggestion = new Suggestion(event.getArgs()[1], module.getCommandInfo().subCommands());
-                if (suggestion.getSuggestions().length() > 0) {
-                    event.respond("Sub command not found. Did you mean: " + Colors.BOLD + suggestion.getSuggestions());
+        try {
+            CommandModule module = this.getModuleFor(event.getCommand());
+            if (module != null && module.checkPerm(event.getChannel(), event.getSender())) {
+                if (module.getCommandInfo().needsChannel() && event.isInPrivateMessage()) {
+                    event.respond("You cannot perform " + Colors.BOLD + Colors.UNDERLINE + Nexus.getInstance().getConfig().getCommandPrefix() + module.getCommand() + " " + event.getArgs() + Colors.NORMAL + " here.");
                     return true;
                 }
-            } else return true;
+                if (!module.onCommand(event)) {
+                    Suggestion suggestion = new Suggestion(event.getArgs()[1], module.getCommandInfo().subCommands());
+                    if (suggestion.getSuggestions().length() > 0) {
+                        event.respond("Sub command not found. Did you mean: " + Colors.BOLD + suggestion.getSuggestions());
+                        return true;
+                    }
+                } else return true;
+            }
+        } catch (Exception e) {
+            System.out.println("caught!");
+            event.respond(Colors.RED + "Houston, we have a problem! Here is a conveniently provided stacktrace: " + Nexus.getInstance().getGithub().createGist(e));
+            return true;
         }
         return false;
     }

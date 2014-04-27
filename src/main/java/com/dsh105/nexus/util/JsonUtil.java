@@ -29,8 +29,8 @@ import java.net.URLConnection;
 
 public class JsonUtil {
 
-    private Gson gson = new Gson();
-    private JsonParser parser = new JsonParser();
+    public Gson gson = new Gson();
+    public JsonParser parser = new JsonParser();
 
     public <T> T read(URLConnection con, Class<T> type) {
         try {

@@ -21,7 +21,6 @@ import com.dsh105.nexus.Nexus;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.*;
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -32,10 +31,9 @@ public class YamlConfig {
 
     public YamlConfig(String fileName) {
         this.fileName = fileName;
-        this.load();
     }
 
-    public void saveDefaults() {
+    public void setDefaults() {
     }
 
     public String getFileName() {
@@ -52,6 +50,7 @@ public class YamlConfig {
             PrintWriter writer = new PrintWriter(new FileOutputStream(file));
             Yaml yaml = new Yaml();
             writer.write(yaml.dump(this.options));
+            writer.close();
         } catch (IOException e) {
             Nexus.LOGGER.severe("Failed to save configuration file: " + fileName);
         }
@@ -66,13 +65,19 @@ public class YamlConfig {
             FileInputStream input = new FileInputStream(file);
             Yaml yaml = new Yaml();
             Map<String, Object> loaded = (Map<String, Object>) yaml.load(input);
-            for (String key : loaded.keySet()) {
-                this.options.put(key, loaded.get(key));
+            if (loaded != null && !loaded.isEmpty()) {
+                this.loadData(loaded);
             }
         } catch (IOException e) {
             Nexus.LOGGER.severe("Failed to load configuration file: " + fileName);
         }
         this.save();
+    }
+
+    public void loadData(Map<String, Object> loadedData) {
+        for (String key : loadedData.keySet()) {
+            this.options.put(key, loadedData.get(key));
+        }
     }
 
     public void set(String path, Object value) {

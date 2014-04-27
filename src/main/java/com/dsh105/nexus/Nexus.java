@@ -19,6 +19,8 @@ package com.dsh105.nexus;
 
 import com.dsh105.nexus.command.CommandManager;
 import com.dsh105.nexus.config.OptionsConfig;
+import com.dsh105.nexus.hook.github.GitHub;
+import com.dsh105.nexus.hook.github.GitHubEvent;
 import com.dsh105.nexus.hook.jenkins.Jenkins;
 import com.dsh105.nexus.listener.EventManager;
 import com.dsh105.nexus.response.ResponseManager;
@@ -30,6 +32,8 @@ import org.pircbotx.exception.IrcException;
 import org.pircbotx.exception.NickAlreadyInUseException;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -41,11 +45,12 @@ public class Nexus extends PircBotX {
     public static Logger LOGGER = Logger.getLogger(Nexus.class.getName());
     public static JsonUtil JSON = new JsonUtil();
     public static String CONFIG_FILE_NAME = "options.txt";
-    public static String ADMIN_CHANNEL = "#nexus";
+    public static String ADMIN_CHANNEL = "#dsh106";
     private OptionsConfig config;
     private CommandManager commandManager;
     private ResponseManager responseManager;
     private Jenkins jenkins;
+    private GitHub github;
 
     public static void main(String[] args) throws Exception {
         new Nexus();
@@ -55,17 +60,25 @@ public class Nexus extends PircBotX {
         INSTANCE = this;
         this.registerLogger();
         config = new OptionsConfig();
+        ADMIN_CHANNEL = config.getAdminChannel();
         commandManager = new CommandManager();
         commandManager.registerDefaults();
         responseManager = new ResponseManager();
-        this.setName("Nexus");
+        this.setName(this.getConfig().getNick());
+        this.setLogin("Nexus");
+        this.setVersion("Nexus");
         this.setVerbose(false);
+        setAutoReconnectChannels(true);
         this.connect();
         this.identify(this.config.getAccountPassword());
         this.registerListeners();
-
+        System.out.println(this.getConfig().getChannels());
         if (!this.config.getJenkinsUrl().isEmpty() && !this.config.getJenkinsToken().isEmpty()) {
             this.jenkins = new Jenkins();
+        }
+
+        if (!this.config.getGitHubApiKey().isEmpty()) {
+            this.github = new GitHub();
         }
     }
 
@@ -103,9 +116,9 @@ public class Nexus extends PircBotX {
     }
 
     public void saveChannels() {
-        this.config.getChannels().clear();
+        this.config.clearChannels();
         for (Channel channel : this.getUserBot().getChannels()) {
-            this.config.getChannels().add(channel.getName());
+            this.config.addChannel(channel.getName());
         }
         this.config.save();
     }
@@ -138,8 +151,12 @@ public class Nexus extends PircBotX {
         return jenkins;
     }
 
+    public GitHub getGithub() {
+        return github;
+    }
+
     public boolean isAdmin(User user) {
-        return this.getChannel(ADMIN_CHANNEL).isOp(user);
+        return this.getChannel(this.getConfig().getAdminChannel()).getOps().contains(user) || this.getConfig().getAdmins().contains(user.getNick());
     }
 
     public ResponseManager getResponseManager() {
