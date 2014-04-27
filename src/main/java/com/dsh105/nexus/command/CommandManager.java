@@ -19,21 +19,34 @@ package com.dsh105.nexus.command;
 
 import com.dsh105.nexus.Nexus;
 import com.dsh105.nexus.command.module.HelpCommand;
+import com.dsh105.nexus.command.module.HttpTestCommand;
 import com.dsh105.nexus.command.module.StackTestCommand;
 import org.pircbotx.Channel;
 import org.pircbotx.Colors;
 import org.pircbotx.User;
+import org.reflections.Reflections;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Set;
 
 public class CommandManager {
 
     private ArrayList<CommandModule> modules = new ArrayList<>();
 
     public void registerDefaults() {
-        this.register(new HelpCommand());
-        this.register(new StackTestCommand());
+        Reflections reflections = new Reflections("com.dsh105.nexus.command.module");
+        Set<Class<? extends CommandModule>> cmds = reflections.getSubTypesOf(CommandModule.class);
+        for (Class<? extends CommandModule> cmd : cmds) {
+            try {
+                this.register(cmd.newInstance());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
     }
 
     public void register(CommandModule module) {

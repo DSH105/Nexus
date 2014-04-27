@@ -30,9 +30,8 @@ public class HelpCommand extends CommandModule {
     public boolean onCommand(CommandPerformEvent event) {
         for (CommandModule module : Nexus.getInstance().getCommandManager().getRegisteredCommands()) {
             event.respond(Colors.BOLD + Nexus.getInstance().getConfig().getCommandPrefix() + module.getCommand() + Colors.NORMAL + " - " + module.getHelp(), true);
-            return true;
         }
-        return false;
+        return true;
     }
 
     @Override

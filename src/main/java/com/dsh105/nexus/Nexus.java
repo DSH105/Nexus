@@ -25,6 +25,11 @@ import com.dsh105.nexus.hook.jenkins.Jenkins;
 import com.dsh105.nexus.listener.EventManager;
 import com.dsh105.nexus.response.ResponseManager;
 import com.dsh105.nexus.util.JsonUtil;
+import com.mashape.unirest.http.HttpResponse;
+import com.mashape.unirest.http.JsonNode;
+import com.mashape.unirest.http.Unirest;
+import com.mashape.unirest.http.async.Callback;
+import com.mashape.unirest.http.exceptions.UnirestException;
 import org.pircbotx.Channel;
 import org.pircbotx.PircBotX;
 import org.pircbotx.User;
@@ -32,8 +37,10 @@ import org.pircbotx.exception.IrcException;
 import org.pircbotx.exception.NickAlreadyInUseException;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.concurrent.Future;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -51,6 +58,7 @@ public class Nexus extends PircBotX {
     private ResponseManager responseManager;
     private Jenkins jenkins;
     private GitHub github;
+
 
     public static void main(String[] args) throws Exception {
         new Nexus();
@@ -99,6 +107,13 @@ public class Nexus extends PircBotX {
 
     private void connect() {
         try {
+            if (!this.config.isReady()) {
+                LOGGER.info("Your config needs the 'ready' field to set to true.");
+                System.exit(-1);
+            }
+
+            LOGGER.info("Attempting to connect to " + this.config.getServer());
+
             this.connect(this.config.getServer(), this.config.getPort(), this.config.getAccountPassword());
             for (String channel : this.config.getChannels()) {
                 this.joinChannel(channel);
