@@ -15,8 +15,9 @@
  * along with Nexus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.dsh105.nexus;
+package com.dsh105.nexus.config;
 
+import com.dsh105.nexus.Nexus;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.*;
@@ -24,22 +25,17 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class Config {
+public class YamlConfig {
 
-    private LinkedHashMap<String, Object> options = new LinkedHashMap<>();
-    private ArrayList<String> channels = new ArrayList<>();
+    protected LinkedHashMap<String, Object> options = new LinkedHashMap<>();
     private String fileName;
 
-    private void saveDefaults() {
-        channels.add(Nexus.ADMIN_CHANNEL);
-        this.options.put("server", "irc.esper.net");
-        this.options.put("port", 5555);
-        this.options.put("channels", channels);
-        this.options.put("command-prefix", ";");
-        this.options.put("nick", "Nexus");
-        this.options.put("server-password", "");
-        this.options.put("account-password", "");
-        this.save();
+    public YamlConfig(String fileName) {
+        this.fileName = fileName;
+        this.load();
+    }
+
+    public void saveDefaults() {
     }
 
     public String getFileName() {
@@ -47,7 +43,6 @@ public class Config {
     }
 
     public void save() {
-        this.set("channels", channels);
         try {
             File file = new File(this.getFileName());
             if (file.exists()) {
@@ -62,9 +57,7 @@ public class Config {
         }
     }
 
-    public static Config load(String fileName) {
-        Config config = new Config();
-        config.fileName = fileName;
+    public void load() {
         try {
             File file = new File(fileName);
             if (!file.exists()) {
@@ -74,13 +67,12 @@ public class Config {
             Yaml yaml = new Yaml();
             Map<String, Object> loaded = (Map<String, Object>) yaml.load(input);
             for (String key : loaded.keySet()) {
-                config.options.put(key, loaded.get(key));
+                this.options.put(key, loaded.get(key));
             }
         } catch (IOException e) {
             Nexus.LOGGER.severe("Failed to load configuration file: " + fileName);
         }
-        config.save();
-        return config;
+        this.save();
     }
 
     public void set(String path, Object value) {
@@ -97,29 +89,5 @@ public class Config {
             return (T) value;
         }
         return defaultValue;
-    }
-
-    public String getServer() {
-        return get("server", "irc.esper.net");
-    }
-
-    public int getPort() {
-        return get("port", 5555);
-    }
-
-    public ArrayList<String> getChannels() {
-        return channels;
-    }
-
-    public String getAccountPassword() {
-        return get("account-password", "");
-    }
-
-    public String getServerPassword() {
-        return get("server-password", "");
-    }
-
-    public String getCommandPrefix() {
-        return get("command-prefix", "%");
     }
 }

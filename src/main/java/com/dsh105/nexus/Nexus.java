@@ -18,8 +18,14 @@
 package com.dsh105.nexus;
 
 import com.dsh105.nexus.command.CommandManager;
+import com.dsh105.nexus.config.OptionsConfig;
+import com.dsh105.nexus.hook.jenkins.Jenkins;
+import com.dsh105.nexus.listener.EventManager;
+import com.dsh105.nexus.response.ResponseManager;
+import com.dsh105.nexus.util.JsonUtil;
 import org.pircbotx.Channel;
 import org.pircbotx.PircBotX;
+import org.pircbotx.User;
 import org.pircbotx.exception.IrcException;
 import org.pircbotx.exception.NickAlreadyInUseException;
 
@@ -33,10 +39,13 @@ public class Nexus extends PircBotX {
 
     private static Nexus INSTANCE;
     public static Logger LOGGER = Logger.getLogger(Nexus.class.getName());
-    protected static String CONFIG_FILE_NAME = "options.yml";
+    public static JsonUtil JSON = new JsonUtil();
+    public static String CONFIG_FILE_NAME = "options.txt";
     public static String ADMIN_CHANNEL = "#nexus";
-    private Config config;
+    private OptionsConfig config;
     private CommandManager commandManager;
+    private ResponseManager responseManager;
+    private Jenkins jenkins;
 
     public static void main(String[] args) throws Exception {
         new Nexus();
@@ -45,17 +54,23 @@ public class Nexus extends PircBotX {
     public Nexus() {
         INSTANCE = this;
         this.registerLogger();
-        config = Config.load(CONFIG_FILE_NAME);
+        config = new OptionsConfig();
         commandManager = new CommandManager();
         commandManager.registerDefaults();
+        responseManager = new ResponseManager();
         this.setName("Nexus");
+        this.setVerbose(false);
         this.connect();
         this.identify(this.config.getAccountPassword());
         this.registerListeners();
+
+        if (!this.config.getJenkinsUrl().isEmpty() && !this.config.getJenkinsToken().isEmpty()) {
+            this.jenkins = new Jenkins();
+        }
     }
 
     private void registerListeners() {
-        this.getListenerManager().addListener(this.commandManager);
+        this.getListenerManager().addListener(new EventManager());
     }
 
     private void registerLogger() {
@@ -81,6 +96,12 @@ public class Nexus extends PircBotX {
         }
     }
 
+    @Override
+    public void joinChannel(String channel) {
+        super.joinChannel(channel);
+        this.saveChannels();
+    }
+
     public void saveChannels() {
         this.config.getChannels().clear();
         for (Channel channel : this.getUserBot().getChannels()) {
@@ -89,15 +110,39 @@ public class Nexus extends PircBotX {
         this.config.save();
     }
 
+    @Override
+    public void sendMessage(Channel chan, User target, String message) {
+        this.sendMessage(chan, appendNick(target.getNick(), message));
+    }
+
+    public String appendNick(String nick, String message) {
+        if (getConfig().appendNicks()) {
+            message = "(" + nick + ") " + message;
+        }
+        return message;
+    }
+
     public static Nexus getInstance() {
         return INSTANCE;
     }
 
-    public Config getConfig() {
+    public OptionsConfig getConfig() {
         return config;
     }
 
     public CommandManager getCommandManager() {
         return commandManager;
+    }
+
+    public Jenkins getJenkins() {
+        return jenkins;
+    }
+
+    public boolean isAdmin(User user) {
+        return this.getChannel(ADMIN_CHANNEL).isOp(user);
+    }
+
+    public ResponseManager getResponseManager() {
+        return responseManager;
     }
 }

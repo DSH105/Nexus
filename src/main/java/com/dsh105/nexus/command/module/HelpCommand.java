@@ -18,17 +18,20 @@
 package com.dsh105.nexus.command.module;
 
 import com.dsh105.nexus.Nexus;
+import com.dsh105.nexus.command.Command;
 import com.dsh105.nexus.command.CommandModule;
-import org.pircbotx.Channel;
-import org.pircbotx.User;
+import com.dsh105.nexus.command.CommandPerformEvent;
 
+@Command(command = "help", needsChannel = false)
 public class HelpCommand extends CommandModule {
 
     @Override
-    public void onCommand(Channel channel, User sender, String[] args) {
+    public boolean onCommand(CommandPerformEvent event) {
         for (CommandModule module : Nexus.getInstance().getCommandManager().getRegisteredCommands()) {
-            sender.sendMessage(Nexus.getInstance().getConfig().getCommandPrefix() + module.getCommand() + " - " + module.getHelp());
+            event.respond(Nexus.getInstance().getConfig().getCommandPrefix() + module.getCommand() + " - " + module.getHelp());
+            return true;
         }
+        return false;
     }
 
     @Override

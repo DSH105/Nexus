@@ -19,55 +19,65 @@ package com.dsh105.nexus.command;
 
 import com.dsh105.nexus.Nexus;
 import com.dsh105.nexus.command.module.HelpCommand;
-import com.dsh105.nexus.util.StringUtil;
 import org.pircbotx.Channel;
+import org.pircbotx.Colors;
 import org.pircbotx.User;
-import org.pircbotx.hooks.ListenerAdapter;
-import org.pircbotx.hooks.events.MessageEvent;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 
-public class CommandManager extends ListenerAdapter<Nexus> {
+public class CommandManager {
 
-    private HashMap<String, CommandModule> modules = new HashMap<>();
+    private ArrayList<CommandModule> modules = new ArrayList<>();
 
     public void registerDefaults() {
-        this.register("help", new HelpCommand());
+        this.register(new HelpCommand());
     }
 
-    public void register(String subCommand, CommandModule module) {
-        this.modules.put(subCommand, module);
-        module.setCommand(subCommand);
+    public void register(CommandModule module) {
+        if (module.getCommandInfo() == null) {
+            Nexus.LOGGER.warning("Failed to register command: " + module.getClass().getSimpleName() + ". Missing @Command annotation!");
+            return;
+        }
+        this.modules.add(module);
     }
 
     public CommandModule getModuleFor(String commandArguments) {
-        return this.modules.get(commandArguments);
-    }
-
-    @Override
-    public void onMessage(MessageEvent<Nexus> event) {
-        Channel channel = event.getChannel();
-        User sender = event.getUser();
-        String message = event.getMessage();
-
-        String prefix = Nexus.getInstance().getConfig().getCommandPrefix();
-
-        if (!message.startsWith(prefix)) {
-            return;
+        for (CommandModule module : modules) {
+            if (module.getCommandInfo().command().equalsIgnoreCase(commandArguments)) {
+                return module;
+            }
         }
-
-        String[] parts = message.substring(prefix.length()).split(" ");
-        String command = parts[0].toLowerCase();
-        String[] args = StringUtil.separate(1, parts);
-
-        CommandModule module = this.getModuleFor(command);
-        if (module != null && module.checkPerm(channel, sender)) {
-            module.onCommand(channel, sender, args);
-        }
+        return null;
     }
 
     public Collection<CommandModule> getRegisteredCommands() {
-        return modules.values();
+        return modules;
+    }
+
+    public boolean onCommand(Channel channel, User sender, String command, String... args) {
+        return onCommand(new CommandPerformEvent(channel, sender, command, args));
+    }
+
+    public boolean onCommand(User sender, String command, String... args) {
+        return onCommand(new CommandPerformEvent(sender, command, args));
+    }
+
+    public boolean onCommand(CommandPerformEvent event) {
+        CommandModule module = this.getModuleFor(event.getCommand());
+        if (module != null && module.checkPerm(event.getChannel(), event.getSender())) {
+            if (module.getCommandInfo().needsChannel() && event.isInPrivateMessage()) {
+                event.respond("You cannot perform " + Colors.BOLD + Colors.UNDERLINE + Nexus.getInstance().getConfig().getCommandPrefix() + module.getCommand() + " " + event.getArgs() + Colors.NORMAL + " here.");
+                return true;
+            }
+            if (!module.onCommand(event)) {
+                Suggestion suggestion = new Suggestion(event.getArgs()[1], module.getCommandInfo().subCommands());
+                if (suggestion.getSuggestions().length() > 0) {
+                    event.respond("Sub command not found. Did you mean: " + Colors.BOLD + suggestion.getSuggestions());
+                    return true;
+                }
+            } else return true;
+        }
+        return false;
     }
 }

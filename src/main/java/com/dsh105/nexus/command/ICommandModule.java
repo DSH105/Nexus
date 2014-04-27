@@ -21,35 +21,18 @@ import com.dsh105.nexus.Nexus;
 import org.pircbotx.Channel;
 import org.pircbotx.User;
 
-public abstract class CommandModule implements ICommandModule {
+@Command
+public interface ICommandModule {
 
-    public String getCommand() {
-        return getCommandInfo().command();
-    }
+    public String getCommand();
 
     public abstract boolean onCommand(CommandPerformEvent event);
 
     public abstract String getHelp();
 
-    protected boolean checkPerm(Channel channel, User sender) {
-        if (Nexus.getInstance().isAdmin(sender)) {
-            return true;
-        }
-        if (channel == null) {
-            return hasPermission(sender);
-        }
-        return hasPermission(channel, sender);
-    }
+    public boolean hasPermission(Channel channel, User sender);
 
-    public boolean hasPermission(Channel channel, User sender) {
-        return true;
-    }
+    public boolean hasPermission(User sender);
 
-    public boolean hasPermission(User sender) {
-        return true;
-    }
-
-    public Command getCommandInfo() {
-        return this.getClass().getAnnotation(Command.class);
-    }
+    public Command getCommandInfo();
 }
