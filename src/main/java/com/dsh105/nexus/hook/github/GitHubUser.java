@@ -15,11 +15,18 @@
  * along with Nexus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.dsh105.nexus.exception;
+package com.dsh105.nexus.hook.github;
 
-public class IrcHookNotFoundException extends RuntimeException {
+public class GitHubUser {
 
-    public IrcHookNotFoundException(String s) {
-        super(s);
+    private String login;
+    private String html_url;
+
+    public String getLogin() {
+        return login;
+    }
+
+    public String getUrl() {
+        return html_url;
     }
 }

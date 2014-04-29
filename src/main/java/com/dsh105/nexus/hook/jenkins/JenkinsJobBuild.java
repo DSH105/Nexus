@@ -15,11 +15,18 @@
  * along with Nexus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.dsh105.nexus.exception;
+package com.dsh105.nexus.hook.jenkins;
 
-public class IrcHookNotFoundException extends RuntimeException {
+public class JenkinsJobBuild {
 
-    public IrcHookNotFoundException(String s) {
-        super(s);
+    private int number;
+    private String url;
+
+    public int getNumber() {
+        return number;
+    }
+
+    public String getUrl() {
+        return url;
     }
 }

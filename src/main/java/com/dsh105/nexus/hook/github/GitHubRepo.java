@@ -17,6 +17,17 @@
 
 package com.dsh105.nexus.hook.github;
 
+import com.dsh105.nexus.Nexus;
+import com.dsh105.nexus.exception.GitHubException;
+import com.dsh105.nexus.exception.GitHubRepoNotFoundException;
+import com.mashape.unirest.http.Unirest;
+import com.mashape.unirest.http.exceptions.UnirestException;
+
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
 public class GitHubRepo {
 
     private String name;
@@ -31,6 +42,32 @@ public class GitHubRepo {
     private String created_at;
     private String updated_at;
     private String pushed_at;
+
+    protected GitHubUser repoOwner;
+    protected GitHubUser[] collaborators;
+    protected boolean isPrivate;
+
+    public GitHubRepo() {
+        collaborators = getCollaborators();
+    }
+
+    public GitHubUser getRepoOwner() {
+        if (repoOwner == null) {
+            repoOwner = Nexus.getInstance().getGithub().getOwnerOf(this);
+        }
+        return repoOwner;
+    }
+
+    public GitHubUser[] getCollaborators() {
+        if (collaborators == null) {
+            collaborators = Nexus.getInstance().getGithub().getCollaborators(this);
+        }
+        return collaborators;
+    }
+
+    public boolean isPrivate() {
+        return isPrivate;
+    }
 
     public String getName() {
         return name;

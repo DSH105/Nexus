@@ -53,4 +53,13 @@ public enum GitHubEvent {
     public String getJsonName() {
         return jsonName;
     }
+
+    public static GitHubEvent getByJsonName(String name) {
+        for (GitHubEvent event : GitHubEvent.values()) {
+            if (event.getJsonName().equalsIgnoreCase(name)) {
+                return event;
+            }
+        }
+        return null;
+    }
 }

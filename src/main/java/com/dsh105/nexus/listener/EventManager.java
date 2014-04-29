@@ -32,7 +32,7 @@ public class EventManager extends ListenerAdapter<Nexus> {
         String commandPrefix = Nexus.getInstance().getConfig().getCommandPrefix();
         if (message.startsWith(commandPrefix)) {
             String[] split = message.substring(commandPrefix.length()).split(" ");
-            Nexus.getInstance().getCommandManager().onCommand(event.getChannel(), event.getUser(), split[0].toLowerCase(), StringUtil.separate(1, split));
+            Nexus.getInstance().getCommandManager().onCommand(event.getChannel(), event.getUser(), split[0].toLowerCase(), StringUtil.combineSplit(1, split, " ").split(" "));
         }
 
         Nexus.getInstance().getResponseManager().trigger(event.getChannel(), event.getUser(), message);
@@ -59,7 +59,7 @@ public class EventManager extends ListenerAdapter<Nexus> {
         String commandPrefix = Nexus.getInstance().getConfig().getCommandPrefix();
         if (message.startsWith(commandPrefix)) {
             String[] split = message.substring(commandPrefix.length()).split(" ");
-            Nexus.getInstance().getCommandManager().onCommand(event.getUser(), split[0].toLowerCase(), StringUtil.separate(1, split));
+            Nexus.getInstance().getCommandManager().onCommand(event.getUser(), split[0].toLowerCase(), StringUtil.combineSplit(1, split, " ").split(" "));
         }
     }
 

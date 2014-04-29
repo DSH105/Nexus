@@ -18,15 +18,12 @@
 package com.dsh105.nexus.hook.jenkins;
 
 import com.dsh105.nexus.Nexus;
-import com.dsh105.nexus.util.JsonUtil;
-import com.google.gson.JsonParser;
+import com.dsh105.nexus.exception.JenkinsJobException;
+import com.dsh105.nexus.exception.JenkinsJobNotFoundException;
+import com.mashape.unirest.http.Unirest;
+import com.mashape.unirest.http.exceptions.UnirestException;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.ArrayList;
+import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
@@ -34,7 +31,7 @@ import java.util.Set;
 public class Jenkins {
 
     private HashSet<JenkinsJob> jobs = new HashSet<>();
-    private HashMap<String, JenkinsJob.JobEntry> jobEntries = new HashMap<>();
+    private HashMap<String, JenkinsJobEntry> jobEntries = new HashMap<>();
     protected String jenkinsUrl;
     protected String jenkinsToken;
 
@@ -47,15 +44,11 @@ public class Jenkins {
         String jenkinsUrl = Nexus.getInstance().getConfig().getJenkinsUrl();
         String token = Nexus.getInstance().getConfig().getJenkinsToken();
         if (!jenkinsUrl.isEmpty() && !token.isEmpty()) {
-            try {
-                new URL(jenkinsUrl + "job/" + jobName + "/build?token=" + token).openConnection();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            Unirest.get(jenkinsUrl + "job/" + jobName + "/build?token=");
         }
     }
 
-    public JenkinsJob.JobEntry getJobEntry(String jobName) {
+    public JenkinsJobEntry getJobEntry(String jobName) {
         JenkinsJob job = this.getJob(jobName);
         return job == null ? null : job.getJobEntry();
     }
@@ -75,20 +68,19 @@ public class Jenkins {
 
     public Set<JenkinsJob> getJobs(boolean reconnect) {
         if (reconnect || this.jobEntries.isEmpty()) {
-            JenkinsJob.JobEntry[] jobs = new JenkinsJob.JobEntry[0];
+            JenkinsJobEntry[] jobs;
             try {
-                HttpURLConnection con = (HttpURLConnection) new URL(Nexus.getInstance().getJenkins().jenkinsUrl + "/api/json").openConnection();
-                con.setConnectTimeout(5000);
-                con.setReadTimeout(5000);
-                con.setUseCaches(false);
-                jobs = Nexus.JSON.read(con, "jobs", JenkinsJob.JobEntry[].class);
-            } catch (IOException e) {
-                e.printStackTrace();
+                jobs = Nexus.JSON.read(Unirest.get(jenkinsUrl + "/api/json"), "jobs", JenkinsJobEntry[].class);
+            } catch (UnirestException e) {
+                if (e.getCause() instanceof FileNotFoundException) {
+                    throw new JenkinsJobNotFoundException("Failed to locate Jenkins API!", e);
+                }
+                throw new JenkinsJobException("Failed to connect to Jenkins API!", e);
             }
             if (jobs.length > 0) {
                 this.jobEntries.clear();
                 this.jobs.clear();
-                for (JenkinsJob.JobEntry entry : jobs) {
+                for (JenkinsJobEntry entry : jobs) {
                     this.jobEntries.put(entry.getName(), entry);
                     this.jobs.add(new JenkinsJob(entry.getName(), entry));
                 }

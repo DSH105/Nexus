@@ -18,63 +18,21 @@
 package com.dsh105.nexus.hook.jenkins;
 
 import com.dsh105.nexus.Nexus;
+import com.dsh105.nexus.exception.JenkinsJobException;
+import com.dsh105.nexus.exception.JenkinsJobNotFoundException;
+import com.mashape.unirest.http.Unirest;
+import com.mashape.unirest.http.exceptions.UnirestException;
 
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import java.io.FileNotFoundException;
 
 public class JenkinsJob {
 
-    public class JobEntry {
-        private String name;
-        private String url;
-        private String color;
-
-        public String getName() {
-            return name;
-        }
-
-        public String getUrl() {
-            return url;
-        }
-
-        public Result getResult() {
-            return Result.getByIdent(color);
-        }
-    }
-
-    private class JobHealth {
-        private String description;
-        private int score;
-
-        public String getDescription() {
-            return description;
-        }
-
-        public int getScore() {
-            return score;
-        }
-    }
-
-    private class Build {
-        private int number;
-        private String url;
-
-        public int getNumber() {
-            return number;
-        }
-
-        public String getUrl() {
-            return url;
-        }
-    }
-
     private String jobName;
-    private JobEntry jobEntry;
-    private JobHealth health;
-    private Build latestBuild;
+    private JenkinsJobEntry jobEntry;
+    private JenkinsJobHealth health;
+    private JenkinsJobBuild latestBuild;
 
-    public JenkinsJob(String jobName, JobEntry jobEntry) {
+    public JenkinsJob(String jobName, JenkinsJobEntry jobEntry) {
         this.jobName = jobName;
         this.jobEntry = jobEntry;
         this.health = getHealth();
@@ -85,35 +43,33 @@ public class JenkinsJob {
         return jobName;
     }
 
-    public JobEntry getJobEntry() {
+    public JenkinsJobEntry getJobEntry() {
         return jobEntry;
     }
 
-    public Build getLatestBuild() {
+    public JenkinsJobBuild getLatestBuild() {
         if (this.latestBuild == null) {
             try {
-                HttpURLConnection con = (HttpURLConnection) new URL(Nexus.getInstance().getJenkins().jenkinsUrl + "job/" + jobName + "/api/json").openConnection();
-                con.setConnectTimeout(5000);
-                con.setReadTimeout(5000);
-                con.setUseCaches(false);
-                this.latestBuild = Nexus.JSON.read(con, "lastBuild", Build.class);
-            } catch (IOException e) {
-                e.printStackTrace();
+                latestBuild = Nexus.JSON.read(Unirest.get(Nexus.getInstance().getJenkins().jenkinsUrl + "job/" + jobName + "/api/json"), "lastBuild", JenkinsJobBuild.class);
+            } catch (UnirestException e) {
+                if (e.getCause() instanceof FileNotFoundException) {
+                    throw new JenkinsJobNotFoundException("Failed to locate Jenkins API!", e);
+                }
+                throw new JenkinsJobException("Failed to connect to Jenkins API!", e);
             }
         }
         return latestBuild;
     }
 
-    public JobHealth getHealth() {
+    public JenkinsJobHealth getHealth() {
         if (this.health == null) {
             try {
-                HttpURLConnection con = (HttpURLConnection) new URL(Nexus.getInstance().getJenkins().jenkinsUrl + "job/" + jobName + "/api/json").openConnection();
-                con.setConnectTimeout(5000);
-                con.setReadTimeout(5000);
-                con.setUseCaches(false);
-                this.health = Nexus.JSON.read(con, "healthReport", JobHealth.class);
-            } catch (IOException e) {
-                e.printStackTrace();
+                health = Nexus.JSON.read(Unirest.get(Nexus.getInstance().getJenkins().jenkinsUrl + "job/" + jobName + "/api/json"), "healthReport", JenkinsJobHealth.class);
+            } catch (UnirestException e) {
+                if (e.getCause() instanceof FileNotFoundException) {
+                    throw new JenkinsJobNotFoundException("Failed to locate Jenkins API!", e);
+                }
+                throw new JenkinsJobException("Failed to connect to Jenkins API!", e);
             }
         }
         return health;

@@ -18,11 +18,13 @@
 package com.dsh105.nexus.hook.github.gist;
 
 import com.dsh105.nexus.Nexus;
+import com.dsh105.nexus.exception.GistException;
 import com.google.gson.JsonObject;
+import com.mashape.unirest.http.HttpResponse;
+import com.mashape.unirest.http.JsonNode;
+import com.mashape.unirest.http.Unirest;
+import com.mashape.unirest.http.exceptions.UnirestException;
 
-import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -34,7 +36,7 @@ public class Gist {
     private String date;
 
     public Gist(GistFile... files) {
-        this(true, files);
+        this(false, files);
     }
 
     public Gist(boolean isPublic, GistFile... files) {
@@ -61,24 +63,12 @@ public class Gist {
     }
 
     public String create() {
-        InputStream in = null;
-        OutputStream out = null;
         try {
-            HttpURLConnection conn = (HttpURLConnection) new URL(Nexus.getInstance().getGithub().getApiUrl() + "/gists").openConnection();
-            conn.setDoOutput(true);
-            conn.setDoInput(true);
-            conn.setUseCaches(false);
-            conn.setRequestMethod("POST");
-            conn.setRequestProperty("Authorization", Nexus.getInstance().getConfig().getGitHubApiKey());
-            //conn.setRequestProperty("Accept", "application/json");
-            conn.setRequestProperty("Content-Type", "application/json; charset=utf-8");
-
             JsonObject gistJson = new JsonObject();
             gistJson.addProperty("description", this.getDescription());
             gistJson.addProperty("public", this.isPublic());
 
             JsonObject filesJson = new JsonObject();
-            filesJson.addProperty("language", "Markdown");
 
             for (int i = 0; i < getFiles().length; i++) {
                 GistFile gistFile = getFiles()[i];
@@ -89,29 +79,16 @@ public class Gist {
             }
 
             gistJson.add("files", filesJson);
-            conn.setRequestProperty("Content-Length", String.valueOf(gistJson.toString().length()));
-            conn.connect();
 
-            out = conn.getOutputStream();
-            OutputStreamWriter writer = new OutputStreamWriter(out);
-            writer.write(gistJson.toString());
-            writer.flush();
-
-            in = conn.getInputStream();
-            return Nexus.JSON.parser.parse(new InputStreamReader(in)).getAsJsonObject().get("html_url").getAsString();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (in != null) {
-                    in.close();
-                }
-                if (out != null) {
-                    out.close();
-                }
-            } catch (IOException e) {
-            }
+            HttpResponse<JsonNode> response = Unirest.post(Nexus.getInstance().getGithub().getApiUrl() + "/gists")
+                    .basicAuth(Nexus.getInstance().getConfig().getGistAccountName(), Nexus.getInstance().getConfig().getGistAccountPassword())
+                    .header("accept", "application/json")
+                    .header("content-type", "application/json; charset=utf-8")
+                    .body(gistJson.toString())
+                    .asJson();
+            return response.getBody().getObject().getString("html_url");
+        } catch (UnirestException e) {
+            throw new GistException("Failed to Gist!", e);
         }
-        return "";
     }
 }

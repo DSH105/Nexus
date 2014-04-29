@@ -20,6 +20,7 @@ package com.dsh105.nexus.config;
 import com.dsh105.nexus.Nexus;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 public class OptionsConfig extends YamlConfig {
 
@@ -35,9 +36,6 @@ public class OptionsConfig extends YamlConfig {
 
     @Override
     public void setDefaults() {
-        System.out.println(Nexus.ADMIN_CHANNEL);
-        channels.add(Nexus.ADMIN_CHANNEL);
-        admins.add("DSH105");
         this.options.put("server", "irc.esper.net");
         this.options.put("port", 5555);
         this.options.put("server-password", "");
@@ -50,9 +48,20 @@ public class OptionsConfig extends YamlConfig {
         this.options.put("jenkins-token", "");
         this.options.put("response-chance", "");
         this.options.put("github-key", "");
+        this.options.put("ready", false);
+        if (this.getAdminChannel() != null && !this.getAdminChannel().isEmpty()) {
+            channels.add(this.getAdminChannel());
+        }
+        admins.add("DSH105");
         this.options.put("channels", channels);
         this.options.put("admins", admins);
-        this.options.put("ready", false);
+    }
+
+    @Override
+    public void loadData(Map<String, Object> loadedData) {
+        super.loadData(loadedData);
+        this.set("channels", this.get("channels", channels));
+        this.set("admins", this.get("admins", admins));
     }
 
     @Override
@@ -70,7 +79,9 @@ public class OptionsConfig extends YamlConfig {
         return get("port", 5555);
     }
 
-    public boolean isReady() { return get("ready", false); }
+    public boolean isReady() {
+        return get("ready", false);
+    }
 
     public String getAccountPassword() {
         return get("account-password", "");
@@ -142,5 +153,21 @@ public class OptionsConfig extends YamlConfig {
 
     public ArrayList<String> getAdmins() {
         return new ArrayList<>(admins);
+    }
+
+    public String getGitHubAccountName() {
+        return get("github-account-name", "");
+    }
+
+    public String getGitHubAccountPassword() {
+        return get("github-account-password", "");
+    }
+
+    public String getGistAccountName() {
+        return get("gist-account-name", "");
+    }
+
+    public String getGistAccountPassword() {
+        return get("gist-account-password", "");
     }
 }

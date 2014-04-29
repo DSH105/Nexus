@@ -17,18 +17,14 @@
 
 package com.dsh105.nexus.command;
 
-import com.dsh105.nexus.Nexus;
 import org.pircbotx.Channel;
 import org.pircbotx.User;
 
-@Command
 public interface ICommandModule {
 
     public String getCommand();
 
     public abstract boolean onCommand(CommandPerformEvent event);
-
-    public abstract String getHelp();
 
     public boolean hasPermission(Channel channel, User sender);
 

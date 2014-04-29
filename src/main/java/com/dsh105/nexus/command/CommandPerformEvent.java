@@ -19,7 +19,11 @@ package com.dsh105.nexus.command;
 
 import com.dsh105.nexus.Nexus;
 import org.pircbotx.Channel;
+import org.pircbotx.Colors;
 import org.pircbotx.User;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class CommandPerformEvent {
 
@@ -63,6 +67,42 @@ public class CommandPerformEvent {
         return inPrivateMessage;
     }
 
+    public void errorWithPing(String errorMessage, String... highlights) {
+        this.errorWithPing(errorMessage, false, highlights);
+    }
+
+    public void errorWithPing(String errorMessage, boolean forcePrivateMessage, String... highlights) {
+        this.error(Nexus.getInstance().appendNick(this.sender.getNick(), errorMessage), forcePrivateMessage, highlights);
+    }
+
+    public void error(String errorMessage, String... highlights) {
+        this.error(errorMessage, false, highlights);
+    }
+
+    public void error(String errorMessage, boolean forcePrivateMessage, String... highlights) {
+        StringBuffer buffer = new StringBuffer();
+        Matcher matcher = Pattern.compile("(\\{.+?\\})").matcher(errorMessage);
+        int index = 0;
+        while (matcher.find()) {
+            if (index >= highlights.length) {
+                break;
+            }
+            String replacement = highlights[index++];
+            matcher.appendReplacement(buffer, Colors.BOLD + replacement + Colors.NORMAL + Colors.RED);
+        }
+        matcher.appendTail(buffer);
+        String message = Colors.RED + buffer.toString();
+        respond(message, forcePrivateMessage);
+    }
+
+    public void respondWithPing(String message) {
+        this.respondWithPing(message, false);
+    }
+
+    public void respondWithPing(String message, boolean forcePrivateMessage) {
+        this.respond(Nexus.getInstance().appendNick(this.sender.getNick(), message), forcePrivateMessage);
+    }
+
     public void respond(String message) {
         this.respond(message, false);
     }
@@ -71,7 +111,7 @@ public class CommandPerformEvent {
         if (this.inPrivateMessage || forcePrivateMessage) {
             this.sender.sendMessage(message);
         } else {
-            Nexus.getInstance().sendMessage(this.channel, this.sender, message);
+            Nexus.getInstance().sendMessage(this.channel, message);
         }
     }
 }

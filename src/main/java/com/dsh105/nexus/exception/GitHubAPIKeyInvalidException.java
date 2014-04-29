@@ -17,9 +17,9 @@
 
 package com.dsh105.nexus.exception;
 
-public class IrcHookNotFoundException extends RuntimeException {
+public class GitHubAPIKeyInvalidException extends RuntimeException {
 
-    public IrcHookNotFoundException(String s) {
+    public GitHubAPIKeyInvalidException(String s) {
         super(s);
     }
 }

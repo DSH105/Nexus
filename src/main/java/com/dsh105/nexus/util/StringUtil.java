@@ -38,7 +38,7 @@ public class StringUtil {
 
     public static String[] separate(int startIndex, String... string) {
         if (startIndex >= string.length || string.length <= 0) {
-            return string;
+            return new String[0];
         }
         String[] str = new String[string.length - startIndex];
         for (int i = startIndex; i < string.length; i++) {

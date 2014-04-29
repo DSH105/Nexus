@@ -23,8 +23,7 @@ public enum Result {
 
     SUCCESS("blue", Colors.BOLD, Colors.UNDERLINE, Colors.GREEN),
     FAILUTE("red", Colors.BOLD, Colors.UNDERLINE, Colors.RED),
-    NOT_BUILT("notbuilt", Colors.BOLD, Colors.UNDERLINE, Colors.LIGHT_GRAY),
-    ;
+    NOT_BUILT("notbuilt", Colors.BOLD, Colors.UNDERLINE, Colors.LIGHT_GRAY),;
 
     private String ident;
     private String[] colours;

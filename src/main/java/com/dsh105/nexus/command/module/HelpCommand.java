@@ -23,19 +23,14 @@ import com.dsh105.nexus.command.CommandModule;
 import com.dsh105.nexus.command.CommandPerformEvent;
 import org.pircbotx.Colors;
 
-@Command(command = "help", needsChannel = false)
+@Command(command = "help", needsChannel = false, help = "Show this help information")
 public class HelpCommand extends CommandModule {
 
     @Override
     public boolean onCommand(CommandPerformEvent event) {
         for (CommandModule module : Nexus.getInstance().getCommandManager().getRegisteredCommands()) {
-            event.respond(Colors.BOLD + Nexus.getInstance().getConfig().getCommandPrefix() + module.getCommand() + Colors.NORMAL + " - " + module.getHelp(), true);
+            event.respondWithPing(Colors.BOLD + Nexus.getInstance().getConfig().getCommandPrefix() + module.getCommand() + Colors.NORMAL + " - " + module.getCommandInfo().help(), true);
         }
         return true;
-    }
-
-    @Override
-    public String getHelp() {
-        return "Show this help information";
     }
 }

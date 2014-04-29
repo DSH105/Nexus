@@ -15,23 +15,11 @@
  * along with Nexus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.dsh105.nexus.command.module;
+package com.dsh105.nexus.exception;
 
-import com.dsh105.nexus.command.Command;
-import com.dsh105.nexus.command.CommandModule;
-import com.dsh105.nexus.command.CommandPerformEvent;
+public class JenkinsJobNotFoundException extends RuntimeException {
 
-@Command(command = "stack", needsChannel = false)
-public class StackTestCommand extends CommandModule {
-
-    @Override
-    public boolean onCommand(CommandPerformEvent event) {
-        event.respond("Testing 123");
-        throw new RuntimeException("This is a lovely new stacktrace for you to read! :D");
-    }
-
-    @Override
-    public String getHelp() {
-        return "Test the stack!";
+    public JenkinsJobNotFoundException(String s, Throwable throwable) {
+        super(s, throwable);
     }
 }

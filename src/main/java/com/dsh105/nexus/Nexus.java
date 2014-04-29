@@ -20,16 +20,10 @@ package com.dsh105.nexus;
 import com.dsh105.nexus.command.CommandManager;
 import com.dsh105.nexus.config.OptionsConfig;
 import com.dsh105.nexus.hook.github.GitHub;
-import com.dsh105.nexus.hook.github.GitHubEvent;
 import com.dsh105.nexus.hook.jenkins.Jenkins;
 import com.dsh105.nexus.listener.EventManager;
 import com.dsh105.nexus.response.ResponseManager;
 import com.dsh105.nexus.util.JsonUtil;
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.JsonNode;
-import com.mashape.unirest.http.Unirest;
-import com.mashape.unirest.http.async.Callback;
-import com.mashape.unirest.http.exceptions.UnirestException;
 import org.pircbotx.Channel;
 import org.pircbotx.PircBotX;
 import org.pircbotx.User;
@@ -37,10 +31,6 @@ import org.pircbotx.exception.IrcException;
 import org.pircbotx.exception.NickAlreadyInUseException;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.concurrent.Future;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -80,14 +70,11 @@ public class Nexus extends PircBotX {
         this.connect();
         this.identify(this.config.getAccountPassword());
         this.registerListeners();
-        System.out.println(this.getConfig().getChannels());
         if (!this.config.getJenkinsUrl().isEmpty() && !this.config.getJenkinsToken().isEmpty()) {
             this.jenkins = new Jenkins();
         }
 
-        if (!this.config.getGitHubApiKey().isEmpty()) {
-            this.github = new GitHub();
-        }
+        this.github = new GitHub();
     }
 
     private void registerListeners() {

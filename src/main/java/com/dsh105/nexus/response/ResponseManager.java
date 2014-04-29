@@ -21,7 +21,10 @@ import com.dsh105.nexus.Nexus;
 import org.pircbotx.Channel;
 import org.pircbotx.User;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
@@ -55,7 +58,7 @@ public class ResponseManager {
                         reader.close();
 
                         this.responses.put(new ResponseTrigger(Nexus.getInstance().getConfig().get("responses." + s + ".chance", 5), s), responses);
-                    } catch (IOException e){
+                    } catch (IOException e) {
                         if (reader != null) {
                             reader.close();
                         }

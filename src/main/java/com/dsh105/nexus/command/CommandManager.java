@@ -18,16 +18,12 @@
 package com.dsh105.nexus.command;
 
 import com.dsh105.nexus.Nexus;
-import com.dsh105.nexus.command.module.HelpCommand;
-import com.dsh105.nexus.command.module.HttpTestCommand;
-import com.dsh105.nexus.command.module.StackTestCommand;
+import com.dsh105.nexus.exception.GitHubAPIKeyInvalidException;
 import org.pircbotx.Channel;
 import org.pircbotx.Colors;
 import org.pircbotx.User;
 import org.reflections.Reflections;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Set;
@@ -88,15 +84,18 @@ public class CommandManager {
                 }
                 if (!module.onCommand(event)) {
                     Suggestion suggestion = new Suggestion(event.getArgs()[1], module.getCommandInfo().subCommands());
-                    if (suggestion.getSuggestions().length() > 0) {
-                        event.respond("Sub command not found. Did you mean: " + Colors.BOLD + suggestion.getSuggestions());
+                    if (suggestion.getSuggestions() != null && suggestion.getSuggestions().length() > 0) {
+                        event.respondWithPing("Sub command not found. Did you mean: " + Colors.BOLD + suggestion.getSuggestions());
                         return true;
                     }
                 } else return true;
             }
         } catch (Exception e) {
-            System.out.println("caught!");
-            event.respond(Colors.RED + "Houston, we have a problem! Here is a conveniently provided stacktrace: " + Nexus.getInstance().getGithub().createGist(e));
+            if (e instanceof GitHubAPIKeyInvalidException) {
+                event.respondWithPing(Colors.RED + "Failed to connect to GitHub. My API key is not configured!");
+                return true;
+            }
+            event.respondWithPing(Colors.RED + "Houston, we have a problem! Here is a conveniently provided stacktrace: " + Nexus.getInstance().getGithub().createGist(e));
             return true;
         }
         return false;

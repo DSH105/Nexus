@@ -8,7 +8,7 @@ import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 
-@Command(command = "httptest", needsChannel = false)
+@Command(command = "httptest", needsChannel = false, help = "Tests a simple HTTP request.")
 public class HttpTestCommand extends CommandModule {
 
     @Override
@@ -24,14 +24,11 @@ public class HttpTestCommand extends CommandModule {
             Unirest.setDefaultHeader("User-Agent", "Nexus/v1.0 (by DSH105)");
             HttpResponse<JsonNode> jsonResponse = Unirest.get(url)
                     .asJson();
-            event.respond(jsonResponse.getBody().getObject().getString("user-agent"));
+            event.respondWithPing(jsonResponse.getBody().getObject().getString("user-agent"));
         } catch (UnirestException e) {
             e.printStackTrace();
-            event.respond("Oh no! Something went wrong: " + e.getMessage());
+            event.respondWithPing("Oh no! Something went wrong: " + e.getMessage());
         }
         return true;
     }
-
-    @Override
-    public String getHelp() { return "Tests a simple HTTP request."; }
 }

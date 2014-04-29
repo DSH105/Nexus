@@ -26,9 +26,11 @@ public @interface Command {
 
     public boolean needsChannel() default false;
 
-    public String command() default "";
+    public String command();
 
     public String[] aliases() default "";
 
     public String[] subCommands() default "";
+
+    public String help();
 }

@@ -29,8 +29,6 @@ public abstract class CommandModule implements ICommandModule {
 
     public abstract boolean onCommand(CommandPerformEvent event);
 
-    public abstract String getHelp();
-
     protected boolean checkPerm(Channel channel, User sender) {
         if (Nexus.getInstance().isAdmin(sender)) {
             return true;

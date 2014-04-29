@@ -18,106 +18,168 @@
 package com.dsh105.nexus.hook.github;
 
 import com.dsh105.nexus.Nexus;
+import com.dsh105.nexus.exception.GitHubAPIKeyInvalidException;
+import com.dsh105.nexus.exception.GitHubException;
+import com.dsh105.nexus.exception.GitHubRepoNotFoundException;
 import com.dsh105.nexus.exception.IrcHookNotFoundException;
 import com.dsh105.nexus.hook.github.gist.Gist;
 import com.dsh105.nexus.hook.github.gist.GistFile;
-import com.google.gson.JsonObject;
+import com.mashape.unirest.http.HttpResponse;
+import com.mashape.unirest.http.JsonNode;
+import com.mashape.unirest.http.Unirest;
+import com.mashape.unirest.http.exceptions.UnirestException;
 
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.io.StringWriter;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 
 public class GitHub {
 
     public String createGist(Exception e) {
-        PrintWriter writer = new PrintWriter(new StringWriter());
-        e.printStackTrace(writer);
+        Writer writer = new StringWriter();
+        PrintWriter printWriter = new PrintWriter(writer);
+        e.printStackTrace(printWriter);
         Gist gist = new Gist(new GistFile(writer.toString()));
         return gist.create();
     }
 
     public GitHubRepo getRepo(String name) {
-        GitHubRepo repo = null;
         try {
-            HttpURLConnection con = (HttpURLConnection) new URL(getRepoApiUrl(name)).openConnection();
-            con.setConnectTimeout(5000);
-            con.setReadTimeout(5000);
-            con.setUseCaches(false);
-            repo = Nexus.JSON.read(con, GitHubRepo.class);
-        } catch (IOException e) {
-            e.printStackTrace();
+            HttpResponse<JsonNode> response = Unirest.get(getRepoApiUrl(name)).asJson();
+            GitHubRepo repo = Nexus.JSON.read(response.getRawBody(), GitHubRepo.class);
+            repo.isPrivate = response.getBody().getObject().getBoolean("private");
+            repo.repoOwner = Nexus.JSON.read(response.getRawBody(), "owner", GitHubUser.class);
+            return repo;
+        } catch (UnirestException e) {
+            if (e.getCause() instanceof FileNotFoundException) {
+                throw new GitHubRepoNotFoundException("Failed to locate GitHub Repo: " + name, e);
+            }
+            throw new GitHubException("Error connecting to GitHub API! ", e);
         }
-        return repo;
+    }
+
+    public GitHubUser getOwnerOf(GitHubRepo repo) {
+        try {
+            return Nexus.JSON.read(Unirest.get(getRepoApiUrl(repo.getName())), GitHubUser.class);
+        } catch (UnirestException e) {
+            if (e.getCause() instanceof FileNotFoundException) {
+                throw new GitHubRepoNotFoundException("Failed to locate GitHub Repo: " + repo.getName(), e);
+            }
+            throw new GitHubException("Error connecting to GitHub API! ", e);
+        }
+    }
+
+    public boolean isPrivate(GitHubRepo repo) {
+        try {
+            return Unirest.get(getRepoApiUrl(repo.getName())).asJson().getBody().getObject().getBoolean("private");
+        } catch (UnirestException e) {
+            if (e.getCause() instanceof FileNotFoundException) {
+                throw new GitHubRepoNotFoundException("Failed to locate GitHub Repo: " + repo.getName(), e);
+            }
+            throw new GitHubException("Error connecting to GitHub API! ", e);
+        }
+    }
+
+    public GitHubIssue getIssue(GitHubRepo repo, int id) {
+        return getIssue(repo.getName(), id);
     }
 
     public GitHubIssue getIssue(String name, int id) {
-        GitHubIssue issue = null;
         try {
-            HttpURLConnection con = (HttpURLConnection) new URL(getIssuesUrl(name, id)).openConnection();
-            con.setConnectTimeout(5000);
-            con.setReadTimeout(5000);
-            con.setUseCaches(false);
-            issue = Nexus.JSON.read(con, GitHubIssue.class);
-        } catch (IOException e) {
-            e.printStackTrace();
+            return Nexus.JSON.read(Unirest.get(getIssuesUrl(name, id)), GitHubIssue.class);
+        } catch (UnirestException e) {
+            if (e.getCause() instanceof FileNotFoundException) {
+                throw new GitHubRepoNotFoundException("Failed to locate GitHub Repo: " + name, e);
+            }
+            throw new GitHubException("Error connecting to GitHub API! ", e);
         }
-        return issue;
+    }
+
+    public GitHubHook[] getHooks(GitHubRepo repo) {
+        return getHooks(repo.getName());
     }
 
     public GitHubHook[] getHooks(String name) {
-        GitHubHook[] hooks= null;
         try {
-            HttpURLConnection con = (HttpURLConnection) new URL(getHooksUrl(name)).openConnection();
-            con.setConnectTimeout(5000);
-            con.setReadTimeout(5000);
-            con.setUseCaches(false);
-            con.setRequestProperty("Authorization", Nexus.getInstance().getConfig().getGitHubApiKey());
-            hooks = Nexus.JSON.read(con, GitHubHook[].class);
-        } catch (IOException e) {
-            e.printStackTrace();
+            return Nexus.JSON.read(Unirest.get(getHooksUrl(name) + "?access_token=" + Nexus.getInstance().getConfig().getGitHubApiKey()), GitHubHook[].class);
+        } catch (UnirestException e) {
+            if (e.getCause() instanceof FileNotFoundException) {
+                throw new GitHubRepoNotFoundException("Failed to locate GitHub Repo: " + name, e);
+            }
+            throw new GitHubException("Error connecting to GitHub API! ", e);
         }
-        return hooks;
     }
 
-    public void setIrcNotifications(String githubRepoName, GitHubEvent... events) {
-        GitHubHook hook = null;
-        for (GitHubHook h : getHooks(githubRepoName)) {
-            if (h.getName().equals("irc")) {
-                hook = h;
+    public GitHubHook getHook(GitHubRepo repo, int id) {
+        return getHook(repo.getName(), id);
+    }
+
+    public GitHubHook getHook(String repo, int id) {
+        for (GitHubHook hook : getHooks(repo)) {
+            if (hook.getId() == id) {
+                return hook;
             }
         }
-        if (hook != null) {
-            ArrayList<String> jsonEvents = new ArrayList<>();
-            for (GitHubEvent event : GitHubEvent.values()) {
-                jsonEvents.add(event.getJsonName());
+        return null;
+    }
+
+    public GitHubHook getHook(GitHubRepo repo, String name) {
+        return getHook(repo.getName(), name);
+    }
+
+    public GitHubHook getHook(String repo, String name) {
+        for (GitHubHook hook : getHooks(repo)) {
+            if (hook.getName().equals(name)) {
+                return hook;
             }
-            HashMap<String, ArrayList<String>> map = new HashMap<>();
-            map.put("events", jsonEvents);
+        }
+        return null;
+    }
+
+    public GitHubUser[] getCollaborators(GitHubRepo repo) {
+        return getCollaborators(repo.getName());
+    }
+
+    public GitHubUser[] getCollaborators(String name) {
+        try {
+            return Nexus.JSON.read(Unirest.get(getCollaboratorsUrl(name)), GitHubUser[].class);
+        } catch (UnirestException e) {
+            if (e.getCause() instanceof FileNotFoundException) {
+                throw new GitHubRepoNotFoundException("Failed to locate GitHub Repo: " + name, e);
+            }
+            throw new GitHubException("Error connecting to GitHub API! ", e);
+        }
+    }
+
+    public void setIrcNotifications(GitHubRepo repo, GitHubEvent... events) {
+        setIrcNotifications(repo.getRepoOwner().getLogin() + "/" + repo.getName(), events);
+    }
+
+    public void setIrcNotifications(String repo, GitHubEvent... events) {
+        if (Nexus.getInstance().getConfig().getGitHubApiKey().isEmpty()) {
+            throw new GitHubAPIKeyInvalidException("Invalid GitHub API key!");
+        }
+        GitHubHook hook = getHook(repo, "irc");
+        if (hook != null) {
+            String s = "";
+            for (GitHubEvent e : events) {
+                s += s.isEmpty() ? "\"" + e.getJsonName() + "\"" : "," + "\"" + e.getJsonName() + "\"";
+            }
+            ArrayList<String> eventsList = new ArrayList<>();
+            for (GitHubEvent e : events) {
+                eventsList.add(e.getJsonName());
+            }
             try {
-                HttpURLConnection con = (HttpURLConnection) new URL(getHooksUrl(githubRepoName) + "/" + hook.getId()).openConnection();
-                con.setConnectTimeout(5000);
-                con.setReadTimeout(5000);
-                con.setUseCaches(false);
-                con.setRequestMethod("PATCH");
-                con.setRequestProperty("Content-type", "application/json");
-                con.setRequestProperty("Authorization", Nexus.getInstance().getConfig().getGitHubApiKey());
-                JsonObject eventsJson = new JsonObject();
-                eventsJson.addProperty("events", Arrays.asList(events).toString());
-                con.connect();
-                OutputStreamWriter writer = new OutputStreamWriter(con.getOutputStream());
-                writer.write(eventsJson.toString());
-                writer.flush();
-            } catch (IOException e) {
-                e.printStackTrace();
+                Unirest.patch(getHooksUrl(repo) + "/" + hook.getId() + "?access_token=" + Nexus.getInstance().getConfig().getGitHubApiKey())
+                        .header("accept", "application/json")
+                        .header("content-type", "application/json")
+                        .body("{\"events\":[" + s + "]}").asJson();
+            } catch (UnirestException e) {
+                throw new GitHubException("Could not connect to GitHub API!", e);
             }
         } else {
-            throw new IrcHookNotFoundException();
+            throw new IrcHookNotFoundException("IRC Hook not found for GitHub Repo (" + repo + ")");
         }
     }
 
@@ -155,5 +217,9 @@ public class GitHub {
 
     public String getHooksUrl(String repoName) {
         return getRepoApiUrl(repoName) + "/hooks";
+    }
+
+    public String getCollaboratorsUrl(String repoName) {
+        return getRepoApiUrl(repoName) + "/collaborators";
     }
 }
