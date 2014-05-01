@@ -18,6 +18,7 @@
 package com.dsh105.nexus.command;
 
 import com.dsh105.nexus.Nexus;
+import com.sun.swing.internal.plaf.metal.resources.metal;
 import org.pircbotx.Channel;
 import org.pircbotx.Colors;
 import org.pircbotx.User;
@@ -67,40 +68,62 @@ public class CommandPerformEvent {
         return inPrivateMessage;
     }
 
-    public void errorWithPing(String errorMessage, String... highlights) {
-        this.errorWithPing(errorMessage, false, highlights);
+    public String removePing(String nick) {
+        return nick == null ? null : (nick.substring(0, 1) + '\u200b' + (nick.length() >= 2 ? nick.substring(1, nick.length()) : ""));
     }
 
-    public void errorWithPing(String errorMessage, boolean forcePrivateMessage, String... highlights) {
-        this.error(Nexus.getInstance().appendNick(this.sender.getNick(), errorMessage), forcePrivateMessage, highlights);
+    /*
+     * Easy response methods
+     */
+
+    public void respondWithPing(String message, String... highlights) {
+        respond(Colors.NORMAL, message, true, false, highlights);
     }
 
-    public void error(String errorMessage, String... highlights) {
-        this.error(errorMessage, false, highlights);
+    public void respond(String message, String... highlights) {
+        this.respond(Colors.NORMAL, message, false, false, highlights);
     }
 
-    public void error(String errorMessage, boolean forcePrivateMessage, String... highlights) {
+    public void respond(String message, boolean forcePrivateMessage, String... highlights) {
+        respond(Colors.NORMAL, message, false, forcePrivateMessage, highlights);
+    }
+
+    public void respond(String mainColor, String message, boolean appendNick, boolean forcePrivateMessage, String... highlights) {
         StringBuffer buffer = new StringBuffer();
-        Matcher matcher = Pattern.compile("(\\{.+?\\})").matcher(errorMessage);
+        Matcher matcher = Pattern.compile("(\\{.+?\\})").matcher(message);
         int index = 0;
         while (matcher.find()) {
             if (index >= highlights.length) {
                 break;
             }
             String replacement = highlights[index++];
-            matcher.appendReplacement(buffer, Colors.BOLD + replacement + Colors.NORMAL + Colors.RED);
+            matcher.appendReplacement(buffer, Colors.BOLD + replacement + Colors.NORMAL + mainColor);
         }
         matcher.appendTail(buffer);
-        String message = Colors.RED + buffer.toString();
-        respond(message, forcePrivateMessage);
+        String response = mainColor + buffer.toString();
+        if (appendNick && !this.inPrivateMessage) {
+            response = Nexus.getInstance().appendNick(this.sender.getNick(), response);
+        }
+        respond(response, forcePrivateMessage);
+    }
+
+    public void errorWithPing(String message, String... highlights) {
+        this.respond(Colors.RED, message, true, false, highlights);
+    }
+
+    public void error(String message, String... highlights) {
+        this.error(message, false, highlights);
+    }
+
+    public void error(String message, boolean forcePrivateMessage, String... highlights) {
+        this.respond(Colors.RED, message, false, forcePrivateMessage, highlights);
     }
 
     public void respondWithPing(String message) {
-        this.respondWithPing(message, false);
-    }
-
-    public void respondWithPing(String message, boolean forcePrivateMessage) {
-        this.respond(Nexus.getInstance().appendNick(this.sender.getNick(), message), forcePrivateMessage);
+        if (!this.inPrivateMessage) {
+            message = Nexus.getInstance().appendNick(this.sender.getNick(), message);
+        }
+        this.respond(message, false);
     }
 
     public void respond(String message) {

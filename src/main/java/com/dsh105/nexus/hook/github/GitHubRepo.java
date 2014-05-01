@@ -18,51 +18,78 @@
 package com.dsh105.nexus.hook.github;
 
 import com.dsh105.nexus.Nexus;
-import com.dsh105.nexus.exception.GitHubException;
-import com.dsh105.nexus.exception.GitHubRepoNotFoundException;
-import com.mashape.unirest.http.Unirest;
-import com.mashape.unirest.http.exceptions.UnirestException;
-
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import com.google.gson.annotations.SerializedName;
 
 public class GitHubRepo {
 
+    @SerializedName("name")
     private String name;
-    private String html_url;
+
+    @SerializedName("full_name")
+    private String fullName;
+
+    @SerializedName("html_url")
+    private String url;
+
+    @SerializedName("description")
     private String description;
+
+    @SerializedName("homepage")
     private String homepage;
-    private String language;
-    private boolean has_wiki;
-    private int forks_count;
-    private int open_issues_count;
-    private int watchers_count;
-    private String created_at;
-    private String updated_at;
-    private String pushed_at;
 
-    protected GitHubUser repoOwner;
-    protected GitHubUser[] collaborators;
+    @SerializedName("has_wiki")
+    private boolean hasWiki;
+
+    @SerializedName("forks_count")
+    private int forks;
+
+    @SerializedName("open_issues_count")
+    private int openIssues;
+
+    @SerializedName("watchers_count")
+    private int watchers;
+
+    @SerializedName("created_at")
+    private String createdAt;
+
+    @SerializedName("updated_at")
+    private String updatedAt;
+
+    @SerializedName("pushed_at")
+    private String pushedAt;
+
     protected boolean isPrivate;
-
-    public GitHubRepo() {
-        collaborators = getCollaborators();
-    }
+    private GitHubUser repoOwner;
+    private GitHubUser[] collaborators;
+    private GitHubUser[] contributors;
+    private String[] languages;
 
     public GitHubUser getRepoOwner() {
         if (repoOwner == null) {
-            repoOwner = Nexus.getInstance().getGithub().getOwnerOf(this);
+            repoOwner = GitHub.getGitHub().getOwnerOf(this);
         }
         return repoOwner;
     }
 
     public GitHubUser[] getCollaborators() {
         if (collaborators == null) {
-            collaborators = Nexus.getInstance().getGithub().getCollaborators(this);
+            collaborators = GitHub.getGitHub().getCollaborators(this);
         }
         return collaborators;
+    }
+
+    public GitHubUser[] getContributors() {
+        if (contributors == null) {
+            contributors = GitHub.getGitHub().getContributors(this);
+        }
+        return contributors;
+    }
+
+    public String[] getLanguages() {
+        if (languages == null) {
+            languages = GitHub.getGitHub().getLanguages(this);
+        }
+        return languages;
     }
 
     public boolean isPrivate() {
@@ -73,8 +100,12 @@ public class GitHubRepo {
         return name;
     }
 
+    public String getFullName() {
+        return fullName;
+    }
+
     public String getUrl() {
-        return html_url;
+        return url;
     }
 
     public String getDescription() {
@@ -85,32 +116,28 @@ public class GitHubRepo {
         return homepage;
     }
 
-    public String getLanguage() {
-        return language;
-    }
-
     public boolean hasWiki() {
-        return has_wiki;
+        return hasWiki;
     }
 
     public int getForksCount() {
-        return forks_count;
+        return forks;
     }
 
     public int getOpenIssuesCount() {
-        return open_issues_count;
+        return openIssues;
     }
 
     public String getDateCreated() {
-        return created_at;
+        return createdAt;
     }
 
     public String getDateLastUpdated() {
-        return updated_at;
+        return updatedAt;
     }
 
     public String getDateLastPushedTo() {
-        return pushed_at;
+        return pushedAt;
     }
 
 }

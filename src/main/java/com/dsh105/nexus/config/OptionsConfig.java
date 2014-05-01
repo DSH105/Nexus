@@ -36,23 +36,29 @@ public class OptionsConfig extends YamlConfig {
 
     @Override
     public void setDefaults() {
+        this.options.put("ready", false);
         this.options.put("server", "irc.esper.net");
         this.options.put("port", 5555);
         this.options.put("server-password", "");
         this.options.put("account-password", "");
-        this.options.put("command-prefix", ";");
+        this.options.put("command-prefix", "\\");
         this.options.put("nick", "Nexus");
-        this.options.put("admin-channel", Nexus.ADMIN_CHANNEL);
+        this.options.put("admin-channel", "");
         this.options.put("append-nicks", true);
         this.options.put("jenkins-url", "");
         this.options.put("jenkins-token", "");
         this.options.put("response-chance", "");
         this.options.put("github-key", "");
-        this.options.put("ready", false);
+        this.options.put("github-account-name", "");
+        this.options.put("github-account-password", "");
+        this.options.put("gist-account-name", "");
+        this.options.put("gist-account-password", "");
         if (this.getAdminChannel() != null && !this.getAdminChannel().isEmpty()) {
             channels.add(this.getAdminChannel());
         }
         admins.add("DSH105");
+        this.channels = this.get("channels", channels);
+        this.admins = this.get("admins", admins);
         this.options.put("channels", channels);
         this.options.put("admins", admins);
     }
@@ -60,8 +66,10 @@ public class OptionsConfig extends YamlConfig {
     @Override
     public void loadData(Map<String, Object> loadedData) {
         super.loadData(loadedData);
-        this.set("channels", this.get("channels", channels));
-        this.set("admins", this.get("admins", admins));
+        this.channels = this.get("channels", channels);
+        this.admins = this.get("admins", admins);
+        this.options.put("channels", channels);
+        this.options.put("admins", admins);
     }
 
     @Override
@@ -100,7 +108,7 @@ public class OptionsConfig extends YamlConfig {
     }
 
     public String getAdminChannel() {
-        return get("admin-channel", Nexus.ADMIN_CHANNEL);
+        return get("admin-channel", "");
     }
 
     public boolean appendNicks() {

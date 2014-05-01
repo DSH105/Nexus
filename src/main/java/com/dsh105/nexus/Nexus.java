@@ -24,6 +24,7 @@ import com.dsh105.nexus.hook.jenkins.Jenkins;
 import com.dsh105.nexus.listener.EventManager;
 import com.dsh105.nexus.response.ResponseManager;
 import com.dsh105.nexus.util.JsonUtil;
+import com.mashape.unirest.http.Unirest;
 import org.pircbotx.Channel;
 import org.pircbotx.PircBotX;
 import org.pircbotx.User;
@@ -42,7 +43,6 @@ public class Nexus extends PircBotX {
     public static Logger LOGGER = Logger.getLogger(Nexus.class.getName());
     public static JsonUtil JSON = new JsonUtil();
     public static String CONFIG_FILE_NAME = "options.txt";
-    public static String ADMIN_CHANNEL = "#dsh106";
     private OptionsConfig config;
     private CommandManager commandManager;
     private ResponseManager responseManager;
@@ -58,23 +58,34 @@ public class Nexus extends PircBotX {
         INSTANCE = this;
         this.registerLogger();
         config = new OptionsConfig();
-        ADMIN_CHANNEL = config.getAdminChannel();
         commandManager = new CommandManager();
         commandManager.registerDefaults();
         responseManager = new ResponseManager();
+        Unirest.setTimeouts(10000, 10000);
         this.setName(this.getConfig().getNick());
         this.setLogin("Nexus");
         this.setVersion("Nexus");
         this.setVerbose(false);
-        setAutoReconnectChannels(true);
-        this.connect();
+        this.setAutoReconnectChannels(true);
         this.identify(this.config.getAccountPassword());
+        this.connect();
         this.registerListeners();
         if (!this.config.getJenkinsUrl().isEmpty() && !this.config.getJenkinsToken().isEmpty()) {
             this.jenkins = new Jenkins();
         }
-
         this.github = new GitHub();
+    }
+
+    @Override
+    public void shutdown() {
+        super.shutdown();
+        INSTANCE = null;
+    }
+
+    @Override
+    public void shutdown(boolean noReconnect) {
+        super.shutdown(noReconnect);
+        INSTANCE = null;
     }
 
     private void registerListeners() {
@@ -109,12 +120,6 @@ public class Nexus extends PircBotX {
             LOGGER.severe("That nickname is already in use!");
         } catch (IrcException | IOException ignored) {
         }
-    }
-
-    @Override
-    public void joinChannel(String channel) {
-        super.joinChannel(channel);
-        this.saveChannels();
     }
 
     public void saveChannels() {

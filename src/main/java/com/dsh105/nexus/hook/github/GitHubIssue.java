@@ -17,19 +17,36 @@
 
 package com.dsh105.nexus.hook.github;
 
+import com.google.gson.annotations.SerializedName;
+
 public class GitHubIssue {
 
-    private String html_url;
+    @SerializedName("html_url")
+    private String url;
+
+    @SerializedName("number")
     private int number;
+
+    @SerializedName("title")
     private int title;
+
+    @SerializedName("state")
     private int state;
+
+    @SerializedName("comments")
     private int comments;
-    private String created_at;
-    private String updated_at;
-    private String closed_at;
+
+    @SerializedName("created_at")
+    private String createdAt;
+
+    @SerializedName("updated_at")
+    private String updatedAt;
+
+    @SerializedName("closed_at")
+    private String closedAt;
 
     public String getUrl() {
-        return html_url;
+        return url;
     }
 
     public int getNumber() {
@@ -49,14 +66,14 @@ public class GitHubIssue {
     }
 
     public String getDateCreated() {
-        return created_at;
+        return createdAt;
     }
 
     public String getDateUpdated() {
-        return updated_at;
+        return updatedAt;
     }
 
     public String getDateClosed() {
-        return closed_at;
+        return closedAt;
     }
 }

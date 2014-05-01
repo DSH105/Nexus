@@ -48,7 +48,7 @@ public class StringUtil {
     }
 
     public static String combineSplit(int startIndex, String[] string, String separator) {
-        if (string == null) {
+        if (string == null || startIndex >= string.length) {
             return "";
         } else {
             StringBuilder builder = new StringBuilder();
@@ -56,8 +56,16 @@ public class StringUtil {
                 builder.append(string[i]);
                 builder.append(separator);
             }
-            builder.deleteCharAt(builder.length() - separator.length());
+            builder.delete(builder.length() - separator.length(), builder.length());
             return builder.toString();
         }
+    }
+
+    public static String[] splitArgs(int startIndex, String[] string, String separator) {
+        String combined = combineSplit(startIndex, string, separator);
+        if (combined.isEmpty()) {
+            return new String[0];
+        }
+        return combined.split(separator);
     }
 }

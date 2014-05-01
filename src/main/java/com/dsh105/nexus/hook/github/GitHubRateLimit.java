@@ -15,22 +15,23 @@
  * along with Nexus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.dsh105.nexus.command;
+package com.dsh105.nexus.hook.github;
 
-import java.lang.annotation.*;
+public class GitHubRateLimit {
 
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE)
-@Inherited
-public @interface Command {
+    private int limit;
+    private int remaining;
+    private int reset;
 
-    public boolean needsChannel() default true;
+    public int getLimit() {
+        return limit;
+    }
 
-    public String command();
+    public int getRemaining() {
+        return remaining;
+    }
 
-    public String[] aliases() default "";
-
-    public String[] extendedHelp();
-
-    public String help();
+    public int getTimeUntilReset() {
+        return reset;
+    }
 }

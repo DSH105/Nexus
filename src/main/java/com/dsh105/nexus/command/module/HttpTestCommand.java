@@ -8,7 +8,7 @@ import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 
-@Command(command = "httptest", needsChannel = false, help = "Tests a simple HTTP request.")
+@Command(command = "httptest", needsChannel = false, help = "Tests a simple HTTP request.", extendedHelp = "")
 public class HttpTestCommand extends CommandModule {
 
     @Override

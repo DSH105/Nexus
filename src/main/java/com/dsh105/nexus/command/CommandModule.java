@@ -40,7 +40,7 @@ public abstract class CommandModule implements ICommandModule {
     }
 
     public boolean hasPermission(Channel channel, User sender) {
-        return true;
+        return hasPermission(sender);
     }
 
     public boolean hasPermission(User sender) {

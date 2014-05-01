@@ -17,16 +17,21 @@
 
 package com.dsh105.nexus.hook.github;
 
+import com.google.gson.annotations.SerializedName;
+
 public class GitHubUser {
 
+    @SerializedName("login")
     private String login;
-    private String html_url;
+
+    @SerializedName("html_url")
+    private String url;
 
     public String getLogin() {
         return login;
     }
 
     public String getUrl() {
-        return html_url;
+        return url;
     }
 }

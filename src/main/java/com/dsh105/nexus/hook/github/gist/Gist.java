@@ -19,6 +19,7 @@ package com.dsh105.nexus.hook.github.gist;
 
 import com.dsh105.nexus.Nexus;
 import com.dsh105.nexus.exception.GistException;
+import com.dsh105.nexus.hook.github.GitHub;
 import com.google.gson.JsonObject;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
@@ -80,7 +81,7 @@ public class Gist {
 
             gistJson.add("files", filesJson);
 
-            HttpResponse<JsonNode> response = Unirest.post(Nexus.getInstance().getGithub().getApiUrl() + "/gists")
+            HttpResponse<JsonNode> response = Unirest.post(GitHub.getGitHub().getApiUrl() + "/gists")
                     .basicAuth(Nexus.getInstance().getConfig().getGistAccountName(), Nexus.getInstance().getConfig().getGistAccountPassword())
                     .header("accept", "application/json")
                     .header("content-type", "application/json; charset=utf-8")

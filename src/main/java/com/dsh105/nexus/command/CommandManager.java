@@ -19,6 +19,8 @@ package com.dsh105.nexus.command;
 
 import com.dsh105.nexus.Nexus;
 import com.dsh105.nexus.exception.GitHubAPIKeyInvalidException;
+import com.dsh105.nexus.exception.GitHubRateLimitExceededException;
+import com.dsh105.nexus.hook.github.GitHub;
 import org.pircbotx.Channel;
 import org.pircbotx.Colors;
 import org.pircbotx.User;
@@ -26,6 +28,7 @@ import org.reflections.Reflections;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Set;
 
 public class CommandManager {
@@ -62,6 +65,18 @@ public class CommandManager {
         return null;
     }
 
+    public CommandModule matchModule(String commandArguments) {
+        CommandModule possibleMatch = null;
+        for (CommandModule module : modules) {
+            if (module.getCommandInfo().command().equalsIgnoreCase(commandArguments)) {
+                return module;
+            } else if (module.getCommand().startsWith(commandArguments)) {
+                possibleMatch = module;
+            }
+        }
+        return possibleMatch;
+    }
+
     public Collection<CommandModule> getRegisteredCommands() {
         return modules;
     }
@@ -83,11 +98,13 @@ public class CommandManager {
                     return true;
                 }
                 if (!module.onCommand(event)) {
-                    Suggestion suggestion = new Suggestion(event.getArgs()[1], module.getCommandInfo().subCommands());
+                    event.error("Use " + Nexus.getInstance().getConfig().getCommandPrefix() + "{0} for help.", Nexus.getInstance().getConfig().getCommandPrefix() + "help " + event.getCommand());
+                    return true;
+                    /*Suggestion suggestion = new Suggestion(event.getArgs()[1], module.getCommandInfo().subCommands());
                     if (suggestion.getSuggestions() != null && suggestion.getSuggestions().length() > 0) {
                         event.respondWithPing("Sub command not found. Did you mean: " + Colors.BOLD + suggestion.getSuggestions());
                         return true;
-                    }
+                    }*/
                 } else return true;
             }
         } catch (Exception e) {
@@ -95,7 +112,10 @@ public class CommandManager {
                 event.respondWithPing(Colors.RED + "Failed to connect to GitHub. My API key is not configured!");
                 return true;
             }
-            event.respondWithPing(Colors.RED + "Houston, we have a problem! Here is a conveniently provided stacktrace: " + Nexus.getInstance().getGithub().createGist(e));
+            if (e instanceof GitHubRateLimitExceededException) {
+                event.respondWithPing(Colors.RED + "Rate limit for GitHub API exceeded. Further requests cannot be executed.");
+            }
+            event.respondWithPing(Colors.RED + "Houston, we have a problem! Here is a conveniently provided stacktrace: " + GitHub.getGitHub().createGist(e));
             return true;
         }
         return false;
