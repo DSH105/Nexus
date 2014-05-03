@@ -17,9 +17,9 @@
 
 package com.dsh105.nexus.exception;
 
-public class JenkinsJobNotFoundException extends JenkinsException {
+public class GitHubHookNotFoundException extends RuntimeException {
 
-    public JenkinsJobNotFoundException(String s, Throwable throwable) {
-        super(s, throwable);
+    public GitHubHookNotFoundException(String s) {
+        super(s);
     }
 }

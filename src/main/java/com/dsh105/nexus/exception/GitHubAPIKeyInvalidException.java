@@ -17,7 +17,7 @@
 
 package com.dsh105.nexus.exception;
 
-public class GitHubAPIKeyInvalidException extends RuntimeException {
+public class GitHubAPIKeyInvalidException extends GitHubException {
 
     public GitHubAPIKeyInvalidException(String s) {
         super(s);

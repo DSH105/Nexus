@@ -17,7 +17,7 @@
 
 package com.dsh105.nexus.exception;
 
-public class JenkinsJobException extends RuntimeException {
+public class JenkinsJobException extends JenkinsException {
 
     public JenkinsJobException(String s, Throwable throwable) {
         super(s, throwable);

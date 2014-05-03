@@ -17,7 +17,7 @@
 
 package com.dsh105.nexus.exception;
 
-public class GitHubRepoException extends RuntimeException {
+public class GitHubRepoException extends GitHubException {
 
     public GitHubRepoException(String s, Throwable throwable) {
         super(s, throwable);

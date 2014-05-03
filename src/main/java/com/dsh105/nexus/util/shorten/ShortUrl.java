@@ -15,11 +15,23 @@
  * along with Nexus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.dsh105.nexus.exception;
+package com.dsh105.nexus.util.shorten;
 
-public class IrcHookNotFoundException extends RuntimeException {
+public class ShortUrl {
 
-    public IrcHookNotFoundException(String s) {
-        super(s);
+    private String kind;
+    private String id;
+    private String longUrl;
+
+    public String getKind() {
+        return kind;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public String getLongUrl() {
+        return longUrl;
     }
 }

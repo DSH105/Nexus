@@ -17,7 +17,7 @@
 
 package com.dsh105.nexus.exception;
 
-public class GitHubRateLimitExceededException extends RuntimeException {
+public class GitHubRateLimitExceededException extends GitHubException {
 
     public GitHubRateLimitExceededException(String s) {
         super(s);

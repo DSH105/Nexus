@@ -17,7 +17,7 @@
 
 package com.dsh105.nexus.exception;
 
-public class GitHubRepoNotFoundException extends RuntimeException {
+public class GitHubRepoNotFoundException extends GitHubException {
 
     public GitHubRepoNotFoundException(String s) {
         super(s);

@@ -15,20 +15,19 @@
  * along with Nexus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.dsh105.nexus.hook.jenkins;
+package com.dsh105.nexus.hook.github;
 
 import org.pircbotx.Colors;
 
-public enum Result {
+public enum IssueState {
 
-    SUCCESS("blue", Colors.BOLD, Colors.UNDERLINE, Colors.GREEN),
-    FAILURE("red", Colors.BOLD, Colors.UNDERLINE, Colors.RED),
-    NOT_BUILT("notbuilt", Colors.BOLD, Colors.UNDERLINE, Colors.LIGHT_GRAY),;
+    OPEN("open", Colors.BOLD, Colors.UNDERLINE, Colors.GREEN),
+    CLOSED("closed", Colors.BOLD, Colors.UNDERLINE, Colors.RED);
 
     private String ident;
     private String[] colours;
 
-    Result(String ident, String... colours) {
+    IssueState(String ident, String... colours) {
         this.ident = ident;
         this.colours = colours;
     }
@@ -49,10 +48,10 @@ public enum Result {
         return ident;
     }
 
-    public static Result getByIdent(String ident) {
-        for (Result r : Result.values()) {
-            if (r.getIdent().equals(ident)) {
-                return r;
+    public static IssueState getByIdent(String ident) {
+        for (IssueState s : IssueState.values()) {
+            if (s.getIdent().equals(ident)) {
+                return s;
             }
         }
         return null;

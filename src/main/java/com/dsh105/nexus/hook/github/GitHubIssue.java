@@ -28,10 +28,10 @@ public class GitHubIssue {
     private int number;
 
     @SerializedName("title")
-    private int title;
+    private String title;
 
     @SerializedName("state")
-    private int state;
+    private String state;
 
     @SerializedName("comments")
     private int comments;
@@ -45,6 +45,16 @@ public class GitHubIssue {
     @SerializedName("closed_at")
     private String closedAt;
 
+    protected String repoFullName;
+    protected GitHubUser reportedBy;
+
+    public GitHubUser getReporter() {
+        if (reportedBy == null) {
+            reportedBy = GitHub.getGitHub().getReporterOf(this);
+        }
+        return reportedBy;
+    }
+
     public String getUrl() {
         return url;
     }
@@ -53,11 +63,11 @@ public class GitHubIssue {
         return number;
     }
 
-    public int getTitle() {
+    public String getTitle() {
         return title;
     }
 
-    public int getState() {
+    public String getState() {
         return state;
     }
 

@@ -68,6 +68,10 @@ public class CommandPerformEvent {
         return inPrivateMessage;
     }
 
+    public String getCommandPrefix() {
+        return Nexus.getInstance().getConfig().getCommandPrefix();
+    }
+
     public String removePing(String nick) {
         return nick == null ? null : (nick.substring(0, 1) + '\u200b' + (nick.length() >= 2 ? nick.substring(1, nick.length()) : ""));
     }

@@ -22,6 +22,7 @@ import com.dsh105.nexus.exception.JenkinsJobException;
 import com.dsh105.nexus.exception.JenkinsJobNotFoundException;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
+import org.json.JSONArray;
 
 import java.io.FileNotFoundException;
 
@@ -64,7 +65,7 @@ public class JenkinsJob {
     public JenkinsJobHealth getHealth() {
         if (this.health == null) {
             try {
-                health = Nexus.JSON.read(Unirest.get(Nexus.getInstance().getJenkins().jenkinsUrl + "job/" + jobName + "/api/json"), "healthReport", JenkinsJobHealth.class);
+                return Nexus.JSON.read(Unirest.get(Nexus.getInstance().getJenkins().jenkinsUrl + "job/" + jobName + "/api/json"), "healthReport", JenkinsJobHealth[].class)[0];
             } catch (UnirestException e) {
                 if (e.getCause() instanceof FileNotFoundException) {
                     throw new JenkinsJobNotFoundException("Failed to locate Jenkins API!", e);

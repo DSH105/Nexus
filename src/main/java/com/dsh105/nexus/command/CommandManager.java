@@ -21,6 +21,7 @@ import com.dsh105.nexus.Nexus;
 import com.dsh105.nexus.exception.GitHubAPIKeyInvalidException;
 import com.dsh105.nexus.exception.GitHubRateLimitExceededException;
 import com.dsh105.nexus.hook.github.GitHub;
+import com.dsh105.nexus.util.StringUtil;
 import org.pircbotx.Channel;
 import org.pircbotx.Colors;
 import org.pircbotx.User;
@@ -94,7 +95,7 @@ public class CommandManager {
             CommandModule module = this.getModuleFor(event.getCommand());
             if (module != null && module.checkPerm(event.getChannel(), event.getSender())) {
                 if (module.getCommandInfo().needsChannel() && event.isInPrivateMessage()) {
-                    event.respond("You cannot perform " + Colors.BOLD + Colors.UNDERLINE + Nexus.getInstance().getConfig().getCommandPrefix() + module.getCommand() + " " + event.getArgs() + Colors.NORMAL + " here.");
+                    event.respond("You cannot perform {0} here.", event.getCommandPrefix() + module.getCommand() + " " + StringUtil.combineSplit(0, event.getArgs(), " "));
                     return true;
                 }
                 if (!module.onCommand(event)) {

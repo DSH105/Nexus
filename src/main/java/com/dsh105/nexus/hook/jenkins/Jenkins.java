@@ -20,31 +20,35 @@ package com.dsh105.nexus.hook.jenkins;
 import com.dsh105.nexus.Nexus;
 import com.dsh105.nexus.exception.JenkinsJobException;
 import com.dsh105.nexus.exception.JenkinsJobNotFoundException;
+import com.mashape.unirest.http.HttpClientHelper;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 
 import java.io.FileNotFoundException;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public class Jenkins {
 
     private HashSet<JenkinsJob> jobs = new HashSet<>();
     private HashMap<String, JenkinsJobEntry> jobEntries = new HashMap<>();
     protected String jenkinsUrl;
-    protected String jenkinsToken;
 
     public Jenkins() {
-        this.jenkinsToken = Nexus.getInstance().getConfig().getJenkinsUrl();
-        this.jenkinsUrl = Nexus.getInstance().getConfig().getJenkinsToken();
+        this.jenkinsUrl = Nexus.getInstance().getConfig().getJenkinsUrl();
+        new Timer(true).schedule(new RefreshTask(), 0, 6000000);
     }
 
     public void requestBuild(String jobName) {
-        String jenkinsUrl = Nexus.getInstance().getConfig().getJenkinsUrl();
-        String token = Nexus.getInstance().getConfig().getJenkinsToken();
+        String token = Nexus.getInstance().getConfig().get("jenkins-token-" + jobName, "");
         if (!jenkinsUrl.isEmpty() && !token.isEmpty()) {
-            Unirest.get(jenkinsUrl + "job/" + jobName + "/build?token=");
+            try {
+                Unirest.get(jenkinsUrl + "job/" + jobName + "/build?token=" + token).asString();
+            } catch (UnirestException e) {
+                if (e.getCause() instanceof FileNotFoundException) {
+                    throw new JenkinsJobNotFoundException("Failed to locate Jenkins job: " + jobName, e);
+                }
+                throw new JenkinsJobException("Failed to connect to Jenkins API!", e);
+            }
         }
     }
 
@@ -54,12 +58,24 @@ public class Jenkins {
     }
 
     public JenkinsJob getJob(String jobName) {
-        for (JenkinsJob job : getJobs()) {
-            if (job.getJobName().equals(jobName)) {
-                return job;
+        if (!this.jobs.isEmpty()) {
+            for (JenkinsJob job : getJobs()) {
+                if (job.getJobName().equals(jobName)) {
+                    return job;
+                }
             }
         }
-        return null;
+
+        // Couldn't find it using the above method, so let's try connecting to it directly
+        try {
+            JenkinsJobEntry jobEntry = Nexus.JSON.read(Unirest.get(Nexus.getInstance().getJenkins().jenkinsUrl + "job/" + jobName + "/api/json"), JenkinsJobEntry.class);
+            return new JenkinsJob(jobEntry.getName(), jobEntry);
+        } catch (UnirestException e) {
+            if (e.getCause() instanceof FileNotFoundException) {
+                throw new JenkinsJobNotFoundException("Failed to locate Jenkins API!", e);
+            }
+            throw new JenkinsJobException("Failed to connect to Jenkins API!", e);
+        }
     }
 
     public Set<JenkinsJob> getJobs() {
@@ -70,24 +86,34 @@ public class Jenkins {
         if (reconnect || this.jobEntries.isEmpty()) {
             JenkinsJobEntry[] jobs;
             try {
-                jobs = Nexus.JSON.read(Unirest.get(jenkinsUrl + "/api/json"), "jobs", JenkinsJobEntry[].class);
+                jobs = Nexus.JSON.read(Unirest.get(jenkinsUrl + "api/json"), "jobs", JenkinsJobEntry[].class);
             } catch (UnirestException e) {
-                if (e.getCause() instanceof FileNotFoundException) {
-                    throw new JenkinsJobNotFoundException("Failed to locate Jenkins API!", e);
-                }
                 throw new JenkinsJobException("Failed to connect to Jenkins API!", e);
             }
-            if (jobs.length > 0) {
-                this.jobEntries.clear();
-                this.jobs.clear();
-                for (JenkinsJobEntry entry : jobs) {
-                    this.jobEntries.put(entry.getName(), entry);
-                    this.jobs.add(new JenkinsJob(entry.getName(), entry));
-                }
+            if (jobs != null) {
+                this.updateJobs(jobs);
             }
         }
         return new HashSet<>(this.jobs);
     }
 
+    private void updateJobs(JenkinsJobEntry[] jobs) {
+        if (jobs.length > 0) {
+            this.jobEntries.clear();
+            this.jobs.clear();
+            for (JenkinsJobEntry entry : jobs) {
+                this.jobEntries.put(entry.getName(), entry);
+                this.jobs.add(new JenkinsJob(entry.getName(), entry));
+            }
+        }
+    }
 
+
+    public class RefreshTask extends TimerTask {
+
+        @Override
+        public void run() {
+            getJobs(true);
+        }
+    }
 }

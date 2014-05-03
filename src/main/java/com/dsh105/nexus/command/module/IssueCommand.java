@@ -15,11 +15,12 @@
  * along with Nexus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.dsh105.nexus.exception;
+package com.dsh105.nexus.command.module;
 
-public class JenkinsJobNotFoundException extends JenkinsException {
+import com.dsh105.nexus.command.Command;
 
-    public JenkinsJobNotFoundException(String s, Throwable throwable) {
-        super(s, throwable);
-    }
+@Command(command = "issue", needsChannel = false, help = "Show this help information", extendedHelp = "")
+public class IssueCommand {
+
+    //TODO: Will work as an alias of \repo <name> issue <number>
 }

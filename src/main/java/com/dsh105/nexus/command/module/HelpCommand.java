@@ -23,7 +23,7 @@ import com.dsh105.nexus.command.CommandModule;
 import com.dsh105.nexus.command.CommandPerformEvent;
 import org.pircbotx.Colors;
 
-@Command(command = "help", needsChannel = false, help = "Show this help information", extendedHelp = "Use ;help <command> for more information on a specific command.")
+@Command(command = "help", needsChannel = false, help = "Show this help information", extendedHelp = "Use {p}{c} <command> for more information on a specific command.")
 public class HelpCommand extends CommandModule {
 
     @Override
@@ -34,14 +34,18 @@ public class HelpCommand extends CommandModule {
                 event.errorWithPing("Could not match {0} to a command.", module.getCommand());
                 return true;
             }
-            event.respondWithPing("Check your private messages for help information.");
-            event.respond("Help info for {0}:", true, module.getCommand());
+            if (!event.isInPrivateMessage()) {
+                event.respondWithPing("Check your private messages for help information.");
+            }
+            event.respond("Help info for {0}{1}:", true, event.getCommandPrefix(), module.getCommand());
             for (String part : module.getCommandInfo().extendedHelp()) {
-                event.respond(part, true);
+                event.respond(part.replace("{c}", event.getCommand()).replace("{p}", event.getCommandPrefix()).replace("{b}", Colors.BOLD).replace("{/b}", Colors.NORMAL), true);
             }
             return true;
         }
-        event.respondWithPing("Check your private messages for help information.");
+        if (!event.isInPrivateMessage()) {
+            event.respondWithPing("Check your private messages for help information.");
+        }
         for (CommandModule module : Nexus.getInstance().getCommandManager().getRegisteredCommands()) {
             event.respond(Colors.BOLD + Nexus.getInstance().getConfig().getCommandPrefix() + module.getCommand() + Colors.NORMAL + " - " + module.getCommandInfo().help(), true);
         }

@@ -24,7 +24,7 @@ import com.dsh105.nexus.command.CommandPerformEvent;
 import org.pircbotx.Channel;
 import org.pircbotx.User;
 
-@Command(command = "exit", needsChannel = false, help = "Exit and shutdown Nexus", extendedHelp = "Use ;exit to shutdown the bot. Only admins may use this command.")
+@Command(command = "exit", needsChannel = false, help = "Exit and shutdown Nexus", extendedHelp = "Use {b}{p}{c}{/b} to shutdown the bot. Only admins may use this command.")
 public class ExitCommand extends CommandModule {
 
     @Override

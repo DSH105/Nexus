@@ -46,7 +46,7 @@ public class OptionsConfig extends YamlConfig {
         this.options.put("admin-channel", "");
         this.options.put("append-nicks", true);
         this.options.put("jenkins-url", "");
-        this.options.put("jenkins-token", "");
+        this.options.put("jenkins-token-jobName", "change-me");
         this.options.put("response-chance", "");
         this.options.put("github-key", "");
         this.options.put("github-account-name", "");
@@ -117,10 +117,6 @@ public class OptionsConfig extends YamlConfig {
 
     public String getJenkinsUrl() {
         return get("jenkins-url", "");
-    }
-
-    public String getJenkinsToken() {
-        return get("jenkins-token", "");
     }
 
     public int getResponseChance() {

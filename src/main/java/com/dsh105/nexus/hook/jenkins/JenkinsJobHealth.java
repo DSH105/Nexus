@@ -19,8 +19,8 @@ package com.dsh105.nexus.hook.jenkins;
 
 public class JenkinsJobHealth {
 
-    private String description;
-    private int score;
+    protected String description;
+    protected int score;
 
     public String getDescription() {
         return description;

@@ -70,7 +70,7 @@ public class Nexus extends PircBotX {
         this.identify(this.config.getAccountPassword());
         this.connect();
         this.registerListeners();
-        if (!this.config.getJenkinsUrl().isEmpty() && !this.config.getJenkinsToken().isEmpty()) {
+        if (!this.config.getJenkinsUrl().isEmpty()) {
             this.jenkins = new Jenkins();
         }
         this.github = new GitHub();
