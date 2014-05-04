@@ -18,6 +18,7 @@
 package com.dsh105.nexus;
 
 import com.dsh105.nexus.command.CommandManager;
+import com.dsh105.nexus.command.module.RemindCommand;
 import com.dsh105.nexus.config.OptionsConfig;
 import com.dsh105.nexus.hook.github.GitHub;
 import com.dsh105.nexus.hook.jenkins.Jenkins;
@@ -49,7 +50,6 @@ public class Nexus extends PircBotX {
     private Jenkins jenkins;
     private GitHub github;
 
-
     public static void main(String[] args) throws Exception {
         new Nexus();
     }
@@ -74,16 +74,19 @@ public class Nexus extends PircBotX {
             this.jenkins = new Jenkins();
         }
         this.github = new GitHub();
+        //this.sendMessage(this.getChannel(this.getConfig().getAdminChannel()), "Hi. I have returned.");
     }
 
     @Override
     public void shutdown() {
+        this.saveAll();
         super.shutdown();
         INSTANCE = null;
     }
 
     @Override
     public void shutdown(boolean noReconnect) {
+        this.saveAll();
         super.shutdown(noReconnect);
         INSTANCE = null;
     }
@@ -119,6 +122,14 @@ public class Nexus extends PircBotX {
         } catch (NickAlreadyInUseException e) {
             LOGGER.severe("That nickname is already in use!");
         } catch (IrcException | IOException ignored) {
+        }
+    }
+
+    public void saveAll() {
+        this.saveChannels();
+        RemindCommand remindCommand = this.getCommandManager().getModuleOfType(RemindCommand.class);
+        if (remindCommand != null) {
+            remindCommand.clearReminders();
         }
     }
 

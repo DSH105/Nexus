@@ -21,9 +21,9 @@ import org.pircbotx.Colors;
 
 public enum Result {
 
-    SUCCESS("blue", Colors.BOLD, Colors.UNDERLINE, Colors.GREEN),
-    FAILURE("red", Colors.BOLD, Colors.UNDERLINE, Colors.RED),
-    NOT_BUILT("notbuilt", Colors.BOLD, Colors.UNDERLINE, Colors.LIGHT_GRAY),;
+    SUCCESS("blue", Colors.GREEN, Colors.UNDERLINE),
+    FAILURE("red", Colors.RED, Colors.UNDERLINE),
+    NOT_BUILT("notbuilt", Colors.LIGHT_GRAY, Colors.UNDERLINE),;
 
     private String ident;
     private String[] colours;

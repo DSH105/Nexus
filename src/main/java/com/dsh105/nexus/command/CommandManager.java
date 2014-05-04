@@ -57,6 +57,15 @@ public class CommandManager {
         this.modules.add(module);
     }
 
+    public <T extends CommandModule> T getModuleOfType(Class<T> type) {
+        for (CommandModule module : modules) {
+            if (module.getClass().equals(type)) {
+                return (T) module;
+            }
+        }
+        return null;
+    }
+
     public CommandModule getModuleFor(String commandArguments) {
         for (CommandModule module : modules) {
             if (module.getCommandInfo().command().equalsIgnoreCase(commandArguments)) {
@@ -82,12 +91,17 @@ public class CommandManager {
         return modules;
     }
 
+    public boolean onCommand(Channel channel, User sender, String content) {
+        String[] split = content.substring(content.contains("\\") ? Nexus.getInstance().getConfig().getCommandPrefix().length() : 0).replaceAll("\\s+", " ").split(" ");
+        return onCommand(channel, sender, split[0].toLowerCase(), StringUtil.splitArgs(1, split, " "));
+    }
+
     public boolean onCommand(Channel channel, User sender, String command, String... args) {
         return onCommand(new CommandPerformEvent(channel, sender, command, args));
     }
 
     public boolean onCommand(User sender, String command, String... args) {
-        return onCommand(new CommandPerformEvent(sender, command, args));
+        return onCommand(new CommandPerformEvent(null, sender, command, args));
     }
 
     public boolean onCommand(CommandPerformEvent event) {

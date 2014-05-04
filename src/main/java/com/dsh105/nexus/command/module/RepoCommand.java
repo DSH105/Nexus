@@ -34,9 +34,10 @@ import java.util.regex.Pattern;
         extendedHelp = {
                 "The repo command contains various commands to manage GitHub repositories.",
                 "{b}{p}{c} <name>{/b} - retrieves repository information for the given repo. Uses the sender's nick as the GitHub login",
-                "{b}{p}{c} <owner> <name>{/b} - retrieves repository information for the given repo and login.",
+                "{b}{p}{c} [owner] <name>{/b} - retrieves repository information for the given repo and login.",
                 "--------",
                 "Following the above arguments, these commands can also be performed:",
+                "{b}{p}{c} <...> save{/b} - save a repo and owner combination for later ease of command use.",
                 "{b}{p}{c} <...> set <option> <args>{/b} - sets the value of the given event option for a repo.",
                 "{b}{p}{c} <..> get <option>{/b} - retrieves information on the given event option.",
                 "Valid options are: irc"})
@@ -48,8 +49,8 @@ public class RepoCommand extends CommandModule {
             return false;
         }
         int startCheck = 2;
-        boolean subMatchesSecond = event.getArgs().length >= startCheck && Pattern.compile("(set|get|issue)").matcher(event.getArgs()[startCheck - 1]).matches();
-        boolean subMatchesThird = event.getArgs().length >= (startCheck + 1) && Pattern.compile("(set|get|issue)").matcher(event.getArgs()[startCheck]).matches();
+        boolean subMatchesSecond = event.getArgs().length >= startCheck && Pattern.compile("(set|get|save|issue)").matcher(event.getArgs()[startCheck - 1]).matches();
+        boolean subMatchesThird = event.getArgs().length >= (startCheck + 1) && Pattern.compile("(set|get|save|issue)").matcher(event.getArgs()[startCheck]).matches();
 
         String repoName = subMatchesSecond ? event.getArgs()[0] : ((subMatchesThird || event.getArgs().length == 2) ? event.getArgs()[1] : event.getArgs()[0]);
         String owner = subMatchesSecond ? event.getSender().getNick() : ((subMatchesThird || event.getArgs().length == 2) ? event.getArgs()[0] : event.getSender().getNick());
@@ -69,10 +70,23 @@ public class RepoCommand extends CommandModule {
                 String owner2 = repoName;
                 repoName = owner;
                 owner = owner2;
+
                 repo = GitHub.getGitHub().getRepo(owner + "/" + repoName);
             } catch (GitHubRepoNotFoundException e2) {
-                event.respond(Colors.RED + "The GitHub repository " + Colors.BOLD + " " + repoName + "/" + owner + Colors.NORMAL + Colors.RED + " could not be found! :(");
-                return true;
+                String storedCase = Nexus.getInstance().getConfig().get("github-repo-" + owner.toLowerCase(), ""); // temporarily use the owner so that the error message outputs correctly
+                if (!storedCase.isEmpty()) {
+                    repoName = owner;
+                    owner = storedCase;
+                    try {
+                        repo = GitHub.getGitHub().getRepo(owner + "/" + repoName);
+                    } catch (GitHubRepoNotFoundException e3) {
+                        event.errorWithPing("The GitHub repository {0} could not be found! :(", repoName + "/" + owner);
+                        return true;
+                    }
+                } else {
+                    event.errorWithPing("The GitHub repository {0} could not be found! :(", repoName + "/" + owner);
+                    return true;
+                }
             }
         }
 
@@ -90,7 +104,7 @@ public class RepoCommand extends CommandModule {
                     event.respondWithPing("You are not permitted to set repository settings for {0}.", repo.getFullName());
                     return true;
                 }
-                if (event.getArgs().length >= startIndex + 1) {
+                if (event.getArgs().length >= startIndex + 2) {
                     if (event.getArgs()[startIndex + 1].equalsIgnoreCase("irc")) {
                         if (event.getArgs().length == startIndex + 2) {
                             String validEvents = "";
@@ -115,7 +129,7 @@ public class RepoCommand extends CommandModule {
                             for (GitHubEvent e : GitHubEvent.values()) {
                                 validEvents += (validEvents.isEmpty()) ? e.getJsonName() : ", " + e.getJsonName();
                             }
-                            event.respond(Colors.RED + "You entered " + Colors.BOLD + "invalid" + Colors.NORMAL + Colors.RED + " event names: " + StringUtil.combineSplit(0, invalidEvents.toArray(new String[invalidEvents.size()]), ", ") + ". " + Colors.BOLD + "Valid" + Colors.NORMAL + Colors.RED + " event names are: " + validEvents);
+                            event.respondWithPing("You entered " + Colors.BOLD + "invalid" + Colors.NORMAL + Colors.RED + " event names: " + StringUtil.combineSplit(0, invalidEvents.toArray(new String[invalidEvents.size()]), ", ") + ". " + Colors.BOLD + "Valid" + Colors.NORMAL + Colors.RED + " event names are: " + validEvents);
                             if (events.isEmpty()) {
                                 return true;
                             }
@@ -136,7 +150,7 @@ public class RepoCommand extends CommandModule {
                     }
                 }
             } else if (event.getArgs()[startIndex].equalsIgnoreCase("get")) {
-                if (event.getArgs().length >= startIndex + 1) {
+                if (event.getArgs().length >= startIndex + 2) {
                     if (event.getArgs()[startIndex + 1].equalsIgnoreCase("irc")) {
                         String eventsStr = "";
                         for (GitHubEvent e : GitHub.getGitHub().getIrcNotifications(repo)) {
@@ -144,13 +158,27 @@ public class RepoCommand extends CommandModule {
                         }
                         event.respondWithPing("IRC notifications for GitHub repository ({0}) are{1}", repo.getFullName(), eventsStr.isEmpty() ? " empty" : ": " + eventsStr);
                         return true;
+                    } else {
+                        event.errorWithPing("Invalid repository setting entered: {0}.", event.getArgs()[startIndex + 1]);
+                        return true;
                     }
+                }
+            } else if (event.getArgs()[startIndex].equalsIgnoreCase("save")){
+                if (event.getArgs().length >= startIndex + 1) {
+                    if (Nexus.getInstance().isAdmin(event.getSender())) {
+                        Nexus.getInstance().getConfig().set("github-repo-" + repo.getName().toLowerCase(), repo.getRepoOwner().getLogin());
+                        Nexus.getInstance().getConfig().save();
+                        event.respondWithPing("GitHub repository information for {0} stored under {1}. You can now use {2} instead of {3} for this repository", repo.getName(), event.removePing(repo.getRepoOwner().getLogin()), event.getCommandPrefix() + event.getCommand() + " <repo_name>", event.getCommandPrefix() + event.getCommand() + " <owner> <repo_name>");
+                    } else {
+                        event.respondWithPing("Only admins can save repository information.");
+                    }
+                    return true;
                 }
             } else if (event.getArgs()[startIndex].equalsIgnoreCase("issue")) {
                 if (event.getArgs().length == startIndex + 2) {
                     String issueNumber = event.getArgs()[startIndex + 1];
                     if (!StringUtil.isInt(issueNumber)) {
-                        event.respondWithPing("{0} needs to be an integer.");
+                        event.respondWithPing("{0} needs to be an integer.", issueNumber);
                         return true;
                     }
                     GitHubIssue issue;
@@ -162,36 +190,32 @@ public class RepoCommand extends CommandModule {
                     }
 
                     IssueState issueState = IssueState.getByIdent(issue.getState());
-                    String state = issueState.format(issue.getState());
+                    String state = issueState.format(issue.getState()).toUpperCase();
+                    String body = issue.getBody();
+                    if (body.length() > 30) {
+                        body = body.substring(0, 70) + "...";
+                    }
 
                     if (issue instanceof GitHubPullRequest) {
                         GitHubPullRequest pr = (GitHubPullRequest) issue;
                         if (pr.isMerged()) {
-                            state = Colors.BOLD + Colors.UNDERLINE + Colors.PURPLE + "MERGED";
+                            state = Colors.PURPLE + Colors.UNDERLINE + "MERGED";
                         }
-                        event.respond(Colors.BOLD + "GitHub PR #" + pr.getNumber() + Colors.NORMAL + " - " + Colors.BLUE + Colors.BOLD + repo.getName() + Colors.NORMAL + " (" + Colors.BOLD + event.removePing(repo.getRepoOwner().getLogin()) + Colors.NORMAL + ") -  (" + pr.getUrl() + ")");
+                        String mergeData = (pr.isMerged() ? " (" + URLShortener.shorten("http://github.com/DSH105/HoloAPI/commit/" + pr.getMergeCommit()) + ")" : "");
+                        event.respond(Colors.BOLD + "GitHub PR #" + pr.getNumber() + Colors.NORMAL + " - " + Colors.BLUE + Colors.BOLD + repo.getName() + Colors.NORMAL + " (" + Colors.BOLD + event.removePing(repo.getRepoOwner().getLogin()) + Colors.NORMAL + ") -  (" + URLShortener.shorten(pr.getUrl()) + ")");
                         event.respond("Reporter: {0}", event.removePing(pr.getReporter().getLogin()));
                         event.respond("Title: " + pr.getTitle());
-                        event.respond("Status: {0} | Comments: {1} | Review Comments: {2}", state, String.valueOf(pr.getComments()), String.valueOf(pr.getReviewComments()));
+                        event.respond("Body: " + body);
+                        event.respond("Status: {0}" + mergeData + " | Comments: {1} | Review Comments: {2}", state, String.valueOf(pr.getComments()), String.valueOf(pr.getReviewComments()));
                         event.respond("Commits: {0} | Additions: " + Colors.GREEN + "{1} | Deletions: " + Colors.RED + "{2} | Files Changed: {3}", pr.getCommits() + "", pr.getAdditions() + "", pr.getDeletions() + "", pr.getChangedFiles() + "");
-                        event.respond("Created at {0}", issue.getDateCreated().split("T")[0] + "");
-                        event.respond("Last updated at {0}", issue.getDateUpdated().split("T")[0] + "");
-                        if (issue.getDateClosed() != null) {
-                            event.respond("Date closed {0}", issue.getDateClosed().split("T")[0] + "");
-                        }
-                        if (pr.isMerged()) {
-                            event.respond("Merged at {0} ({1})", pr.getMergedAt().split("T")[0] + "", URLShortener.shorten("http://github.com/DSH105/HoloAPI/commit/" + pr.getMergeCommit()));
-                        }
+                        event.respond("Created: {0} | Updated: {1} | " + (issue.getDateClosed() != null ? " | Closed {2}" : ""), issue.getDateCreated(), issue.getDateUpdated(), issue.getDateClosed());
                     } else {
-                        event.respond(Colors.BOLD + "GitHub Issue #" + issue.getNumber() + Colors.NORMAL + " - " + Colors.BLUE + Colors.BOLD+ repo.getName() + Colors.NORMAL + " (" + Colors.BOLD + event.removePing(repo.getRepoOwner().getLogin()) + Colors.NORMAL + ") -  (" + issue.getUrl() + ")");
+                        event.respond(Colors.BOLD + "GitHub Issue #" + issue.getNumber() + Colors.NORMAL + " - " + Colors.BLUE + Colors.BOLD+ repo.getName() + Colors.NORMAL + " (" + Colors.BOLD + event.removePing(repo.getRepoOwner().getLogin()) + Colors.NORMAL + ") -  (" + URLShortener.shorten(issue.getUrl()) + ")");
                         event.respond("Reporter: " + event.removePing(issue.getReporter().getLogin()));
                         event.respond("Title: " + issue.getTitle());
+                        event.respond("Body: \"" + body + "\"");
                         event.respond("Status: {0} | Comments: {1}", state, String.valueOf(issue.getComments()));
-                        event.respond("Created at {0}", issue.getDateCreated().split("T")[0] + "");
-                        event.respond("Last updated at {0}", issue.getDateUpdated().split("T")[0] + "");
-                        if (issue.getDateClosed() != null) {
-                            event.respond("Date closed {0}", issue.getDateClosed().split("T")[0] + "");
-                        }
+                        event.respond("Created: {0} | Updated: {1} | " + (issue.getDateClosed() != null ? " | Closed {2}" : ""), issue.getDateCreated(), issue.getDateUpdated(), issue.getDateClosed());
                     }
                     return true;
                 }
@@ -218,9 +242,7 @@ public class RepoCommand extends CommandModule {
             event.respond(Colors.BOLD + "GitHub" + Colors.NORMAL + " - " + Colors.BOLD + Colors.BLUE + repo.getName() + Colors.NORMAL + " (" + Colors.BOLD + event.removePing(repo.getRepoOwner().getLogin()) + Colors.NORMAL + ") - " + StringUtil.combineSplit(0, repo.getLanguages(), ", ") + " (" + repo.getUrl() + ")");
             event.respond("By {0}", StringUtil.combineSplit(0, activeCollaborators.toArray(new String[activeCollaborators.size()]), ", "));
             event.respond("Forks: {0} | Issues: {1}", String.valueOf(repo.getForksCount()), String.valueOf(repo.getOpenIssuesCount()));
-            event.respond("Created at {0}", repo.getDateCreated().split("T")[0] + "");
-            event.respond("Last pushed to at {0}", repo.getDateLastPushedTo().split("T")[0] + "");
-            event.respond("Last updated at {0}", repo.getDateLastUpdated().split("T")[0] + "");
+            event.respond("Created {0} | Last Pushed {1}", repo.getDateCreated().split("T")[0], repo.getDateLastPushedTo().split("T")[0]);
             return true;
         }
         return false;

@@ -63,6 +63,9 @@ public class GitHub {
             } catch (JSONException e) {
                 // ignore it
             }
+            if (repo == null || repo.getUrl() == null) {
+                throw new GitHubRepoNotFoundException("Failed to locate GitHub Repo: " + name);
+            }
             repo.getCollaborators();
             repo.getRepoOwner();
             repo.getLanguages();

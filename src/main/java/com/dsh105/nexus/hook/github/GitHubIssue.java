@@ -30,6 +30,9 @@ public class GitHubIssue {
     @SerializedName("title")
     private String title;
 
+    @SerializedName("body")
+    private String body;
+
     @SerializedName("state")
     private String state;
 
@@ -67,6 +70,10 @@ public class GitHubIssue {
         return title;
     }
 
+    public String getBody() {
+        return body;
+    }
+
     public String getState() {
         return state;
     }
@@ -76,14 +83,23 @@ public class GitHubIssue {
     }
 
     public String getDateCreated() {
-        return createdAt;
+        if (createdAt != null) {
+            return createdAt.split("T")[0];
+        }
+        return null;
     }
 
     public String getDateUpdated() {
-        return updatedAt;
+        if (updatedAt != null) {
+            return updatedAt.split("T")[0];
+        }
+        return null;
     }
 
     public String getDateClosed() {
-        return closedAt;
+        if (closedAt != null) {
+            return closedAt.split("T")[0];
+        }
+        return null;
     }
 }

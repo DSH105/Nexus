@@ -49,6 +49,7 @@ public class OptionsConfig extends YamlConfig {
         this.options.put("jenkins-token-jobName", "change-me");
         this.options.put("response-chance", "");
         this.options.put("github-key", "");
+        this.options.put("github-repo-repoName", "change-to-author");
         this.options.put("github-account-name", "");
         this.options.put("github-account-password", "");
         this.options.put("gist-account-name", "");
@@ -100,7 +101,7 @@ public class OptionsConfig extends YamlConfig {
     }
 
     public String getCommandPrefix() {
-        return get("command-prefix", ";");
+        return get("command-prefix", "\\");
     }
 
     public String getNick() {

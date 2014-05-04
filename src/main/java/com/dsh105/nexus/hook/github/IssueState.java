@@ -21,8 +21,8 @@ import org.pircbotx.Colors;
 
 public enum IssueState {
 
-    OPEN("open", Colors.BOLD, Colors.UNDERLINE, Colors.GREEN),
-    CLOSED("closed", Colors.BOLD, Colors.UNDERLINE, Colors.RED);
+    OPEN("open", Colors.GREEN, Colors.UNDERLINE),
+    CLOSED("closed", Colors.RED, Colors.UNDERLINE);
 
     private String ident;
     private String[] colours;

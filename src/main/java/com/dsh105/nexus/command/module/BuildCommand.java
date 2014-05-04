@@ -22,6 +22,7 @@ import com.dsh105.nexus.command.Command;
 import com.dsh105.nexus.command.CommandModule;
 import com.dsh105.nexus.command.CommandPerformEvent;
 import com.dsh105.nexus.exception.GitHubRepoNotFoundException;
+import com.dsh105.nexus.exception.JenkinsException;
 import com.dsh105.nexus.exception.JenkinsJobNotFoundException;
 import com.dsh105.nexus.hook.github.GitHub;
 import com.dsh105.nexus.hook.jenkins.JenkinsJob;
@@ -53,7 +54,7 @@ public class BuildCommand extends CommandModule {
                 try {
                     job = Nexus.getInstance().getJenkins().getJob(jobName);
                 } catch (JenkinsJobNotFoundException e) {
-                    event.respond(Colors.RED + "The Jenkins job {0} could not be found! :(", jobName);
+                    event.errorWithPing("The {0} job could not be found on " + Nexus.getInstance().getConfig().getJenkinsUrl() + "! :(", jobName);
                     return true;
                 }
                 if (job != null) {
@@ -68,8 +69,8 @@ public class BuildCommand extends CommandModule {
         try {
             Nexus.getInstance().getJenkins().requestBuild(jobName);
             return true;
-        } catch (JenkinsJobNotFoundException e) {
-            event.respond(Colors.RED + "The Jenkins job {0} could not be found! :(", jobName);
+        } catch (JenkinsException e) {
+            event.errorWithPing("The {0} job could not be found on " + Nexus.getInstance().getConfig().getJenkinsUrl() + "! :(", jobName);
             return true;
         }
     }

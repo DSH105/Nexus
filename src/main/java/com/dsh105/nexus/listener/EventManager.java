@@ -31,8 +31,8 @@ public class EventManager extends ListenerAdapter<Nexus> {
         String message = event.getMessage();
         String commandPrefix = Nexus.getInstance().getConfig().getCommandPrefix();
         if (message.startsWith(commandPrefix)) {
-            String[] split = message.substring(commandPrefix.length()).split(" ");
-            boolean result = Nexus.getInstance().getCommandManager().onCommand(event.getChannel(), event.getUser(), split[0].toLowerCase(), StringUtil.splitArgs(1, split, " "));
+            String[] split = message.substring(commandPrefix.length()).replaceAll("\\s+", " ").split(" ");
+            Nexus.getInstance().getCommandManager().onCommand(event.getChannel(), event.getUser(), split[0].toLowerCase(), StringUtil.splitArgs(1, split, " "));
         }
 
         Nexus.getInstance().getResponseManager().trigger(event.getChannel(), event.getUser(), message);
@@ -54,13 +54,14 @@ public class EventManager extends ListenerAdapter<Nexus> {
 
     @Override
     public void onPrivateMessage(PrivateMessageEvent<Nexus> event) throws Exception {
+        Nexus.getInstance().getCommandManager().onCommand(null, event.getUser(), event.getMessage());
         // Some commands can be performed through PM
-        String message = event.getMessage();
+        /*String message = event.getMessage();
         String commandPrefix = Nexus.getInstance().getConfig().getCommandPrefix();
         if (message.startsWith(commandPrefix)) {
-            String[] split = message.substring(commandPrefix.length()).split(" ");
+            String[] split = message.substring(commandPrefix.length()).replaceAll("\\s+", " ").split(" ");
             Nexus.getInstance().getCommandManager().onCommand(event.getUser(), split[0].toLowerCase(), StringUtil.splitArgs(1, split, " "));
-        }
+        }*/
     }
 
     @Override

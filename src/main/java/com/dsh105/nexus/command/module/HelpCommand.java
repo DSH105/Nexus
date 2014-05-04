@@ -31,7 +31,7 @@ public class HelpCommand extends CommandModule {
         if (event.getArgs().length == 1) {
             CommandModule module = Nexus.getInstance().getCommandManager().matchModule(event.getArgs()[0]);
             if (module == null) {
-                event.errorWithPing("Could not match {0} to a command.", module.getCommand());
+                event.errorWithPing("Could not match {0} to a command.", event.getArgs()[0]);
                 return true;
             }
             if (!event.isInPrivateMessage()) {
