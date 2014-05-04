@@ -21,14 +21,14 @@ import com.dsh105.nexus.Nexus;
 import com.dsh105.nexus.command.Command;
 import com.dsh105.nexus.command.CommandModule;
 import com.dsh105.nexus.command.CommandPerformEvent;
+import com.dsh105.nexus.response.ResponseTrigger;
 import com.dsh105.nexus.util.StringUtil;
 import com.dsh105.nexus.util.TimeUtil;
 import org.pircbotx.Channel;
+import org.yaml.snakeyaml.Yaml;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.io.*;
+import java.util.*;
 
 @Command(command = "remind", help = "Schedule a reminder", extendedHelp = "")
 public class RemindCommand extends CommandModule {
@@ -47,8 +47,9 @@ public class RemindCommand extends CommandModule {
                 event.respondWithPing("Invalid time period entered: {0}. Examples: {1} (1 day), {2} (2 hours), {3} (5 minutes), {4} (20 seconds)", event.getArgs()[0], "1d", "2h", "5m", "20s");
                 return true;
             }
-            String reminder = StringUtil.combineSplit(1, event.getArgs(), " ");
-            new Timer(true).schedule(new Reminder(event.getChannel(), event.getSender().getNick(), reminder), timePeriod);
+            String reminderMessage = StringUtil.combineSplit(1, event.getArgs(), " ");
+            Reminder reminder = new Reminder(event.getChannel(), event.getSender().getNick(), reminderMessage);
+            new Timer(true).schedule(reminder, timePeriod);
             event.respondWithPing("Reminder scheduled for {0}", event.getArgs()[0]);
             return true;
         }
@@ -59,12 +60,78 @@ public class RemindCommand extends CommandModule {
         return new ArrayList<>(reminders);
     }
 
-    public void clearReminders() {
-        Iterator<Reminder> i = reminders.iterator();
-        while (i.hasNext()) {
-            Reminder r = i.next();
+    public void saveReminders() {
+        this.cancelReminders();
+        int index = 0;
+        for (Reminder r : reminders) {
+            File remindersFolder = new File("reminders");
+            if (!remindersFolder.exists()) {
+                remindersFolder.mkdirs();
+            }
+            try {
+                File file = new File(remindersFolder.getCanonicalPath() + File.separator + "reminders-" + index + ".txt");
+                if (file.exists()) {
+                    file.delete();
+                }
+                file.createNewFile();
+
+                HashMap<String, Object> valueMap = new HashMap<>();
+                valueMap.put("channel", r.channel.getName());
+                valueMap.put("user", r.userToRemind);
+                valueMap.put("reminder", r.reminder);
+
+                PrintWriter writer = new PrintWriter(new FileOutputStream(file));
+                Yaml yaml = new Yaml();
+                writer.write(yaml.dump(valueMap));
+                writer.close();
+            } catch (IOException e) {
+                Nexus.LOGGER.severe("Could not load reminders!");
+                e.printStackTrace();
+            }
+        }
+        this.reminders.clear();
+    }
+
+    public void loadReminders() {
+        try {
+            File remindersFolder = new File("reminders");
+            if (!remindersFolder.exists()) {
+                remindersFolder.mkdirs();
+            }
+            ArrayList<File> toRemove = new ArrayList<>();
+            for (File f : remindersFolder.listFiles()) {
+                if (f.getName().startsWith("reminders-")) {
+                    FileInputStream input = new FileInputStream(f);
+                    Yaml yaml = new Yaml();
+                    Map<String, Object> data = (Map<String, Object>) yaml.load(input);
+                    if (data != null && !data.isEmpty()) {
+                        try {
+                            Reminder reminder = new Reminder(Nexus.getInstance().getChannel((String) data.get("channel")), (String) data.get("user"), (String) data.get("reminder"));
+                            // TODO: Some sort of saving/loading of the time period left
+                            //new Timer(true).schedule(reminder, timePeriod);
+                            reminders.add(reminder);
+                        } catch (Exception e) {
+                        }
+                    }
+                    toRemove.add(f);
+                }
+            }
+
+            Iterator<File> i = toRemove.iterator();
+            while (i.hasNext()) {
+                File f = i.next();
+                f.delete();
+                i.remove();
+            }
+        } catch (IOException e) {
+            Nexus.LOGGER.severe("Could not load reminders!");
+            e.printStackTrace();
+        }
+    }
+
+    public void cancelReminders() {
+        for (Reminder r : reminders) {
             r.cancel();
-            i.remove();
         }
     }
 

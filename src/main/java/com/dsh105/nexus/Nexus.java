@@ -129,7 +129,7 @@ public class Nexus extends PircBotX {
         this.saveChannels();
         RemindCommand remindCommand = this.getCommandManager().getModuleOfType(RemindCommand.class);
         if (remindCommand != null) {
-            remindCommand.clearReminders();
+            remindCommand.saveReminders();
         }
     }
 
