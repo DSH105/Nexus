@@ -38,13 +38,17 @@ public class RemindCommand extends CommandModule {
     @Override
     public boolean onCommand(CommandPerformEvent event) {
         if (event.getArgs().length >= 2) {
-            long timePeriod = TimeUtil.parse(event.getArgs()[0]);
+            long timePeriod = -1;
+            try {
+                timePeriod = TimeUtil.parse(event.getArgs()[0]);
+            } catch (NumberFormatException e) {
+            }
             if (timePeriod <= 0) {
                 event.respondWithPing("Invalid time period entered: {0}. Examples: {1} (1 day), {2} (2 hours), {3} (5 minutes), {4} (20 seconds)", event.getArgs()[0], "1d", "2h", "5m", "20s");
                 return true;
             }
             String reminder = StringUtil.combineSplit(1, event.getArgs(), " ");
-            new Timer(true).schedule(new Reminder(event.getChannel(), event.getSender().getNick(), reminder), timePeriod * 1000);
+            new Timer(true).schedule(new Reminder(event.getChannel(), event.getSender().getNick(), reminder), timePeriod);
             event.respondWithPing("Reminder scheduled for {0}", event.getArgs()[0]);
             return true;
         }
