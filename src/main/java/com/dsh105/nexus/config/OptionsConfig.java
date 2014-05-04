@@ -38,7 +38,7 @@ public class OptionsConfig extends YamlConfig {
     public void setDefaults() {
         this.options.put("ready", false);
         this.options.put("server", "irc.esper.net");
-        this.options.put("port", 5555);
+        this.options.put("port", 6697);
         this.options.put("server-password", "");
         this.options.put("account-password", "");
         this.options.put("command-prefix", "\\");
