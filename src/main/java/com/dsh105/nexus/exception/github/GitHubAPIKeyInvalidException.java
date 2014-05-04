@@ -15,11 +15,11 @@
  * along with Nexus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.dsh105.nexus.exception;
+package com.dsh105.nexus.exception.github;
 
-public class GitHubRepoException extends GitHubException {
+public class GitHubAPIKeyInvalidException extends GitHubException {
 
-    public GitHubRepoException(String s, Throwable throwable) {
-        super(s, throwable);
+    public GitHubAPIKeyInvalidException(String s) {
+        super(s);
     }
 }

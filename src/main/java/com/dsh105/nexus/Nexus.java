@@ -24,7 +24,7 @@ import com.dsh105.nexus.hook.github.GitHub;
 import com.dsh105.nexus.hook.jenkins.Jenkins;
 import com.dsh105.nexus.listener.EventManager;
 import com.dsh105.nexus.response.ResponseManager;
-import com.dsh105.nexus.util.JsonUtil;
+import com.dsh105.nexus.util.JSONUtil;
 import com.mashape.unirest.http.Unirest;
 import org.pircbotx.Channel;
 import org.pircbotx.PircBotX;
@@ -42,7 +42,7 @@ public class Nexus extends PircBotX {
 
     private static Nexus INSTANCE;
     public static Logger LOGGER = Logger.getLogger(Nexus.class.getName());
-    public static JsonUtil JSON = new JsonUtil();
+    public static JSONUtil JSON = new JSONUtil();
     public static String CONFIG_FILE_NAME = "options.txt";
     private OptionsConfig config;
     private CommandManager commandManager;

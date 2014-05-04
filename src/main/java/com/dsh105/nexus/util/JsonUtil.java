@@ -26,7 +26,7 @@ import com.mashape.unirest.request.HttpRequest;
 import java.io.*;
 import java.net.URLConnection;
 
-public class JsonUtil {
+public class JSONUtil {
 
     public Gson gson = new Gson();
     public JsonParser parser = new JsonParser();

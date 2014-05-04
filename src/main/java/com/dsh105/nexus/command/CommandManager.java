@@ -18,8 +18,8 @@
 package com.dsh105.nexus.command;
 
 import com.dsh105.nexus.Nexus;
-import com.dsh105.nexus.exception.GitHubAPIKeyInvalidException;
-import com.dsh105.nexus.exception.GitHubRateLimitExceededException;
+import com.dsh105.nexus.exception.github.GitHubAPIKeyInvalidException;
+import com.dsh105.nexus.exception.github.GitHubRateLimitExceededException;
 import com.dsh105.nexus.hook.github.GitHub;
 import com.dsh105.nexus.util.StringUtil;
 import org.pircbotx.Channel;
@@ -29,7 +29,6 @@ import org.reflections.Reflections;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 import java.util.Set;
 
 public class CommandManager {

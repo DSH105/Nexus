@@ -18,11 +18,10 @@
 package com.dsh105.nexus.hook.jenkins;
 
 import com.dsh105.nexus.Nexus;
-import com.dsh105.nexus.exception.JenkinsJobException;
-import com.dsh105.nexus.exception.JenkinsJobNotFoundException;
+import com.dsh105.nexus.exception.jenkins.JenkinsJobException;
+import com.dsh105.nexus.exception.jenkins.JenkinsJobNotFoundException;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
-import org.json.JSONArray;
 
 import java.io.FileNotFoundException;
 
