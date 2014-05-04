@@ -19,6 +19,10 @@ package com.dsh105.nexus.exception;
 
 public class JenkinsJobNotFoundException extends JenkinsException {
 
+    public JenkinsJobNotFoundException(String s) {
+        super(s);
+    }
+
     public JenkinsJobNotFoundException(String s, Throwable throwable) {
         super(s, throwable);
     }

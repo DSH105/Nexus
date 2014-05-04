@@ -39,13 +39,17 @@ public class Jenkins {
     }
 
     public void requestBuild(String jobName) {
-        String token = Nexus.getInstance().getConfig().get("jenkins-token-" + jobName, "");
+        JenkinsJob job = getJob(jobName);
+        if (job == null) {
+            throw new JenkinsJobNotFoundException("Failed to locate Jenkins API!");
+        }
+        String token = Nexus.getInstance().getConfig().get("jenkins-token-" + job.getJobName(), "");
         if (!jenkinsUrl.isEmpty() && !token.isEmpty()) {
             try {
-                Unirest.get(jenkinsUrl + "job/" + jobName + "/build?token=" + token).asString();
+                Unirest.get(jenkinsUrl + "job/" + job.getJobName() + "/build?token=" + token).asString();
             } catch (UnirestException e) {
                 if (e.getCause() instanceof FileNotFoundException) {
-                    throw new JenkinsJobNotFoundException("Failed to locate Jenkins job: " + jobName, e);
+                    throw new JenkinsJobNotFoundException("Failed to locate Jenkins job: " + job.getJobName(), e);
                 }
                 throw new JenkinsJobException("Failed to connect to Jenkins API!", e);
             }
