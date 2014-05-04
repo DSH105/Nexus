@@ -15,11 +15,11 @@
  * along with Nexus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.dsh105.nexus.exception;
+package com.dsh105.nexus.exception.github;
 
-public class GenericUrlConnectionException extends RuntimeException {
+public class GistException extends RuntimeException {
 
-    public GenericUrlConnectionException(String s, Throwable throwable) {
+    public GistException(String s, Throwable throwable) {
         super(s, throwable);
     }
 }

@@ -15,11 +15,11 @@
  * along with Nexus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.dsh105.nexus.exception;
+package com.dsh105.nexus.exception.jenkins;
 
-public class GitHubRateLimitExceededException extends GitHubException {
+public class JenkinsJobException extends JenkinsException {
 
-    public GitHubRateLimitExceededException(String s) {
-        super(s);
+    public JenkinsJobException(String s, Throwable throwable) {
+        super(s, throwable);
     }
 }

@@ -15,15 +15,15 @@
  * along with Nexus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.dsh105.nexus.exception;
+package com.dsh105.nexus.exception.github;
 
-public class GitHubRepoNotFoundException extends GitHubException {
+public class GitHubException extends RuntimeException {
 
-    public GitHubRepoNotFoundException(String s) {
-        super(s);
+    public GitHubException(String s, Throwable throwable) {
+        super(s, throwable);
     }
 
-    public GitHubRepoNotFoundException(String s, Throwable throwable) {
-        super(s, throwable);
+    protected GitHubException(String s) {
+        super(s);
     }
 }
