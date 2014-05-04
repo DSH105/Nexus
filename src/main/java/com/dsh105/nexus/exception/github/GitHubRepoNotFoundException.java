@@ -15,11 +15,15 @@
  * along with Nexus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.dsh105.nexus.exception;
+package com.dsh105.nexus.exception.github;
 
-public class JenkinsJobException extends JenkinsException {
+public class GitHubRepoNotFoundException extends GitHubException {
 
-    public JenkinsJobException(String s, Throwable throwable) {
+    public GitHubRepoNotFoundException(String s) {
+        super(s);
+    }
+
+    public GitHubRepoNotFoundException(String s, Throwable throwable) {
         super(s, throwable);
     }
 }

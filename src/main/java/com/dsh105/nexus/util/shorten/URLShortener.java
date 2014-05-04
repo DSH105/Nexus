@@ -18,7 +18,7 @@
 package com.dsh105.nexus.util.shorten;
 
 import com.dsh105.nexus.Nexus;
-import com.dsh105.nexus.exception.GenericUrlConnectionException;
+import com.dsh105.nexus.exception.general.GenericUrlConnectionException;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;

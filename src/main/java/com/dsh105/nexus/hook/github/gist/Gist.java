@@ -18,7 +18,7 @@
 package com.dsh105.nexus.hook.github.gist;
 
 import com.dsh105.nexus.Nexus;
-import com.dsh105.nexus.exception.GistException;
+import com.dsh105.nexus.exception.github.GistException;
 import com.dsh105.nexus.hook.github.GitHub;
 import com.google.gson.JsonObject;
 import com.mashape.unirest.http.HttpResponse;
