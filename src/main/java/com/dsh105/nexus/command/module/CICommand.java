@@ -49,7 +49,7 @@ public class CICommand extends CommandModule {
         try {
             job = Nexus.getInstance().getJenkins().getJob(jobName);
         } catch (JenkinsException e) {
-            event.errorWithPing("The {0} job could not be found on " + Nexus.getInstance().getConfig().getJenkinsUrl() + "! :(", jobName);
+            event.errorWithPing("{0} job could not be found on " + Nexus.getInstance().getConfig().getJenkinsUrl(), jobName);
             return true;
         }
         if (job != null) {

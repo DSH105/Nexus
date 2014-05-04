@@ -50,6 +50,7 @@ public class RemindCommand extends CommandModule {
             String reminderMessage = StringUtil.combineSplit(1, event.getArgs(), " ");
             Reminder reminder = new Reminder(event.getChannel(), event.getSender().getNick(), reminderMessage);
             new Timer(true).schedule(reminder, timePeriod);
+            reminders.add(reminder);
             event.respondWithPing("Reminder scheduled for {0}", event.getArgs()[0]);
             return true;
         }
@@ -61,7 +62,6 @@ public class RemindCommand extends CommandModule {
     }
 
     public void saveReminders() {
-        this.cancelReminders();
         int index = 0;
         for (Reminder r : reminders) {
             File remindersFolder = new File("reminders");
@@ -69,7 +69,7 @@ public class RemindCommand extends CommandModule {
                 remindersFolder.mkdirs();
             }
             try {
-                File file = new File(remindersFolder.getCanonicalPath() + File.separator + "reminders-" + index + ".txt");
+                File file = new File(remindersFolder, "reminders-" + index + ".txt");
                 if (file.exists()) {
                     file.delete();
                 }
@@ -79,17 +79,18 @@ public class RemindCommand extends CommandModule {
                 valueMap.put("channel", r.channel.getName());
                 valueMap.put("user", r.userToRemind);
                 valueMap.put("reminder", r.reminder);
+                valueMap.put("execution_time", r.scheduledExecutionTime());
 
                 PrintWriter writer = new PrintWriter(new FileOutputStream(file));
                 Yaml yaml = new Yaml();
                 writer.write(yaml.dump(valueMap));
                 writer.close();
             } catch (IOException e) {
-                Nexus.LOGGER.severe("Could not load reminders!");
+                Nexus.LOGGER.severe("Could not save reminders!");
                 e.printStackTrace();
             }
         }
-        this.reminders.clear();
+        this.cancelReminders();
     }
 
     public void loadReminders() {
@@ -107,9 +108,14 @@ public class RemindCommand extends CommandModule {
                     if (data != null && !data.isEmpty()) {
                         try {
                             Reminder reminder = new Reminder(Nexus.getInstance().getChannel((String) data.get("channel")), (String) data.get("user"), (String) data.get("reminder"));
-                            // TODO: Some sort of saving/loading of the time period left
-                            //new Timer(true).schedule(reminder, timePeriod);
-                            reminders.add(reminder);
+                            long executionTime = (Long) data.get("execution_time");
+                            Date current = new Date();
+                            Date execution = new Date(executionTime);
+                            if (execution.after(current)) {
+                                // Yay, we can still schedule this timer
+                                new Timer(true).schedule(reminder, execution.getTime() - current.getTime());
+                                reminders.add(reminder);
+                            }
                         } catch (Exception e) {
                         }
                     }
@@ -130,8 +136,10 @@ public class RemindCommand extends CommandModule {
     }
 
     public void cancelReminders() {
-        for (Reminder r : reminders) {
-            r.cancel();
+        Iterator<Reminder> i = reminders.iterator();
+        while (i.hasNext()) {
+            i.next().cancel();
+            i.remove();
         }
     }
 
@@ -152,6 +160,14 @@ public class RemindCommand extends CommandModule {
             if (channel != null) {
                 Nexus.getInstance().sendAction(channel, "reminds " + userToRemind + " to " + reminder);
             }
+            this.cancel(true);
+        }
+
+        public void cancel(boolean remove) {
+            if (remove) {
+                reminders.remove(this);
+            }
+            super.cancel();
         }
     }
 }

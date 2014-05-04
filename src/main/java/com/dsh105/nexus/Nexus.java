@@ -74,14 +74,11 @@ public class Nexus extends PircBotX {
             this.jenkins = new Jenkins();
         }
         this.github = new GitHub();
+        RemindCommand remindCommand = this.getCommandManager().getModuleOfType(RemindCommand.class);
+        if (remindCommand != null) {
+            remindCommand.loadReminders();
+        }
         //this.sendMessage(this.getChannel(this.getConfig().getAdminChannel()), "Hi. I have returned.");
-    }
-
-    @Override
-    public void shutdown() {
-        this.saveAll();
-        super.shutdown();
-        INSTANCE = null;
     }
 
     @Override
