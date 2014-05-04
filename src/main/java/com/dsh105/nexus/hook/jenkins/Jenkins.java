@@ -60,7 +60,7 @@ public class Jenkins {
     public JenkinsJob getJob(String jobName) {
         if (!this.jobs.isEmpty()) {
             for (JenkinsJob job : getJobs()) {
-                if (job.getJobName().equals(jobName)) {
+                if (job.getJobName().equalsIgnoreCase(jobName)) {
                     return job;
                 }
             }
