@@ -35,7 +35,7 @@ public class StringUtil {
     public static String capitalise(String s) {
         String[] parts = s.split(" ");
         for (int i = 0; i < parts.length; i++) {
-            parts[i] = parts[i].substring(0, 1) + parts[i].substring(1);
+            parts[i] = parts[i].substring(0, 1).toUpperCase() + parts[i].substring(1);
         }
         return combineSplit(0, parts, " ");
     }
