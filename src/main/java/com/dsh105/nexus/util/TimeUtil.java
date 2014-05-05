@@ -36,6 +36,7 @@ public class TimeUtil {
 
     private static long convert(int value, char unit) {
         switch(unit) {
+            case 'w' : return value * 1000*60*60*24*7;
             case 'd' : return value * 1000*60*60*24;
             case 'h' : return value * 1000*60*60;
             case 'm' : return value * 1000*60;

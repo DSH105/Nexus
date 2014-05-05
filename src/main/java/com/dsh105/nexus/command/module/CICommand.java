@@ -23,6 +23,7 @@ import com.dsh105.nexus.command.CommandModule;
 import com.dsh105.nexus.command.CommandPerformEvent;
 import com.dsh105.nexus.exception.JenkinsException;
 import com.dsh105.nexus.exception.JenkinsJobNotFoundException;
+import com.dsh105.nexus.hook.jenkins.Jenkins;
 import com.dsh105.nexus.hook.jenkins.JenkinsJob;
 import com.dsh105.nexus.hook.jenkins.Result;
 import com.dsh105.nexus.util.StringUtil;
@@ -47,7 +48,7 @@ public class CICommand extends CommandModule {
         String jobName = event.getArgs()[0];
         JenkinsJob job;
         try {
-            job = Nexus.getInstance().getJenkins().getJob(jobName);
+            job = Jenkins.getJenkins().getJob(jobName);
         } catch (JenkinsException e) {
             event.errorWithPing("{0} job could not be found on " + Nexus.getInstance().getConfig().getJenkinsUrl(), jobName);
             return true;

@@ -19,6 +19,10 @@ package com.dsh105.nexus.util;
 
 public class StringUtil {
 
+    public static String removePing(String nick) {
+        return nick == null ? null : (nick.substring(0, 1) + '\u200b' + (nick.length() >= 2 ? nick.substring(1, nick.length()) : ""));
+    }
+
     public static boolean isInt(String string) {
         try {
             Integer.parseInt(string);

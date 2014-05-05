@@ -20,7 +20,6 @@ package com.dsh105.nexus.hook.jenkins;
 import com.dsh105.nexus.Nexus;
 import com.dsh105.nexus.exception.JenkinsJobException;
 import com.dsh105.nexus.exception.JenkinsJobNotFoundException;
-import com.mashape.unirest.http.HttpClientHelper;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 
@@ -31,11 +30,15 @@ public class Jenkins {
 
     private HashSet<JenkinsJob> jobs = new HashSet<>();
     private HashMap<String, JenkinsJobEntry> jobEntries = new HashMap<>();
-    protected String jenkinsUrl;
+    protected String JENKINS_URL;
 
     public Jenkins() {
-        this.jenkinsUrl = Nexus.getInstance().getConfig().getJenkinsUrl();
+        this.JENKINS_URL = Nexus.getInstance().getConfig().getJenkinsUrl();
         new Timer(true).schedule(new RefreshTask(), 0, 6000000);
+    }
+
+    public static Jenkins getJenkins() {
+        return Nexus.getInstance().getJenkins();
     }
 
     public void requestBuild(String jobName) {
@@ -44,9 +47,9 @@ public class Jenkins {
             throw new JenkinsJobNotFoundException("Failed to locate Jenkins API!");
         }
         String token = Nexus.getInstance().getConfig().get("jenkins-token-" + job.getJobName(), "");
-        if (!jenkinsUrl.isEmpty() && !token.isEmpty()) {
+        if (!JENKINS_URL.isEmpty() && !token.isEmpty()) {
             try {
-                Unirest.get(jenkinsUrl + "job/" + job.getJobName() + "/build?token=" + token).asString();
+                Unirest.get(JENKINS_URL + "job/" + job.getJobName() + "/build?token=" + token).asString();
             } catch (UnirestException e) {
                 if (e.getCause() instanceof FileNotFoundException) {
                     throw new JenkinsJobNotFoundException("Failed to locate Jenkins job: " + job.getJobName(), e);
@@ -72,7 +75,7 @@ public class Jenkins {
 
         // Couldn't find it using the above method, so let's try connecting to it directly
         try {
-            JenkinsJobEntry jobEntry = Nexus.JSON.read(Unirest.get(Nexus.getInstance().getJenkins().jenkinsUrl + "job/" + jobName + "/api/json"), JenkinsJobEntry.class);
+            JenkinsJobEntry jobEntry = Nexus.JSON.read(Unirest.get(JENKINS_URL + "job/" + jobName + "/api/json"), JenkinsJobEntry.class);
             return new JenkinsJob(jobEntry.getName(), jobEntry);
         } catch (UnirestException e) {
             if (e.getCause() instanceof FileNotFoundException) {
@@ -90,7 +93,7 @@ public class Jenkins {
         if (reconnect || this.jobEntries.isEmpty()) {
             JenkinsJobEntry[] jobs;
             try {
-                jobs = Nexus.JSON.read(Unirest.get(jenkinsUrl + "api/json"), "jobs", JenkinsJobEntry[].class);
+                jobs = Nexus.JSON.read(Unirest.get(JENKINS_URL + "api/json"), "jobs", JenkinsJobEntry[].class);
             } catch (UnirestException e) {
                 throw new JenkinsJobException("Failed to connect to Jenkins API!", e);
             }

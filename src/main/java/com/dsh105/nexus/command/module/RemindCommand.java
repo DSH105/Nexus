@@ -21,7 +21,6 @@ import com.dsh105.nexus.Nexus;
 import com.dsh105.nexus.command.Command;
 import com.dsh105.nexus.command.CommandModule;
 import com.dsh105.nexus.command.CommandPerformEvent;
-import com.dsh105.nexus.response.ResponseTrigger;
 import com.dsh105.nexus.util.StringUtil;
 import com.dsh105.nexus.util.TimeUtil;
 import org.pircbotx.Channel;
@@ -30,7 +29,15 @@ import org.yaml.snakeyaml.Yaml;
 import java.io.*;
 import java.util.*;
 
-@Command(command = "remind", help = "Schedule a reminder", extendedHelp = "")
+@Command(command = "remind", help = "Schedule a reminder",
+        extendedHelp = {
+                "Schedules a reminder to be executed after the specified time period.",
+                "Valid time periods are: {b}s{/b} (seconds), {b}m{/b} (minutes), {b}h{/b} (hours), {b}d{/b} (days), {b}w{/b} (weeks)",
+                "Examples: 1d (1 day), 2h (2 hours), 5m30s (5 minutes, 30 seconds), 1w3d (1 week, 3 days)",
+                "--------",
+                "Command syntax:",
+                "{b}{p}{c} <time_period> <reminder>{/b} - schedules a reminder with the given message. The {b}<reminder>{/b} message can be more than one word.",
+                "{b}{p}{c} <user_to_remind> <time_period> <reminder>{/b} - schedules a reminder with the given message for a user. The {b}<reminder>{/b} message can be more than one word."})
 public class RemindCommand extends CommandModule {
 
     private ArrayList<Reminder> reminders = new ArrayList<>();
@@ -39,19 +46,30 @@ public class RemindCommand extends CommandModule {
     public boolean onCommand(CommandPerformEvent event) {
         if (event.getArgs().length >= 2) {
             long timePeriod = -1;
+            boolean forOtherUser = false;
             try {
-                timePeriod = TimeUtil.parse(event.getArgs()[0]);
+                timePeriod = TimeUtil.parse(event.getArgs()[1]);
+                forOtherUser = true;
             } catch (NumberFormatException e) {
             }
+
+            String userToRemind = forOtherUser ? event.getArgs()[0] : event.getSender().getNick();
+
+            if (!forOtherUser) {
+                try {
+                    timePeriod = TimeUtil.parse(event.getArgs()[0]);
+                } catch (NumberFormatException e) {
+                }
+            }
             if (timePeriod <= 0) {
-                event.respondWithPing("Invalid time period entered: {0}. Examples: {1} (1 day), {2} (2 hours), {3} (5 minutes), {4} (20 seconds)", event.getArgs()[0], "1d", "2h", "5m", "20s");
+                event.respondWithPing("Invalid time period entered: {0}. Examples: {1} (1 day), {2} (2 hours), {3} (5 minutes, 30 seconds), {4} (1 week, 3 days)", event.getArgs()[0], "1d", "2h", "5m30s", "1w3d");
                 return true;
             }
-            String reminderMessage = StringUtil.combineSplit(1, event.getArgs(), " ");
-            Reminder reminder = new Reminder(event.getChannel(), event.getSender().getNick(), reminderMessage);
+            String reminderMessage = StringUtil.combineSplit(forOtherUser ? 2 : 1, event.getArgs(), " ");
+            Reminder reminder = new Reminder(event.getChannel(), userToRemind, event.getSender().getNick(), reminderMessage);;
             new Timer(true).schedule(reminder, timePeriod);
             reminders.add(reminder);
-            event.respondWithPing("Reminder scheduled for {0}", event.getArgs()[0]);
+            event.respondWithPing("Reminder scheduled for {0}", event.getArgs()[forOtherUser ? 1 : 0]);
             return true;
         }
         return false;
@@ -78,6 +96,7 @@ public class RemindCommand extends CommandModule {
                 HashMap<String, Object> valueMap = new HashMap<>();
                 valueMap.put("channel", r.channel.getName());
                 valueMap.put("user", r.userToRemind);
+                valueMap.put("from", r.from);
                 valueMap.put("reminder", r.reminder);
                 valueMap.put("execution_time", r.scheduledExecutionTime());
 
@@ -107,7 +126,7 @@ public class RemindCommand extends CommandModule {
                     Map<String, Object> data = (Map<String, Object>) yaml.load(input);
                     if (data != null && !data.isEmpty()) {
                         try {
-                            Reminder reminder = new Reminder(Nexus.getInstance().getChannel((String) data.get("channel")), (String) data.get("user"), (String) data.get("reminder"));
+                            Reminder reminder = new Reminder(Nexus.getInstance().getChannel((String) data.get("channel")), (String) data.get("user"), (String) data.get("from"), (String) data.get("reminder"));
                             long executionTime = (Long) data.get("execution_time");
                             Date current = new Date();
                             Date execution = new Date(executionTime);
@@ -147,18 +166,20 @@ public class RemindCommand extends CommandModule {
 
         private Channel channel;
         private String userToRemind;
+        private String from;
         private String reminder;
 
-        public Reminder(Channel channel, String userToRemind, String reminder) {
+        public Reminder(Channel channel, String userToRemind, String from, String reminder) {
             this.channel = channel;
             this.userToRemind = userToRemind;
+            this.from = from == null ? userToRemind : from;
             this.reminder = reminder;
         }
 
         @Override
         public void run() {
             if (channel != null) {
-                Nexus.getInstance().sendAction(channel, "reminds " + userToRemind + " to " + reminder);
+                Nexus.getInstance().sendAction(channel, "reminds " + userToRemind + " to " + reminder + StringUtil.removePing(from.equals(userToRemind) ? "" : " (from " + from + ")"));
             }
             this.cancel(true);
         }

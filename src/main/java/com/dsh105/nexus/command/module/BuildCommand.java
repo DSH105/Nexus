@@ -25,6 +25,7 @@ import com.dsh105.nexus.exception.GitHubRepoNotFoundException;
 import com.dsh105.nexus.exception.JenkinsException;
 import com.dsh105.nexus.exception.JenkinsJobNotFoundException;
 import com.dsh105.nexus.hook.github.GitHub;
+import com.dsh105.nexus.hook.jenkins.Jenkins;
 import com.dsh105.nexus.hook.jenkins.JenkinsJob;
 import org.pircbotx.Channel;
 import org.pircbotx.Colors;
@@ -52,7 +53,7 @@ public class BuildCommand extends CommandModule {
                 String token = event.getArgs()[2];
                 JenkinsJob job;
                 try {
-                    job = Nexus.getInstance().getJenkins().getJob(jobName);
+                    job = Jenkins.getJenkins().getJob(jobName);
                 } catch (JenkinsJobNotFoundException e) {
                     event.errorWithPing("{0} job could not be found on " + Nexus.getInstance().getConfig().getJenkinsUrl(), jobName);
                     return true;
@@ -67,7 +68,7 @@ public class BuildCommand extends CommandModule {
         }
         event.respondWithPing("Requesting build initiation of Jenkins job ({0})...", jobName);
         try {
-            Nexus.getInstance().getJenkins().requestBuild(jobName);
+            Jenkins.getJenkins().requestBuild(jobName);
             return true;
         } catch (JenkinsException e) {
             event.errorWithPing("{0} job could not be found on " + Nexus.getInstance().getConfig().getJenkinsUrl(), jobName);

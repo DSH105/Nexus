@@ -49,6 +49,9 @@ public class GitHubRepo {
     @SerializedName("watchers_count")
     private int watchers;
 
+    @SerializedName("stargazers_count")
+    private int stargazers;
+
     @SerializedName("created_at")
     private String createdAt;
 
@@ -126,6 +129,10 @@ public class GitHubRepo {
 
     public int getOpenIssuesCount() {
         return openIssues;
+    }
+
+    public int getStargazers() {
+        return stargazers;
     }
 
     public String getDateCreated() {
