@@ -19,7 +19,7 @@ public class ChannelStatsCommand extends CommandModule {
         int opPercentage = Math.round(((float) numOpped / numUsers) * 100);
         int voicePercentage = Math.round(((float) numVoiced / numUsers) * 100);
 
-        event.respond(String.format("Channel %s has %d users. There are %d ops (%d%%) and %d voiced users (%d%%).", chanName, numUsers, numOpped, opPercentage, numVoiced, voicePercentage));
+        event.respondWithPing(String.format("Channel %s has %d users. There are %d ops (%d%%) and %d voiced users (%d%%).", chanName, numUsers, numOpped, opPercentage, numVoiced, voicePercentage));
         return true;
     }
 }

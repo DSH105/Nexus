@@ -179,7 +179,7 @@ public class RemindCommand extends CommandModule {
         @Override
         public void run() {
             if (channel != null) {
-                Nexus.getInstance().sendAction(channel, "reminds " + userToRemind + " to " + reminder + StringUtil.removePing(from.equals(userToRemind) ? "" : " (from " + from + ")"));
+                Nexus.getInstance().sendMessage(channel, "I have a reminder for you, " + userToRemind + "! \"" + reminder + "\"" + (from.equals(userToRemind) ? "" : " (from " + StringUtil.removePing(from) + ")"));
             }
             this.cancel(true);
         }
