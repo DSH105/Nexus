@@ -19,10 +19,13 @@ package com.dsh105.nexus.util;
 
 public class StringUtil {
 
+<<<<<<< HEAD
     public static String removePing(String nick) {
         return nick == null ? null : (nick.substring(0, 1) + '\u200b' + (nick.length() >= 2 ? nick.substring(1, nick.length()) : ""));
     }
 
+=======
+>>>>>>> pr/5
     /**
      * Tests if the given String is an Integer
      *
