@@ -12,8 +12,16 @@ public class StringUtilTest {
 
     @Test
     public void testIsInt() {
-        Assert.assertTrue("Valid numeric string deemed integer", StringUtil.isInt("1"));
-        Assert.assertFalse("InValid numeric string deemed not an integer.", StringUtil.isInt("g"));
+        Assert.assertTrue("Valid numeric string deemed integer.", StringUtil.isInt("1"));
+        Assert.assertFalse("Invalid numeric string deemed not an integer.", StringUtil.isInt("g"));
+        Assert.assertFalse("Invalid decimal string deemed not an integer.", StringUtil.isInt("1.4"));
+    }
+
+    @Test
+    public void testIsDouble() {
+        Assert.assertTrue("Valid decimal string deemed double.", StringUtil.isDouble("1.4"));
+        Assert.assertTrue("Valid numeric string deemed double.", StringUtil.isDouble("1"));
+        Assert.assertFalse("Invalid numeric string deemed not a double.", StringUtil.isDouble("g"));
     }
 
     @Test

@@ -28,6 +28,7 @@ import org.pircbotx.User;
 import org.reflections.Reflections;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Set;
 
@@ -67,7 +68,7 @@ public class CommandManager {
 
     public CommandModule getModuleFor(String commandArguments) {
         for (CommandModule module : modules) {
-            if (module.getCommandInfo().command().equalsIgnoreCase(commandArguments)) {
+            if (module.getCommandInfo().command().equalsIgnoreCase(commandArguments) || Arrays.asList(module.getCommandInfo().aliases()).contains(commandArguments.toLowerCase())) {
                 return module;
             }
         }
