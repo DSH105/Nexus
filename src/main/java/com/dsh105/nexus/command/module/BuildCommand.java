@@ -21,14 +21,11 @@ import com.dsh105.nexus.Nexus;
 import com.dsh105.nexus.command.Command;
 import com.dsh105.nexus.command.CommandModule;
 import com.dsh105.nexus.command.CommandPerformEvent;
-import com.dsh105.nexus.exception.GitHubRepoNotFoundException;
-import com.dsh105.nexus.exception.JenkinsException;
-import com.dsh105.nexus.exception.JenkinsJobNotFoundException;
-import com.dsh105.nexus.hook.github.GitHub;
 import com.dsh105.nexus.hook.jenkins.Jenkins;
+import com.dsh105.nexus.exception.jenkins.JenkinsException;
+import com.dsh105.nexus.exception.jenkins.JenkinsJobNotFoundException;
 import com.dsh105.nexus.hook.jenkins.JenkinsJob;
 import org.pircbotx.Channel;
-import org.pircbotx.Colors;
 import org.pircbotx.User;
 
 @Command(command = "build", needsChannel = false, help = "Start building a Jenkins job on the stored CI",

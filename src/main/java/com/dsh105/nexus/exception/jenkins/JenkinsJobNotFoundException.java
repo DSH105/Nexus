@@ -15,11 +15,15 @@
  * along with Nexus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.dsh105.nexus.exception;
+package com.dsh105.nexus.exception.jenkins;
 
-public class GistException extends RuntimeException {
+public class JenkinsJobNotFoundException extends JenkinsException {
 
-    public GistException(String s, Throwable throwable) {
+    public JenkinsJobNotFoundException(String s) {
+        super(s);
+    }
+
+    public JenkinsJobNotFoundException(String s, Throwable throwable) {
         super(s, throwable);
     }
 }

@@ -23,6 +23,12 @@ public class StringUtil {
         return nick == null ? null : (nick.substring(0, 1) + '\u200b' + (nick.length() >= 2 ? nick.substring(1, nick.length()) : ""));
     }
 
+    /**
+     * Tests if the given String is an Integer
+     *
+     * @param string the String to be checked
+     * @return true if Integer
+     */
     public static boolean isInt(String string) {
         try {
             Integer.parseInt(string);
@@ -32,8 +38,14 @@ public class StringUtil {
         return true;
     }
 
-    public static String capitalise(String s) {
-        String[] parts = s.split(" ");
+    /**
+     * Capitalizes the first letter of a String
+     *
+     * @param string the String to be capitalized
+     * @return capitalized String
+     */
+    public static String capitalise(String string) {
+        String[] parts = string.split(" ");
         for (int i = 0; i < parts.length; i++) {
             parts[i] = parts[i].substring(0, 1).toUpperCase() + parts[i].substring(1);
         }
@@ -65,6 +77,14 @@ public class StringUtil {
         }
     }
 
+    /**
+     * Capitalizes the first letter of a String
+     *
+     * @param startIndex the index to start at
+     * @param string the String to be split
+     * @param separator the value to split the string by
+     * @return capitalized String
+     */
     public static String[] splitArgs(int startIndex, String[] string, String separator) {
         String combined = combineSplit(startIndex, string, separator);
         if (combined.isEmpty()) {

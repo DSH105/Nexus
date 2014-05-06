@@ -19,6 +19,12 @@ package com.dsh105.nexus.util;
 
 public class TimeUtil {
 
+    /**
+     * Parses a String into a long value
+     *
+     * @param input the String to be parsed
+     * @return parsed value
+     */
     public static long parse(String input) {
         long result = 0;
         String number = "";
@@ -34,6 +40,13 @@ public class TimeUtil {
         return result;
     }
 
+    /**
+     * Converts the given Integer into the specified time unit
+     *
+     * @param value the value to be converted
+     * @param unit the specified time unit
+     * @return converted value
+     */
     private static long convert(int value, char unit) {
         switch(unit) {
             case 'w' : return value * 1000*60*60*24*7;

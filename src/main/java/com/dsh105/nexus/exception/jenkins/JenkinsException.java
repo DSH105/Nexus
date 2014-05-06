@@ -15,15 +15,15 @@
  * along with Nexus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.dsh105.nexus.exception;
+package com.dsh105.nexus.exception.jenkins;
 
-public class GitHubException extends RuntimeException {
+public class JenkinsException extends RuntimeException {
 
-    public GitHubException(String s, Throwable throwable) {
+    public JenkinsException(String s, Throwable throwable) {
         super(s, throwable);
     }
 
-    protected GitHubException(String s) {
+    protected JenkinsException(String s) {
         super(s);
     }
 }

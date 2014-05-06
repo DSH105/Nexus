@@ -21,7 +21,7 @@ import com.dsh105.nexus.Nexus;
 import com.dsh105.nexus.command.Command;
 import com.dsh105.nexus.command.CommandModule;
 import com.dsh105.nexus.command.CommandPerformEvent;
-import com.dsh105.nexus.exception.GitHubRepoNotFoundException;
+import com.dsh105.nexus.exception.github.GitHubRepoNotFoundException;
 import com.dsh105.nexus.hook.github.*;
 import com.dsh105.nexus.util.shorten.URLShortener;
 import com.dsh105.nexus.util.StringUtil;
