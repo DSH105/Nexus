@@ -21,10 +21,7 @@ import com.dsh105.nexus.Nexus;
 import com.dsh105.nexus.command.Command;
 import com.dsh105.nexus.command.CommandModule;
 import com.dsh105.nexus.command.CommandPerformEvent;
-<<<<<<< HEAD
 import com.dsh105.nexus.hook.jenkins.Jenkins;
-=======
->>>>>>> pr/5
 import com.dsh105.nexus.exception.jenkins.JenkinsException;
 import com.dsh105.nexus.hook.jenkins.JenkinsJob;
 import com.dsh105.nexus.hook.jenkins.Result;
