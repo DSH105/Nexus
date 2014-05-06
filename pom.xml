@@ -113,7 +113,7 @@
     <!-- Build -->
     <build>
         <defaultGoal>clean package install</defaultGoal>
-        <finalName>${project.name}</finalName>
+        <finalName>${project.artifactId}</finalName>
         <sourceDirectory>${basedir}/src/main/java</sourceDirectory>
 
         <!-- Filter resources -->
