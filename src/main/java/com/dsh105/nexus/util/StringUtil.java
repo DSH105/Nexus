@@ -39,6 +39,21 @@ public class StringUtil {
     }
 
     /**
+     * Tests if the given String is an Double
+     *
+     * @param string the String to be checked
+     * @return true if Double
+     */
+    public static boolean isDouble(String string) {
+        try {
+            Double.parseDouble(string);
+        } catch (NumberFormatException ex) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
      * Capitalizes the first letter of a String
      *
      * @param string the String to be capitalized
