@@ -38,7 +38,7 @@ public class GitHub {
     private ArrayList<GitHubIssue> issues = new ArrayList<>();
 
     public GitHub() {
-        new Timer(true).schedule(new RefreshTask(), 0, 6000000);
+        new Timer(true).schedule(new RefreshTask(), 0, 300000);
     }
 
     public static GitHub getGitHub() {
