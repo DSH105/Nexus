@@ -241,7 +241,7 @@ public class RepoCommand extends CommandModule {
             }
             event.respond(Colors.BOLD + "GitHub" + Colors.NORMAL + " - " + Colors.BOLD + Colors.BLUE + repo.getName() + Colors.NORMAL + " (" + Colors.BOLD + event.removePing(repo.getRepoOwner().getLogin()) + Colors.NORMAL + ") - " + StringUtil.combineSplit(0, repo.getLanguages(), ", ") + " (" + repo.getUrl() + ")");
             event.respond("By {0}", StringUtil.combineSplit(0, activeCollaborators.toArray(new String[activeCollaborators.size()]), ", "));
-            event.respond("Forks: {0} | Issues: {1} | Stars {2}", String.valueOf(repo.getForksCount()), String.valueOf(repo.getOpenIssuesCount()), String.valueOf(repo.getStargazers()));
+            event.respond("Forks: {0} | Issues: {1} | Stars: {2}", String.valueOf(repo.getForksCount()), String.valueOf(repo.getOpenIssuesCount()), String.valueOf(repo.getStargazers()));
             event.respond("Created {0} | Last Pushed {1}", repo.getDateCreated().split("T")[0], repo.getDateLastPushedTo().split("T")[0]);
             return true;
         }

@@ -24,6 +24,7 @@
     <groupId>com.dsh105</groupId>
     <artifactId>Nexus</artifactId>
     <version>1.0.0</version>
+    <name>Nexus</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -113,7 +114,7 @@
     <!-- Build -->
     <build>
         <defaultGoal>clean package install</defaultGoal>
-        <finalName>${project.artifactId}</finalName>
+        <finalName>${project.name}</finalName>
         <sourceDirectory>${basedir}/src/main/java</sourceDirectory>
 
         <!-- Filter resources -->

@@ -24,6 +24,7 @@ import com.dsh105.nexus.command.CommandPerformEvent;
 import com.dsh105.nexus.util.StringUtil;
 import com.dsh105.nexus.util.TimeUtil;
 import org.pircbotx.Channel;
+import org.pircbotx.Colors;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.*;
@@ -179,7 +180,7 @@ public class RemindCommand extends CommandModule {
         @Override
         public void run() {
             if (channel != null) {
-                Nexus.getInstance().sendMessage(channel, "I have a reminder for you, " + userToRemind + "! \"" + reminder + "\"" + (from.equals(userToRemind) ? "" : " (from " + StringUtil.removePing(from) + ")"));
+                Nexus.getInstance().sendMessage(channel, "I have a reminder for you, " + userToRemind + "! \"" + Colors.BOLD + reminder + Colors.NORMAL + "\"" + (from.equals(userToRemind) ? "" : " (from " + StringUtil.removePing(from) + ")"));
             }
             this.cancel(true);
         }
