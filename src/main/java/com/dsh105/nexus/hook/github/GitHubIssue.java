@@ -21,6 +21,8 @@ import com.google.gson.annotations.SerializedName;
 
 public class GitHubIssue {
 
+    protected GitHubRepo repo;
+
     @SerializedName("html_url")
     private String url;
 
@@ -50,6 +52,10 @@ public class GitHubIssue {
 
     protected String repoFullName;
     protected GitHubUser reportedBy;
+
+    public GitHubRepo getRepo() {
+        return repo;
+    }
 
     public GitHubUser getReporter() {
         if (reportedBy == null) {

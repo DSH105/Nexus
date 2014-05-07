@@ -62,10 +62,10 @@ public class GitHubRepo {
     private String pushedAt;
 
     protected boolean isPrivate;
-    private GitHubUser repoOwner;
-    private GitHubUser[] collaborators;
-    private GitHubUser[] contributors;
-    private String[] languages;
+    protected GitHubUser repoOwner;
+    protected GitHubUser[] collaborators;
+    protected GitHubUser[] contributors;
+    protected String[] languages;
 
     public GitHubUser getRepoOwner() {
         if (repoOwner == null) {

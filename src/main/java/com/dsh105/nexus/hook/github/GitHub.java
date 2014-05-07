@@ -29,10 +29,17 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Set;
+import java.util.*;
 
 public class GitHub {
+
+    private HashMap<String, GitHubRepo> repositories = new HashMap<>();
+    private HashMap<GitHubRepo, Long> expirationDates = new HashMap<>();
+    private ArrayList<GitHubIssue> issues = new ArrayList<>();
+
+    public GitHub() {
+        new Timer(true).schedule(new RefreshTask(), 0, 6000000);
+    }
 
     public static GitHub getGitHub() {
         if (Nexus.getInstance().getConfig().getGitHubApiKey().isEmpty()) {
@@ -54,6 +61,9 @@ public class GitHub {
     }
 
     public GitHubRepo getRepo(String name) {
+        if (repositories.get(name) != null) {
+            return repositories.get(name);
+        }
         try {
             HttpResponse<JsonNode> response = Unirest.get(getRepoApiUrl(name) + getAccessToken()).asJson();
             InputStream input = response.getRawBody();
@@ -66,9 +76,12 @@ public class GitHub {
             if (repo == null || repo.getUrl() == null) {
                 throw new GitHubRepoNotFoundException("Failed to locate GitHub Repo: " + name);
             }
+            repo.repoOwner = getUser(response.getBody().getObject().getJSONObject("owner").getString("login"));
             repo.getCollaborators();
-            repo.getRepoOwner();
             repo.getLanguages();
+            if (repo != null) {
+                cache(repo);
+            }
             return repo;
         } catch (UnirestException e) {
             if (e.getCause() instanceof FileNotFoundException) {
@@ -78,20 +91,25 @@ public class GitHub {
         }
     }
 
-    protected GitHubUser getOwnerOf(GitHubRepo repo) {
+    public GitHubUser getUser(String userLogin) {
         try {
-            return Nexus.JSON.read(Unirest.get(getRepoApiUrl(repo.getFullName()) + getAccessToken()), "owner", GitHubUser.class);
+            return Nexus.JSON.read(Unirest.get(getUserUrl(userLogin)), GitHubUser.class);
         } catch (UnirestException e) {
             if (e.getCause() instanceof FileNotFoundException) {
-                throw new GitHubRepoNotFoundException("Failed to locate GitHub Repo: " + repo.getFullName(), e);
+                throw new GitHubUserNotFoundException("Failed to locate GitHub User: " + userLogin, e);
             }
             throw new GitHubException("Error connecting to GitHub API! ", e);
         }
     }
 
+    protected GitHubUser getOwnerOf(GitHubRepo repo) {
+        return getUser(repo.getFullName().split("/")[0]);
+    }
+
     protected GitHubUser getReporterOf(GitHubIssue issue) {
         try {
-            return Nexus.JSON.read(Unirest.get(getIssuesUrl(issue.repoFullName, issue.getNumber()) + getAccessToken()), "user", GitHubUser.class);
+            HttpResponse<JsonNode> response = Unirest.get(getIssuesUrl(issue.repoFullName, issue.getNumber()) + getAccessToken()).asJson();
+            return getUser(response.getBody().getObject().getJSONObject("owner").getString("login"));
         } catch (UnirestException e) {
             if (e.getCause() instanceof FileNotFoundException) {
                 throw new GitHubRepoNotFoundException("Failed to locate GitHub Repo: " + issue.repoFullName, e);
@@ -101,32 +119,44 @@ public class GitHub {
     }
 
     public GitHubIssue getIssue(GitHubRepo repo, int id) {
-        return getIssue(repo.getFullName(), id);
-    }
+        Iterator<GitHubIssue> iter = new ArrayList<>(issues).iterator();
+        while (iter.hasNext()) {
+            GitHubIssue i = iter.next();
+            if (repo.getFullName().equals(i.getRepo().getFullName()) && i.getNumber() == id) {
+                return i;
+            }
+        }
 
-    public GitHubIssue getIssue(String repoName, int id) {
         try {
-            HttpResponse<JsonNode> response = Unirest.get(getIssuesUrl(repoName, id) + getAccessToken()).asJson();
+            HttpResponse<JsonNode> response = Unirest.get(getIssuesUrl(repo.getFullName(), id) + getAccessToken()).asJson();
             InputStream input = response.getRawBody();
             GitHubIssue issue;
             try {
                 if (response.getBody().getObject().get("pull_request") != null) {
-                    issue = Nexus.JSON.read(Unirest.get(getPullsUrl(repoName, id) + getAccessToken()), GitHubPullRequest.class);
+                    issue = Nexus.JSON.read(Unirest.get(getPullsUrl(repo.getFullName(), id) + getAccessToken()), GitHubPullRequest.class);
                 } else {
                     issue = Nexus.JSON.read(input, GitHubIssue.class);
                 }
             } catch (JSONException e) {
                 issue = Nexus.JSON.read(input, GitHubIssue.class);
             }
-            issue.repoFullName = repoName;
+            issue.repo = repo;
+            issue.repoFullName = repo.getFullName();
             issue.reportedBy = issue.getReporter();
+            if (issue != null) {
+                cache(issue);
+            }
             return issue;
         } catch (UnirestException e) {
             if (e.getCause() instanceof FileNotFoundException) {
-                throw new GitHubRepoNotFoundException("Failed to locate GitHub Repo: " + repoName, e);
+                throw new GitHubRepoNotFoundException("Failed to locate GitHub Repo: " + repo.getFullName(), e);
             }
             throw new GitHubException("Error connecting to GitHub API! ", e);
         }
+    }
+
+    public GitHubIssue getIssue(String repoName, int id) {
+        return getIssue(getRepo(repoName), id);
     }
 
     public GitHubHook[] getHooks(GitHubRepo repo) {
@@ -323,6 +353,10 @@ public class GitHub {
         return getRepoApiUrl(repoName) + "/languages";
     }
 
+    public String getUserUrl(String userLogin) {
+        return getApiUrl() + "/users/" + userLogin;
+    }
+
     private String getAccessToken() {
         return "?access_token=" + Nexus.getInstance().getConfig().getGitHubApiKey();
     }
@@ -333,5 +367,42 @@ public class GitHub {
         } catch (UnirestException e) {
             throw new GitHubException("Failed to connect to GitHub API!", e);
         }
+    }
+
+    public class RefreshTask extends TimerTask {
+
+        @Override
+        public void run() {
+            HashMap<String, GitHubRepo> fullNameToRepoMapCopy = new HashMap<>(repositories);
+            ArrayList<GitHubIssue> issuesCopy = new ArrayList<>(issues);
+            for (Map.Entry<String, GitHubRepo> entry : fullNameToRepoMapCopy.entrySet()) {
+                long expiration = expirationDates.get(entry.getValue());
+                if (expiration > 0) {
+                    // Only keep them in memory for a certain period of time
+                    if (new Date().before(new Date(expiration))) {
+                        GitHubRepo repo = getRepo(entry.getKey());
+                        repositories.remove(entry.getKey());
+                        expirationDates.remove(entry.getValue());
+                        cache(repo);
+                    }
+                }
+            }
+
+            for (GitHubIssue issue : issuesCopy) {
+                issues.remove(issue);
+                cache(getIssue(issue.getRepo(), issue.getNumber()));
+            }
+        }
+    }
+
+    private void cache(GitHubRepo repo) {
+        Calendar c = Calendar.getInstance();
+        c.add(Calendar.MINUTE, 15);
+        repositories.put(repo.getFullName(), repo);
+        expirationDates.put(repo, c.getTimeInMillis());
+    }
+
+    private void cache(GitHubIssue issue) {
+        issues.add(issue);
     }
 }
