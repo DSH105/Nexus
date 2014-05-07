@@ -109,7 +109,7 @@ public class GitHub {
     protected GitHubUser getReporterOf(GitHubIssue issue) {
         try {
             HttpResponse<JsonNode> response = Unirest.get(getIssuesUrl(issue.repoFullName, issue.getNumber()) + getAccessToken()).asJson();
-            return getUser(response.getBody().getObject().getJSONObject("owner").getString("login"));
+            return getUser(response.getBody().getObject().getJSONObject("user").getString("login"));
         } catch (UnirestException e) {
             if (e.getCause() instanceof FileNotFoundException) {
                 throw new GitHubRepoNotFoundException("Failed to locate GitHub Repo: " + issue.repoFullName, e);
