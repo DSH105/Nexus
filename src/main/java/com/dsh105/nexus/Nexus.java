@@ -78,7 +78,7 @@ public class Nexus extends PircBotX {
         if (remindCommand != null) {
             remindCommand.loadReminders();
         }
-        //this.sendMessage(this.getChannel(this.getConfig().getAdminChannel()), "Hi. I have returned.");
+        this.sendMessage(this.getChannel(this.getConfig().getAdminChannel()), "I'm back! ;D");
     }
 
     @Override
