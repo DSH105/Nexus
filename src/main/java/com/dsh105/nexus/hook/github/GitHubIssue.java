@@ -58,9 +58,6 @@ public class GitHubIssue {
     }
 
     public GitHubUser getReporter() {
-        if (reportedBy == null) {
-            reportedBy = GitHub.getGitHub().getReporterOf(this);
-        }
         return reportedBy;
     }
 

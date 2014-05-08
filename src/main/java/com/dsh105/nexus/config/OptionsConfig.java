@@ -54,6 +54,8 @@ public class OptionsConfig extends YamlConfig {
         this.options.put("github-account-password", "");
         this.options.put("gist-account-name", "");
         this.options.put("gist-account-password", "");
+        this.options.put("user-agent", "Nexus");
+        this.options.put("trello-key", "");
         if (this.getAdminChannel() != null && !this.getAdminChannel().isEmpty()) {
             channels.add(this.getAdminChannel());
         }
@@ -124,8 +126,8 @@ public class OptionsConfig extends YamlConfig {
         return get("response-chance", 5);
     }
 
-    public String getGitHubApiKey() {
-        return get("github-key", "");
+    public String getGitHubApiKey(String userLogin) {
+        return get("github-key-" + userLogin, "");
     }
 
     public void clearChannels() {
@@ -174,5 +176,9 @@ public class OptionsConfig extends YamlConfig {
 
     public String getGistAccountPassword() {
         return get("gist-account-password", "");
+    }
+
+    public String getTrelloApiKey() {
+        return get("trello-key", "");
     }
 }

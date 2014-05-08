@@ -124,11 +124,11 @@ public class CommandManager {
             }
         } catch (Exception e) {
             if (e instanceof GitHubAPIKeyInvalidException) {
-                event.respondWithPing(Colors.RED + "Failed to connect to GitHub. My API key is not configured!");
+                event.respondWithPing(Colors.RED + e.getMessage());
                 return true;
             }
             if (e instanceof GitHubRateLimitExceededException) {
-                event.respondWithPing(Colors.RED + "Rate limit for GitHub API exceeded. Further requests cannot be executed.");
+                event.respondWithPing(Colors.RED + "Rate limit for this GitHub API Key exceeded. Further requests cannot be executed on the behalf of this user.");
             }
             event.respondWithPing(Colors.RED + "Houston, we have a problem! Here is a conveniently provided stacktrace: " + GitHub.getGitHub().createGist(e));
             return true;

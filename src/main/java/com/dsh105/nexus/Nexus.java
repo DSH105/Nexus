@@ -70,6 +70,7 @@ public class Nexus extends PircBotX {
         this.identify(this.config.getAccountPassword());
         this.connect();
         this.registerListeners();
+        Unirest.setDefaultHeader("user-agent", getConfig().get("user-agent", "Nexus"));
         if (!this.config.getJenkinsUrl().isEmpty()) {
             this.jenkins = new Jenkins();
         }
@@ -171,7 +172,15 @@ public class Nexus extends PircBotX {
     }
 
     public boolean isAdmin(User user) {
-        return this.getChannel(this.getConfig().getAdminChannel()).getOps().contains(user) || this.getConfig().getAdmins().contains(user.getNick());
+        return isChannelAdmin(user) || isNexusAdmin(user);
+    }
+
+    public boolean isChannelAdmin(User user) {
+        return this.getChannel(this.getConfig().getAdminChannel()).getOps().contains(user);
+    }
+
+    public boolean isNexusAdmin(User user) {
+        return this.getConfig().getAdmins().contains(user.getNick());
     }
 
     public ResponseManager getResponseManager() {

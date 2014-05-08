@@ -66,32 +66,21 @@ public class GitHubRepo {
     protected GitHubUser[] collaborators;
     protected GitHubUser[] contributors;
     protected String[] languages;
+    protected String accessToken;
 
     public GitHubUser getRepoOwner() {
-        if (repoOwner == null) {
-            repoOwner = GitHub.getGitHub().getOwnerOf(this);
-        }
         return repoOwner;
     }
 
     public GitHubUser[] getCollaborators() {
-        if (collaborators == null) {
-            collaborators = GitHub.getGitHub().getCollaborators(this);
-        }
         return collaborators;
     }
 
     public GitHubUser[] getContributors() {
-        if (contributors == null) {
-            contributors = GitHub.getGitHub().getContributors(this);
-        }
         return contributors;
     }
 
     public String[] getLanguages() {
-        if (languages == null) {
-            languages = GitHub.getGitHub().getLanguages(this);
-        }
         return languages;
     }
 
