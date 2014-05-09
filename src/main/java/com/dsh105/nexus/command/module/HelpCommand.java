@@ -48,7 +48,7 @@ public class HelpCommand extends CommandModule {
             event.respondWithPing("Check your private messages for help information.");
         }
         for (CommandModule module : Nexus.getInstance().getCommandManager().getRegisteredCommands()) {
-            event.respond(Colors.BOLD + Nexus.getInstance().getConfig().getCommandPrefix() + module.getCommand() + Colors.NORMAL + " - " + module.getCommandInfo().help() + (module.getCommandInfo().aliases().length <= 0 ? "" : "(" + StringUtil.combineSplit(0, module.getCommandInfo().aliases(), ", ") + ")"), true);
+            event.respond(Colors.BOLD + Nexus.getInstance().getConfig().getCommandPrefix() + module.getCommand() + Colors.NORMAL + " - " + module.getCommandInfo().help() + (module.getCommandInfo().aliases().length <= 0 ? "" : " (Aliases: " + Colors.BOLD + StringUtil.combineSplit(0, module.getCommandInfo().aliases(), ", ") + Colors.NORMAL + ")"), true);
         }
         return true;
     }

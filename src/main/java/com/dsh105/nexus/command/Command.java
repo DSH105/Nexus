@@ -28,7 +28,7 @@ public @interface Command {
 
     public String command();
 
-    public String[] aliases() default "";
+    public String[] aliases() default {};
 
     public String[] extendedHelp();
 
