@@ -51,8 +51,10 @@ public class OptionsConfig extends YamlConfig {
         this.options.put("github-repo-repoName", "change-to-author");
         this.options.put("github-account-name", "");
         this.options.put("github-account-password", "");
-        this.options.put("github-oauth-authorise-applink", "change-me");
-        this.options.put("github-oauth-token-applink", "change-me");
+        this.options.put("github-oauth-client-id", "change-me");
+        this.options.put("github-oauth-client-secret", "change-me");
+        this.options.put("github-oauth-scope", "change-me");
+        this.options.put("github-oauth-state", "change-me");
         this.options.put("gist-account-name", "");
         this.options.put("gist-account-password", "");
         this.options.put("user-agent", "Nexus");
@@ -187,11 +189,19 @@ public class OptionsConfig extends YamlConfig {
         return getGitHubApiKey("Nexus");
     }
 
-    public String getGitHubOauthAppAuthoriseLink() {
-        return get("github-oauth-authorise-applink", "");
+    public String getGitHubOauthAppClientId() {
+        return get("github-oauth-client-id", "");
     }
 
-    public String getGitHubOauthAppTokenLink() {
-        return get("github-oauth-token-applink", "");
+    public String getGitHubOauthAppClientSecret() {
+        return get("github-oauth-client-secret", "");
+    }
+
+    public String getGitHubOauthAppScope() {
+        return get("github-oauth-scope", "");
+    }
+
+    public String getGitHubOauthAppState() {
+        return get("github-oauth-state", "");
     }
 }
