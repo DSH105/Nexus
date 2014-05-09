@@ -105,8 +105,8 @@ public class GitHub {
 
     public String getAccessToken(String userLogin) {
         String accessToken = Nexus.getInstance().getConfig().getGitHubApiKey(userLogin);
-        // Make sure that we have an API key to use. So we don't go over the rate limit for the bot's IP
-        return accessToken.isEmpty() ? Nexus.getInstance().getConfig().getAdminGitHubApiKey() : "?access_token=" + accessToken;
+        // Make sure that we have a valid API key to use. Provide the default Nexus API key if this user doesn't have one.
+        return "?access_token=" + (accessToken.isEmpty() ? Nexus.getInstance().getConfig().getNexusGitHubApiKey() : accessToken);
     }
 
     private GitHubRateLimit getApiRateLimit(String accessToken) {
@@ -162,7 +162,7 @@ public class GitHub {
             repo.collaborators = getCollaborators(repo, userLogin);
             repo.contributors = getContributors(repo, userLogin);
             repo.languages = getLanguages(repo, userLogin);
-            repo.accessToken = getAccessToken(userLogin);
+            repo.accessToken = userLogin;
             if (repo != null) {
                 cache(repo);
             }

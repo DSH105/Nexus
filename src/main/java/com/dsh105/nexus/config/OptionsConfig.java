@@ -183,7 +183,7 @@ public class OptionsConfig extends YamlConfig {
         return get("trello-key", "");
     }
 
-    public String getAdminGitHubApiKey() {
+    public String getNexusGitHubApiKey() {
         return getGitHubApiKey("Nexus");
     }
 
