@@ -31,7 +31,6 @@ public class IpInfoCommand extends CommandModule {
 
         try {
             url = API_URL + URLEncoder.encode(args[0], "UTF-8");
-            System.out.print(url);
 
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();

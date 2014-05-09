@@ -50,7 +50,7 @@ public class RemindCommand extends CommandModule {
             boolean forOtherUser = false;
             try {
                 timePeriod = TimeUtil.parse(event.getArgs()[1]);
-                if (timePeriod  > 0) {
+                if (timePeriod > 0) {
                     forOtherUser = true;
                 }
             } catch (NumberFormatException e) {

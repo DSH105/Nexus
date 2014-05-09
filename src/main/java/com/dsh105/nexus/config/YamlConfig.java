@@ -47,10 +47,9 @@ public class YamlConfig {
                 file.delete();
             }
             file.createNewFile();
-            PrintWriter writer = new PrintWriter(new FileOutputStream(file));
-            Yaml yaml = new Yaml();
-            writer.write(yaml.dump(this.options));
-            writer.close();
+
+            PrintWriter writer = new PrintWriter(file);
+            writer.write(new Yaml().dump(this.options));
         } catch (IOException e) {
             Nexus.LOGGER.severe("Failed to save configuration file: " + fileName);
         }

@@ -29,7 +29,6 @@ public class OptionsConfig extends YamlConfig {
 
     public OptionsConfig() {
         super(Nexus.CONFIG_FILE_NAME);
-        channels = new ArrayList<>();
         this.setDefaults();
         this.load();
     }
@@ -52,6 +51,8 @@ public class OptionsConfig extends YamlConfig {
         this.options.put("github-repo-repoName", "change-to-author");
         this.options.put("github-account-name", "");
         this.options.put("github-account-password", "");
+        this.options.put("github-oauth-authorise-applink", "change-me");
+        this.options.put("github-oauth-token-applink", "change-me");
         this.options.put("gist-account-name", "");
         this.options.put("gist-account-password", "");
         this.options.put("user-agent", "Nexus");
@@ -184,5 +185,13 @@ public class OptionsConfig extends YamlConfig {
 
     public String getAdminGitHubApiKey() {
         return getGitHubApiKey("Nexus");
+    }
+
+    public String getGitHubOauthAppAuthoriseLink() {
+        return get("github-oauth-authorise-applink", "");
+    }
+
+    public String getGitHubOauthAppTokenLink() {
+        return get("github-oauth-token-applink", "");
     }
 }
