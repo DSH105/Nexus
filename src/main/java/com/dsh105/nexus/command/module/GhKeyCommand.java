@@ -34,7 +34,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 
-@Command(command = "ghkey", aliases = "ghk", help = "Authenticate with GitHub through Nexus to allow the use of various GitHub commands requiring an API key.",
+@Command(command = "ghkey", aliases = "ghk", needsChannel = false, help = "Authenticate with GitHub through Nexus to allow the use of various GitHub commands requiring an API key.",
         extendedHelp = {"{b}{p}{c}{/b} - Provides instructions on how to set this up."})
 public class GhKeyCommand extends CommandModule {
 
@@ -52,7 +52,9 @@ public class GhKeyCommand extends CommandModule {
             event.respond("- Allow Nexus access.", true);
             event.respond("- Copy the URL you are redirected to (the code information in this is important, so don't change anything!).", true);
             event.respond("- Perform {0}, where <code> is the URL you copied above.", true, Nexus.getInstance().getConfig().getCommandPrefix() + this.getCommand() + " <code>");
-            event.respondWithPing("Please check your private messages for instructions on how to configure your GitHub API key.");
+            if (!event.isInPrivateMessage()) {
+                event.respondWithPing("Please check your private messages for instructions on how to configure your GitHub API key.");
+            }
             return true;
         } else if (event.getArgs().length == 1) {
             // request confirmed - check if valid
@@ -72,6 +74,7 @@ public class GhKeyCommand extends CommandModule {
                     try {
                         String accessToken = response.getBody().getObject().getString("access_token");
                         Nexus.getInstance().getConfig().set("github-key-" + StringUtil.getIdent(event.getSender()), accessToken);
+                        Nexus.getInstance().getConfig().save();
                         event.respondWithPing("You may now use the Nexus commands requiring API key information (e.g. IRC notification settings).");
                         return true;
                     } catch (JSONException e) {
