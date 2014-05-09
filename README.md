@@ -28,7 +28,7 @@ Development Builds
 
 You can grab the latest builds from our [Jenkins instance](http://ci.hawkfalcon.com/view/DSH105/job/Nexus/).
 
-![Build Status](https://travis-ci.org/DSH105/HoloAPI.png)
+![Build Status](https://api.travis-ci.org/repositories/DSH105/Nexus.svg)
 
 
 Contributing
