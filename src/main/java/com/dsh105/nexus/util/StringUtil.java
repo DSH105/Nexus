@@ -17,7 +17,13 @@
 
 package com.dsh105.nexus.util;
 
+import org.pircbotx.User;
+
 public class StringUtil {
+
+    public static String getIdent(User user) {
+        return user.getLogin().replaceAll("^\\W", "");
+    }
 
     public static String removePing(String nick) {
         return nick == null ? null : (nick.substring(0, 1) + '\u200b' + (nick.length() >= 2 ? nick.substring(1, nick.length()) : ""));

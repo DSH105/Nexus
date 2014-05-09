@@ -65,21 +65,21 @@ public class RepoCommand extends CommandModule {
 
         GitHubRepo repo;
         try {
-            repo = GitHub.getGitHub().getRepo(owner + "/" + repoName, event.getSender().getLogin());
+            repo = GitHub.getGitHub().getRepo(owner + "/" + repoName, StringUtil.getIdent(event.getSender()));
         } catch (GitHubRepoNotFoundException e) {
             try {
                 String owner2 = repoName;
                 repoName = owner;
                 owner = owner2;
 
-                repo = GitHub.getGitHub().getRepo(owner + "/" + repoName, event.getSender().getLogin());
+                repo = GitHub.getGitHub().getRepo(owner + "/" + repoName, StringUtil.getIdent(event.getSender()));
             } catch (GitHubRepoNotFoundException e2) {
                 String storedCase = Nexus.getInstance().getConfig().get("github-repo-" + owner.toLowerCase(), ""); // temporarily use the owner so that the error message outputs correctly
                 if (!storedCase.isEmpty()) {
                     repoName = owner;
                     owner = storedCase;
                     try {
-                        repo = GitHub.getGitHub().getRepo(owner + "/" + repoName, event.getSender().getLogin());
+                        repo = GitHub.getGitHub().getRepo(owner + "/" + repoName, StringUtil.getIdent(event.getSender()));
                     } catch (GitHubRepoNotFoundException e3) {
                         event.errorWithPing("The GitHub repository {0} could not be found! :(", repoName + "/" + owner);
                         return true;
@@ -137,7 +137,7 @@ public class RepoCommand extends CommandModule {
                         }
 
                         if (!events.isEmpty()) {
-                            GitHub.getGitHub().setIrcNotifications(repo, event.getSender().getLogin(), events.toArray(new GitHubEvent[events.size()]));
+                            GitHub.getGitHub().setIrcNotifications(repo, StringUtil.getIdent(event.getSender()), events.toArray(new GitHubEvent[events.size()]));
                             String eventsStr = "";
                             for (GitHubEvent e : events) {
                                 eventsStr += (eventsStr.isEmpty()) ? e.getJsonName() : ", " + e.getJsonName();
@@ -154,7 +154,7 @@ public class RepoCommand extends CommandModule {
                 if (event.getArgs().length >= startIndex + 2) {
                     if (event.getArgs()[startIndex + 1].equalsIgnoreCase("irc")) {
                         String eventsStr = "";
-                        for (GitHubEvent e : GitHub.getGitHub().getIrcNotifications(repo, event.getSender().getLogin())) {
+                        for (GitHubEvent e : GitHub.getGitHub().getIrcNotifications(repo, StringUtil.getIdent(event.getSender()))) {
                             eventsStr += (eventsStr.isEmpty()) ? e.getJsonName() : ", " + e.getJsonName();
                         }
                         event.respondWithPing("IRC notifications for GitHub repository ({0}) are{1}", repo.getFullName(), eventsStr.isEmpty() ? " empty" : ": " + eventsStr);
@@ -184,7 +184,7 @@ public class RepoCommand extends CommandModule {
                     }
                     GitHubIssue issue;
                     try {
-                        issue = GitHub.getGitHub().getIssue(repo, Integer.parseInt(issueNumber), event.getSender().getLogin());
+                        issue = GitHub.getGitHub().getIssue(repo, Integer.parseInt(issueNumber), StringUtil.getIdent(event.getSender()));
                     } catch (GitHubRepoNotFoundException e) {
                         event.respondWithPing("I couldn't find that for you. Either that repository doesn't have issues enabled, or issue #{0} doesn't exist.");
                         return true;
@@ -192,10 +192,10 @@ public class RepoCommand extends CommandModule {
 
                     IssueState issueState = IssueState.getByIdent(issue.getState());
                     String state = issueState.format(issue.getState()).toUpperCase();
-                    String body = issue.getBody();
+                    /*String body = issue.getBody();
                     if (body.length() > 30) {
                         body = body.substring(0, 70) + "...";
-                    }
+                    }*/
 
                     if (issue instanceof GitHubPullRequest) {
                         GitHubPullRequest pr = (GitHubPullRequest) issue;

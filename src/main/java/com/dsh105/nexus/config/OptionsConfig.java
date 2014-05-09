@@ -45,17 +45,17 @@ public class OptionsConfig extends YamlConfig {
         this.options.put("nick", "Nexus");
         this.options.put("admin-channel", "");
         this.options.put("append-nicks", true);
-        this.options.put("jenkins-url", "");
+        this.options.put("jenkins-url", "change-me");
         this.options.put("jenkins-token-jobName", "change-me");
         this.options.put("response-chance", "");
-        this.options.put("github-key", "");
+        this.options.put("github-key-Nexus", "change-me");
         this.options.put("github-repo-repoName", "change-to-author");
         this.options.put("github-account-name", "");
         this.options.put("github-account-password", "");
         this.options.put("gist-account-name", "");
         this.options.put("gist-account-password", "");
         this.options.put("user-agent", "Nexus");
-        this.options.put("trello-key", "");
+        //this.options.put("trello-key", "");
         if (this.getAdminChannel() != null && !this.getAdminChannel().isEmpty()) {
             channels.add(this.getAdminChannel());
         }
@@ -180,5 +180,9 @@ public class OptionsConfig extends YamlConfig {
 
     public String getTrelloApiKey() {
         return get("trello-key", "");
+    }
+
+    public String getAdminGitHubApiKey() {
+        return getGitHubApiKey("Nexus");
     }
 }

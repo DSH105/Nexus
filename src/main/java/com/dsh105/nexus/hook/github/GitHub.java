@@ -25,7 +25,6 @@ import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
-import com.mashape.unirest.request.GetRequest;
 import org.json.JSONArray;
 import org.json.JSONException;
 
@@ -106,18 +105,23 @@ public class GitHub {
 
     public String getAccessToken(String userLogin) {
         String accessToken = Nexus.getInstance().getConfig().getGitHubApiKey(userLogin);
-        return accessToken.isEmpty() ? "" : "?access_token=" + accessToken;
+        // Make sure that we have an API key to use. So we don't go over the rate limit for the bot's IP
+        return accessToken.isEmpty() ? Nexus.getInstance().getConfig().getAdminGitHubApiKey() : "?access_token=" + accessToken;
     }
 
     private GitHubRateLimit getApiRateLimit(String accessToken) {
         try {
-            return Nexus.JSON.read(Unirest.get(RATE_LIMIT_API_URL + (accessToken.startsWith("?access_token=") ? accessToken : "?access_token" + accessToken)), "rate", GitHubRateLimit.class);
+            return Nexus.JSON.read(Unirest.get(RATE_LIMIT_API_URL + (accessToken.startsWith("?access_token=") ? accessToken : (accessToken.isEmpty() ? "" : "?access_token=" + accessToken))), "rate", GitHubRateLimit.class);
         } catch (UnirestException e) {
             throw new GitHubException("Failed to connect to GitHub API!", e);
         }
     }
 
     public HttpResponse<JsonNode> makeRequest(String urlPath, String userLogin) throws UnirestException {
+        return makeRequest(urlPath, userLogin, false);
+    }
+
+    protected HttpResponse<JsonNode> makeRequest(String urlPath, String userLogin, boolean assumeAccess) throws UnirestException {
         String accessToken = getAccessToken(userLogin);
         // check if the api key has expired - overused
         if (getApiRateLimit(accessToken).getRemaining() <= 0) {
@@ -125,13 +129,15 @@ public class GitHub {
         }
 
         HttpResponse<JsonNode> response = Unirest.get(urlPath + accessToken).asJson();
-        try {
-            String checkAccess = response.getBody().getObject().getString("message");
-            if (checkAccess != null && (checkAccess.equals("Not found") || checkAccess.equals("Bad credentials"))) {
-                throw new GitHubAPIKeyInvalidException("GitHub API key for " + userLogin + " is invalid. Please provide one to access this part of the GitHub API");
+        if (!assumeAccess) {
+            try {
+                String checkAccess = response.getBody().getObject().getString("message");
+                if (checkAccess != null && (checkAccess.equalsIgnoreCase("NOT FOUND") || checkAccess.equalsIgnoreCase("BAD CREDENTIALS"))) {
+                    throw new GitHubAPIKeyInvalidException("GitHub API key for " + userLogin + " is invalid. Please provide one to access this part of the GitHub API");
+                }
+                return response;
+            } catch (JSONException e) {
             }
-            return response;
-        } catch (JSONException e) {
         }
         return response;
     }
@@ -233,13 +239,13 @@ public class GitHub {
         return getIssue(getRepo(repoName, userLogin), id, userLogin);
     }
 
-    public GitHubUser[] getCollaborators(GitHubRepo repo, String userLogin) {
+    protected GitHubUser[] getCollaborators(GitHubRepo repo, String userLogin) {
         return getCollaborators(repo.getFullName(), userLogin);
     }
 
-    public GitHubUser[] getCollaborators(String name, String userLogin) {
+    protected GitHubUser[] getCollaborators(String name, String userLogin) {
         try {
-            return Nexus.JSON.read(makeRequest(getCollaboratorsUrl(name), userLogin).getRawBody(), GitHubUser[].class);
+            return Nexus.JSON.read(makeRequest(getCollaboratorsUrl(name), userLogin, true).getRawBody(), GitHubUser[].class);
         } catch (UnirestException e) {
             if (e.getCause() instanceof FileNotFoundException) {
                 throw new GitHubRepoNotFoundException("Failed to locate GitHub Repo: " + name, e);
@@ -248,13 +254,14 @@ public class GitHub {
         }
     }
 
-    public GitHubUser[] getContributors(GitHubRepo repo, String userLogin) {
+    protected GitHubUser[] getContributors(GitHubRepo repo, String userLogin) {
         return getContributors(repo.getFullName(), userLogin);
     }
 
-    public GitHubUser[] getContributors(String name, String userLogin) {
+    protected GitHubUser[] getContributors(String name, String userLogin) {
         try {
-            return Nexus.JSON.read(makeRequest(getContributorsUrl(name), userLogin).getRawBody(), GitHubUser[].class);
+            // Anything using this method should already have checked API key validity
+            return Nexus.JSON.read(makeRequest(getContributorsUrl(name), userLogin, true).getRawBody(), GitHubUser[].class);
         } catch (UnirestException e) {
             if (e.getCause() instanceof FileNotFoundException) {
                 throw new GitHubRepoNotFoundException("Failed to locate GitHub Repo: " + name, e);
@@ -263,12 +270,13 @@ public class GitHub {
         }
     }
 
-    public String[] getLanguages(GitHubRepo repo, String userLogin) {
+    protected String[] getLanguages(GitHubRepo repo, String userLogin) {
         return getLanguages(repo.getFullName(), userLogin);
     }
 
-    public String[] getLanguages(String name, String userLogin) {
+    protected String[] getLanguages(String name, String userLogin) {
         try {
+            // Anything using this method should already have checked API key validity
             Set<String> set = makeRequest(getLanguagesUrl(name), userLogin).getBody().getObject().keySet();
             ArrayList<String> languages = new ArrayList<>();
             for (String language : set) {

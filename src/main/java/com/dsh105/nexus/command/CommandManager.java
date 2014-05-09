@@ -129,6 +129,7 @@ public class CommandManager {
             }
             if (e instanceof GitHubRateLimitExceededException) {
                 event.respondWithPing(Colors.RED + "Rate limit for this GitHub API Key exceeded. Further requests cannot be executed on the behalf of this user.");
+                return true;
             }
             event.respondWithPing(Colors.RED + "Houston, we have a problem! Here is a conveniently provided stacktrace: " + GitHub.getGitHub().createGist(e));
             return true;

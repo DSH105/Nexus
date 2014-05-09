@@ -47,7 +47,7 @@ public class GhUserCommand extends CommandModule {
         String userLogin = event.getArgs()[0];
         GitHubUser user;
         try {
-            user = GitHub.getGitHub().getUser(userLogin, event.getSender().getLogin());
+            user = GitHub.getGitHub().getUser(userLogin, StringUtil.getIdent(event.getSender()));
         } catch (GitHubUserNotFoundException e) {
             event.respondWithPing("GitHub user ({0}) could not be found.", userLogin);
             return true;
