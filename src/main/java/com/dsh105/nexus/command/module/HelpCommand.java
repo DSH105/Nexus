@@ -21,6 +21,7 @@ import com.dsh105.nexus.Nexus;
 import com.dsh105.nexus.command.Command;
 import com.dsh105.nexus.command.CommandModule;
 import com.dsh105.nexus.command.CommandPerformEvent;
+import com.dsh105.nexus.util.StringUtil;
 import org.pircbotx.Colors;
 
 @Command(command = "help", needsChannel = false, help = "Show this help information", extendedHelp = "Use {p}{c} <command> for more information on a specific command.")
@@ -47,7 +48,7 @@ public class HelpCommand extends CommandModule {
             event.respondWithPing("Check your private messages for help information.");
         }
         for (CommandModule module : Nexus.getInstance().getCommandManager().getRegisteredCommands()) {
-            event.respond(Colors.BOLD + Nexus.getInstance().getConfig().getCommandPrefix() + module.getCommand() + Colors.NORMAL + " - " + module.getCommandInfo().help(), true);
+            event.respond(Colors.BOLD + Nexus.getInstance().getConfig().getCommandPrefix() + module.getCommand() + Colors.NORMAL + " - " + module.getCommandInfo().help() + (module.getCommandInfo().aliases().length <= 0 ? "" : "(" + StringUtil.combineSplit(0, module.getCommandInfo().aliases(), ", ") + ")"), true);
         }
         return true;
     }

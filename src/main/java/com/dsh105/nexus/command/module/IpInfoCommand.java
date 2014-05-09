@@ -3,17 +3,19 @@ package com.dsh105.nexus.command.module;
 import com.dsh105.nexus.command.Command;
 import com.dsh105.nexus.command.CommandModule;
 import com.dsh105.nexus.command.CommandPerformEvent;
+import com.dsh105.nexus.util.shorten.URLShortener;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import org.json.JSONObject;
+import org.pircbotx.Colors;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
 @Command(command = "ipinfo", aliases = {"ip"}, needsChannel = false, help = "Looks up IP information.",
-        extendedHelp = {"Gives approximate location, country & ISP information."})
+        extendedHelp = {"{b}{p}{c}{/b} <ip> - Gives approximate location, country & ISP information."})
 public class IpInfoCommand extends CommandModule {
 
     public static final String API_URL = "http://www.telize.com/geoip/";
@@ -51,18 +53,17 @@ public class IpInfoCommand extends CommandModule {
             }
 
             String info = "Info for " + args[0] + ": ";
-            builder.append(info);
+            builder.append(Colors.BOLD + info);
 
             if (object.has("country")) {
-                builder.append("Country: ").append(object.getString("country")).append(" ");
+                builder.append("Country: ").append(Colors.BOLD + object.getString("country")).append(" ");
             }
 
             if (object.has("isp")) {
-                builder.append("ISP: ").append(object.getString("isp")).append(" ");
+                builder.append("ISP: ").append(Colors.BOLD + object.getString("isp")).append(" ");
             }
 
-            event.respond(builder.toString().trim());
-            event.respond(maps);
+            event.respondWithPing(builder.toString().trim() + "(" + URLShortener.shorten(maps) + ")");
 
         } catch (UnirestException e) {
             return false;
