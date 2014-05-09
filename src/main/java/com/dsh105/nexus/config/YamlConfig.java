@@ -41,6 +41,7 @@ public class YamlConfig {
     }
 
     public void save() {
+        PrintWriter writer = null;
         try {
             File file = new File(this.getFileName());
             if (file.exists()) {
@@ -48,10 +49,14 @@ public class YamlConfig {
             }
             file.createNewFile();
 
-            PrintWriter writer = new PrintWriter(file);
+            writer = new PrintWriter(file);
             writer.write(new Yaml().dump(this.options));
         } catch (IOException e) {
             Nexus.LOGGER.severe("Failed to save configuration file: " + fileName);
+        } finally {
+            if (writer != null) {
+                writer.close();
+            }
         }
     }
 
@@ -64,7 +69,7 @@ public class YamlConfig {
             FileInputStream input = new FileInputStream(file);
             Yaml yaml = new Yaml();
             Map<String, Object> loaded = (Map<String, Object>) yaml.load(input);
-            if (loaded != null && !loaded.isEmpty()) {
+            if (loaded != null) {
                 this.loadData(loaded);
             }
         } catch (IOException e) {
