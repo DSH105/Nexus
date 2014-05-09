@@ -30,7 +30,10 @@ You can grab the latest builds from our [Jenkins instance](http://ci.hawkfalcon.
 
 ![Build Status](https://api.travis-ci.org/repositories/DSH105/Nexus.svg)
 
+JavaDoc
+=======
 
+JavaDocs are available on the [Jenkins instance](http://ci.hawkfalcon.com/view/DSH105/job/Nexus/javadoc/).
 Contributing
 ============
 
