@@ -103,10 +103,17 @@ public class GitHub {
         return gist.create();
     }
 
-    public String getAccessToken(String userLogin) {
+    public String getAccessToken(String userLogin, boolean onlyAllowTokenAccess) {
         String accessToken = Nexus.getInstance().getConfig().getGitHubApiKey(userLogin);
+        if (accessToken.isEmpty() && onlyAllowTokenAccess) {
+            throw new GitHubAPIKeyInvalidException("GitHub API key for " + userLogin + " is invalid. Please provide one to access this part of the GitHub API");
+        }
         // Make sure that we have a valid API key to use. Provide the default Nexus API key if this user doesn't have one.
         return "?access_token=" + (accessToken.isEmpty() ? Nexus.getInstance().getConfig().getNexusGitHubApiKey() : accessToken);
+    }
+
+    public String getAccessToken(String userLogin) {
+        return getAccessToken(userLogin, false);
     }
 
     private GitHubRateLimit getApiRateLimit(String accessToken) {
@@ -122,7 +129,11 @@ public class GitHub {
     }
 
     protected HttpResponse<JsonNode> makeRequest(String urlPath, String userLogin, boolean assumeAccess) throws UnirestException {
-        String accessToken = getAccessToken(userLogin);
+        return makeRequest(urlPath, userLogin, assumeAccess, false);
+    }
+
+    protected HttpResponse<JsonNode> makeRequest(String urlPath, String userLogin, boolean assumeAccess, boolean onlyAllowTokenAccess) throws UnirestException {
+        String accessToken = getAccessToken(userLogin, onlyAllowTokenAccess);
         // check if the api key has expired - overused
         if (getApiRateLimit(accessToken).getRemaining() <= 0) {
             throw new GitHubRateLimitExceededException("Rate limit for GitHub API exceeded. Further requests cannot be executed.");
@@ -297,7 +308,7 @@ public class GitHub {
 
     public GitHubHook[] getHooks(String name, String userLogin) {
         try {
-            return Nexus.JSON.read(makeRequest(getHooksUrl(name), userLogin).getRawBody(), GitHubHook[].class);
+            return Nexus.JSON.read(makeRequest(getHooksUrl(name), userLogin, false, true).getRawBody(), GitHubHook[].class);
         } catch (UnirestException e) {
             if (e.getCause() instanceof FileNotFoundException) {
                 throw new GitHubRepoNotFoundException("Failed to locate GitHub Repo: " + name, e);
@@ -348,7 +359,7 @@ public class GitHub {
                 eventsList.add(e.getJsonName());
             }
             try {
-                Unirest.patch(getHooksUrl(repo) + "/" + hook.getId() + getAccessToken(userLogin))
+                Unirest.patch(getHooksUrl(repo) + "/" + hook.getId() + getAccessToken(userLogin, true))
                         .header("accept", "application/json")
                         .header("content-type", "application/json")
                         .body("{\"events\":[" + s + "]}").asJson();
@@ -369,7 +380,7 @@ public class GitHub {
         if (hook != null) {
             try {
                 ArrayList<GitHubEvent> events = new ArrayList<>();
-                JSONArray eventsJsonArray = makeRequest(getHooksUrl(repo) + "/" + hook.getId(), userLogin).getBody().getObject().getJSONArray("events");
+                JSONArray eventsJsonArray = makeRequest(getHooksUrl(repo) + "/" + hook.getId(), userLogin, false, true).getBody().getObject().getJSONArray("events");
                 for (int i = 0; i < eventsJsonArray.length(); i++) {
                     GitHubEvent e = GitHubEvent.getByJsonName(eventsJsonArray.getString(i));
                     if (e != null) {
