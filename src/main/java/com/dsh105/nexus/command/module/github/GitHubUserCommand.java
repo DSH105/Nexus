@@ -15,7 +15,7 @@
  * along with Nexus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.dsh105.nexus.command.module;
+package com.dsh105.nexus.command.module.github;
 
 import com.dsh105.nexus.command.Command;
 import com.dsh105.nexus.command.CommandModule;
@@ -25,19 +25,11 @@ import com.dsh105.nexus.hook.github.GitHub;
 import com.dsh105.nexus.hook.github.GitHubUser;
 import com.dsh105.nexus.util.StringUtil;
 import com.dsh105.nexus.util.shorten.URLShortener;
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.JsonNode;
-import com.mashape.unirest.http.Unirest;
-import com.mashape.unirest.http.exceptions.UnirestException;
-import org.json.JSONObject;
 import org.pircbotx.Colors;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-
-@Command(command = "ghuser", aliases = {"ghu"}, needsChannel = false, help = "Retrieves information on a GitHub user",
+@Command(command = "githubuser", aliases = {"ghu", "ghuser"}, needsChannel = false, help = "Retrieves information on a GitHub user",
         extendedHelp = {"{b}{p}{c}{/b} <user_name> - Provides information on a GitHub user."})
-public class GhUserCommand extends CommandModule {
+public class GitHubUserCommand extends CommandModule {
 
     @Override
     public boolean onCommand(CommandPerformEvent event) {

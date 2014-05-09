@@ -15,7 +15,7 @@
  * along with Nexus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.dsh105.nexus.command.module;
+package com.dsh105.nexus.command.module.github;
 
 import com.dsh105.nexus.Nexus;
 import com.dsh105.nexus.command.Command;
@@ -30,7 +30,7 @@ import org.pircbotx.Colors;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 
-@Command(command = "repo", needsChannel = false, help = "Management of GitHub repositories.",
+@Command(command = "githubrepository", aliases = {"repo", "repository", "ghrepo"}, needsChannel = false, help = "Management of GitHub repositories.",
         extendedHelp = {
                 "The repo command contains various commands to manage GitHub repositories.",
                 "{b}{p}{c} <name>{/b} - retrieves repository information for the given repo. Uses the sender's nick as the GitHub login",
@@ -41,7 +41,7 @@ import java.util.regex.Pattern;
                 "{b}{p}{c} <...> set <option> <args>{/b} - sets the value of the given event option for a repo.",
                 "{b}{p}{c} <..> get <option>{/b} - retrieves information on the given event option.",
                 "Valid options are: irc"})
-public class RepoCommand extends CommandModule {
+public class GitHubRepositoryCommand extends CommandModule {
 
     @Override
     public boolean onCommand(CommandPerformEvent event) {
