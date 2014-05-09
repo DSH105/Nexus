@@ -144,7 +144,7 @@ public class GitHub {
             try {
                 String checkAccess = response.getBody().getObject().getString("message");
                 if (checkAccess != null && (checkAccess.equalsIgnoreCase("NOT FOUND") || checkAccess.equalsIgnoreCase("BAD CREDENTIALS"))) {
-                    throw new GitHubAPIKeyInvalidException("GitHub API key for " + userLogin + " is invalid. Please provide one to access this part of the GitHub API");
+                    throw new GitHubAPIKeyInvalidException("Either that does exist, or your GitHub API key does not have access to this.");
                 }
                 return response;
             } catch (JSONException e) {

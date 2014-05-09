@@ -225,7 +225,7 @@ public class RepoCommand extends CommandModule {
         if (repo != null) {
             if (!(event.isInPrivateMessage() && repo.getRepoOwner().getLogin().equals(event.getSender().getNick()))) {
                 if (repo.isPrivate()) {
-                    event.respondWithPing("That repository is private. I will not post information here.");
+                    event.respondWithPing("That repository is private. Please check your private messages for repository information.");
                     return true;
                 }
             }
