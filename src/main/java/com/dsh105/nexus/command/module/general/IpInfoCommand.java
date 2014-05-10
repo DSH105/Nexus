@@ -1,4 +1,4 @@
-package com.dsh105.nexus.command.module;
+package com.dsh105.nexus.command.module.general;
 
 import com.dsh105.nexus.command.Command;
 import com.dsh105.nexus.command.CommandModule;
@@ -40,6 +40,7 @@ public class IpInfoCommand extends CommandModule {
             HttpResponse<JsonNode> resp = Unirest.get(url).asJson();
 
             if (resp.getCode() != 200) {
+                event.errorWithPing("Unknown error occurred while executing command! Try again later...");
                 return false;
             }
 

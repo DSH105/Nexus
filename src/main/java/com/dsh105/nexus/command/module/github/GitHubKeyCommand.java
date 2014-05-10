@@ -15,7 +15,7 @@
  * along with Nexus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.dsh105.nexus.command.module;
+package com.dsh105.nexus.command.module.github;
 
 import com.dsh105.nexus.Nexus;
 import com.dsh105.nexus.command.Command;
@@ -34,9 +34,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 
-@Command(command = "ghkey", aliases = "ghk", needsChannel = false, help = "Authenticate with GitHub through Nexus to allow the use of various GitHub commands requiring an API key.",
+@Command(command = "githubkey", aliases = {"ghk", "ghkey"}, needsChannel = false, help = "Authenticate with GitHub through Nexus to allow the use of various GitHub commands requiring an API key.",
         extendedHelp = {"{b}{p}{c}{/b} - Provides instructions on how to set this up."})
-public class GhKeyCommand extends CommandModule {
+public class GitHubKeyCommand extends CommandModule {
 
     private static String AUTHORISE = "https://github.com/login/oauth/authorize?client_id={client_id}&scope={scope}&state={state}";
     private static String ACCESS_TOKEN = "https://github.com/login/oauth/access_token?client_id={client_id}&client_secret={client_secret}&code={code}";

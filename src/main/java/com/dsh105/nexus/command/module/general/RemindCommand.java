@@ -15,7 +15,7 @@
  * along with Nexus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.dsh105.nexus.command.module;
+package com.dsh105.nexus.command.module.general;
 
 import com.dsh105.nexus.Nexus;
 import com.dsh105.nexus.command.Command;

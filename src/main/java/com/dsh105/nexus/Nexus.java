@@ -18,7 +18,7 @@
 package com.dsh105.nexus;
 
 import com.dsh105.nexus.command.CommandManager;
-import com.dsh105.nexus.command.module.RemindCommand;
+import com.dsh105.nexus.command.module.general.RemindCommand;
 import com.dsh105.nexus.config.OptionsConfig;
 import com.dsh105.nexus.hook.github.GitHub;
 import com.dsh105.nexus.hook.jenkins.Jenkins;
