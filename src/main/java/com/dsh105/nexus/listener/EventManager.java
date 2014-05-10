@@ -56,19 +56,23 @@ public class EventManager extends ListenerAdapter<Nexus> {
         }
     }
 
+
+
+    @Override
+    public void onNotice(NoticeEvent<Nexus> event) throws Exception {
+        // Attempt to retrieve static login information for a user
+        System.out.println("NOTICE: " + event.getNotice());
+        Matcher matcher = Pattern.compile("Information on (.+?) \\(account (.+?)\\):").matcher(event.getNotice());
+        while (matcher.find()) {
+            Nexus.getInstance().getGitHubConfig().storeNick(matcher.group(1), matcher.group(2));
+            System.out.println("STORING: " + matcher.group(1) + " : " + matcher.group(2));
+            System.out.println("STORED: " + Nexus.getInstance().getGitHubConfig().getAccountNameFor(matcher.group(1)));
+        }
+    }
+
     @Override
     public void onPrivateMessage(PrivateMessageEvent<Nexus> event) throws Exception {
-        if (event.getUser().getNick().equals("NickServ")) {
-            // Attempt to retrieve static login information for a user
-            Matcher matcher = Pattern.compile("Information on (.+?) \\(account (.+?)\\):").matcher(event.getMessage());
-            if (matcher.matches()) {
-                while (matcher.find()) {
-                    Nexus.getInstance().getGitHubConfig().storeNick(matcher.group(1), matcher.group(2));
-                }
-            }
-        } else {
-            Nexus.getInstance().getCommandManager().onCommand(null, event.getUser(), event.getMessage());
-        }
+        Nexus.getInstance().getCommandManager().onCommand(null, event.getUser(), event.getMessage());
     }
 
     @Override

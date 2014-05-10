@@ -34,6 +34,7 @@ import org.pircbotx.exception.IrcException;
 import org.pircbotx.exception.NickAlreadyInUseException;
 
 import java.io.IOException;
+import java.util.Scanner;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -44,7 +45,7 @@ public class Nexus extends PircBotX {
     private static Nexus INSTANCE;
     public static Logger LOGGER = Logger.getLogger(Nexus.class.getName());
     public static JsonUtil JSON = new JsonUtil();
-    public static String CONFIG_FILE_NAME = "options.txt";
+    public static String CONFIG_FILE_NAME = "options.yml";
     private OptionsConfig config;
     private GitHubConfig githubConfig;
     private CommandManager commandManager;
@@ -82,11 +83,12 @@ public class Nexus extends PircBotX {
         if (remindCommand != null) {
             remindCommand.loadReminders();
         }
-        this.sendMessage(this.getChannel(this.getConfig().getAdminChannel()), "I'm back! ;D");
+        //this.sendMessage(this.getChannel(this.getConfig().getAdminChannel()), "I'm back! ;D");
     }
 
     @Override
     public void shutdown(boolean noReconnect) {
+        LOGGER.info("Shutting down Nexus...");
         this.saveAll();
         super.shutdown(noReconnect);
         INSTANCE = null;

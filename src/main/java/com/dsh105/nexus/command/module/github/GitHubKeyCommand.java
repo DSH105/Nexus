@@ -80,8 +80,9 @@ public class GitHubKeyCommand extends CommandModule {
                         new Timer().schedule(new TimerTask() {
                             @Override
                             public void run() {
+                                System.out.println("Attempting to retrieve account name...");
                                 String account = Nexus.getInstance().getGitHubConfig().getAccountNameFor(nick);
-                                if (!account.isEmpty()) {
+                                if (account != null && !account.isEmpty()) {
                                     Nexus.getInstance().getGitHubConfig().set("github-key-" + account, accessToken);
                                     Nexus.getInstance().getGitHubConfig().save();
                                     event.respondWithPing("You may now use the Nexus commands requiring API key information (e.g. IRC notification settings).");

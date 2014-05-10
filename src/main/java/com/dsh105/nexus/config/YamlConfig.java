@@ -61,12 +61,13 @@ public class YamlConfig {
     }
 
     public void load() {
+        FileInputStream input = null;
         try {
             File file = new File(fileName);
             if (!file.exists()) {
                 file.createNewFile();
             }
-            FileInputStream input = new FileInputStream(file);
+            input = new FileInputStream(file);
             Yaml yaml = new Yaml();
             Map<String, Object> loaded = (Map<String, Object>) yaml.load(input);
             if (loaded != null) {
@@ -74,6 +75,15 @@ public class YamlConfig {
             }
         } catch (IOException e) {
             Nexus.LOGGER.severe("Failed to load configuration file: " + fileName);
+            e.printStackTrace();
+        } finally {
+            if (input != null) {
+                try {
+                    input.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
         this.save();
     }

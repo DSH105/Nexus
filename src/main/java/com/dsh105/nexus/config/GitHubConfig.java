@@ -17,6 +17,7 @@
 
 package com.dsh105.nexus.config;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -45,13 +46,19 @@ public class GitHubConfig extends YamlConfig {
     @Override
     public void loadData(Map<String, Object> loadedData) {
         super.loadData(loadedData);
-        this.nicks = this.get("nicks", nicks);
-        this.options.put("nicks", nicks);
+        for (String s : this.get("nicks", new ArrayList<String>())) {
+            String[] parts = s.split(":");
+            this.nicks.put(parts[0], parts[1]);
+        }
     }
 
     @Override
     public void save() {
-        this.set("nicks", nicks);
+        ArrayList<String> list = new ArrayList<>();
+        for (Map.Entry<String, String> entry : nicks.entrySet()) {
+            list.add(entry.getValue() + ":" + entry.getValue());
+        }
+        this.set("nicks", list);
         super.save();
     }
 
