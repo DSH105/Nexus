@@ -47,16 +47,6 @@ public class OptionsConfig extends YamlConfig {
         this.options.put("jenkins-url", "change-me");
         this.options.put("jenkins-token-jobName", "change-me");
         this.options.put("response-chance", "");
-        this.options.put("github-key-Nexus", "change-me");
-        this.options.put("github-repo-repoName", "change-to-author");
-        this.options.put("github-account-name", "");
-        this.options.put("github-account-password", "");
-        this.options.put("github-oauth-client-id", "change-me");
-        this.options.put("github-oauth-client-secret", "change-me");
-        this.options.put("github-oauth-scope", "change-me");
-        this.options.put("github-oauth-state", "change-me");
-        this.options.put("gist-account-name", "");
-        this.options.put("gist-account-password", "");
         this.options.put("user-agent", "Nexus");
         //this.options.put("trello-key", "");
         if (this.getAdminChannel() != null && !this.getAdminChannel().isEmpty()) {
@@ -129,10 +119,6 @@ public class OptionsConfig extends YamlConfig {
         return get("response-chance", 5);
     }
 
-    public String getGitHubApiKey(String userLogin) {
-        return get("github-key-" + userLogin, "");
-    }
-
     public void clearChannels() {
         this.channels.clear();
     }
@@ -165,43 +151,7 @@ public class OptionsConfig extends YamlConfig {
         return new ArrayList<>(admins);
     }
 
-    public String getGitHubAccountName() {
-        return get("github-account-name", "");
-    }
-
-    public String getGitHubAccountPassword() {
-        return get("github-account-password", "");
-    }
-
-    public String getGistAccountName() {
-        return get("gist-account-name", "");
-    }
-
-    public String getGistAccountPassword() {
-        return get("gist-account-password", "");
-    }
-
     public String getTrelloApiKey() {
         return get("trello-key", "");
-    }
-
-    public String getNexusGitHubApiKey() {
-        return getGitHubApiKey("Nexus");
-    }
-
-    public String getGitHubOauthAppClientId() {
-        return get("github-oauth-client-id", "");
-    }
-
-    public String getGitHubOauthAppClientSecret() {
-        return get("github-oauth-client-secret", "");
-    }
-
-    public String getGitHubOauthAppScope() {
-        return get("github-oauth-scope", "");
-    }
-
-    public String getGitHubOauthAppState() {
-        return get("github-oauth-state", "");
     }
 }

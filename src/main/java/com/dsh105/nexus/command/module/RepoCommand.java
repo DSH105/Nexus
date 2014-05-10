@@ -74,7 +74,7 @@ public class RepoCommand extends CommandModule {
 
                 repo = GitHub.getGitHub().getRepo(owner + "/" + repoName, StringUtil.getIdent(event.getSender()));
             } catch (GitHubRepoNotFoundException e2) {
-                String storedCase = Nexus.getInstance().getConfig().get("github-repo-" + owner.toLowerCase(), ""); // temporarily use the owner so that the error message outputs correctly
+                String storedCase = Nexus.getInstance().getGitHubConfig().get("github-repo-" + owner.toLowerCase(), ""); // temporarily use the owner so that the error message outputs correctly
                 if (!storedCase.isEmpty()) {
                     repoName = owner;
                     owner = storedCase;
@@ -167,8 +167,8 @@ public class RepoCommand extends CommandModule {
             } else if (event.getArgs()[startIndex].equalsIgnoreCase("save")){
                 if (event.getArgs().length >= startIndex + 1) {
                     if (Nexus.getInstance().isAdmin(event.getSender())) {
-                        Nexus.getInstance().getConfig().set("github-repo-" + repo.getName().toLowerCase(), repo.getRepoOwner().getLogin());
-                        Nexus.getInstance().getConfig().save();
+                        Nexus.getInstance().getGitHubConfig().set("github-repo-" + repo.getName().toLowerCase(), repo.getRepoOwner().getLogin());
+                        Nexus.getInstance().getGitHubConfig().save();
                         event.respondWithPing("GitHub repository information for {0} stored under {1}. You can now use {2} instead of {3} for this repository", repo.getName(), event.removePing(repo.getRepoOwner().getLogin()), event.getCommandPrefix() + event.getCommand() + " <repo_name>", event.getCommandPrefix() + event.getCommand() + " <owner> <repo_name>");
                     } else {
                         event.respondWithPing("Only admins can save repository information.");

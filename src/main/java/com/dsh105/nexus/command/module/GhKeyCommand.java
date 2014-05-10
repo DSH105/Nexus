@@ -33,6 +33,8 @@ import org.json.JSONException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.Timer;
+import java.util.TimerTask;
 
 @Command(command = "ghkey", aliases = "ghk", needsChannel = false, help = "Authenticate with GitHub through Nexus to allow the use of various GitHub commands requiring an API key.",
         extendedHelp = {"{b}{p}{c}{/b} - Provides instructions on how to set this up."})
@@ -42,13 +44,13 @@ public class GhKeyCommand extends CommandModule {
     private static String ACCESS_TOKEN = "https://github.com/login/oauth/access_token?client_id={client_id}&client_secret={client_secret}&code={code}";
 
     @Override
-    public boolean onCommand(CommandPerformEvent event) {
+    public boolean onCommand(final CommandPerformEvent event) {
         if (event.getArgs().length == 0) {
             event.respond("Please follow the following instructions:", true);
             event.respond("- Visit " + URLShortener.shorten(AUTHORISE
-                    .replace("{client_id}", Nexus.getInstance().getConfig().getGitHubOauthAppClientId())
-                    .replace("{scope}", Nexus.getInstance().getConfig().getGitHubOauthAppScope())
-                    .replace("{state}", Nexus.getInstance().getConfig().getGitHubOauthAppState())), true);
+                    .replace("{client_id}", Nexus.getInstance().getGitHubConfig().getGitHubOauthAppClientId())
+                    .replace("{scope}", Nexus.getInstance().getGitHubConfig().getGitHubOauthAppScope())
+                    .replace("{state}", Nexus.getInstance().getGitHubConfig().getGitHubOauthAppState())), true);
             event.respond("- Allow Nexus access.", true);
             event.respond("- Copy the URL you are redirected to (the code information in this is important, so don't change anything!).", true);
             event.respond("- Perform {0}, where <code> is the URL you copied above.", true, Nexus.getInstance().getConfig().getCommandPrefix() + this.getCommand() + " <code>");
@@ -63,19 +65,29 @@ public class GhKeyCommand extends CommandModule {
                 HashMap<String, String> params = getParams(codeUrl);
                 String code = params.get("code");
                 String state = params.get("state");
-                if (code != null && state != null && state.equals(Nexus.getInstance().getConfig().getGitHubOauthAppState())) {
+                if (code != null && state != null && state.equals(Nexus.getInstance().getGitHubConfig().getGitHubOauthAppState())) {
                     HttpResponse<JsonNode> response = Unirest.get(ACCESS_TOKEN
-                                .replace("{client_id}", Nexus.getInstance().getConfig().getGitHubOauthAppClientId())
-                                .replace("{client_secret}", Nexus.getInstance().getConfig().getGitHubOauthAppClientSecret())
+                                .replace("{client_id}", Nexus.getInstance().getGitHubConfig().getGitHubOauthAppClientId())
+                                .replace("{client_secret}", Nexus.getInstance().getGitHubConfig().getGitHubOauthAppClientSecret())
                                 .replace("{code}", code))
                             .header("accept", "application/json")
                             .asJson();
 
                     try {
-                        String accessToken = response.getBody().getObject().getString("access_token");
-                        Nexus.getInstance().getConfig().set("github-key-" + StringUtil.getIdent(event.getSender()), accessToken);
-                        Nexus.getInstance().getConfig().save();
-                        event.respondWithPing("You may now use the Nexus commands requiring API key information (e.g. IRC notification settings).");
+                        final String accessToken = response.getBody().getObject().getString("access_token");
+                        Nexus.getInstance().sendMessage(Nexus.getInstance().getUser("NickServ"), "info " + event.getSender().getNick());
+                        final String nick = event.getSender().getNick();
+                        new Timer().schedule(new TimerTask() {
+                            @Override
+                            public void run() {
+                                String account = Nexus.getInstance().getGitHubConfig().getAccountNameFor(nick);
+                                if (!account.isEmpty()) {
+                                    Nexus.getInstance().getGitHubConfig().set("github-key-" + account, accessToken);
+                                    Nexus.getInstance().getGitHubConfig().save();
+                                    event.respondWithPing("You may now use the Nexus commands requiring API key information (e.g. IRC notification settings).");
+                                }
+                            }
+                        }, 5000);
                         return true;
                     } catch (JSONException e) {
                         event.errorWithPing("Access denied. Reason: \"{0}\"", response.getBody().getObject().getString("error_description"));

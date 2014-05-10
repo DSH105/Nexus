@@ -104,12 +104,15 @@ public class GitHub {
     }
 
     public String getAccessToken(String userLogin, boolean onlyAllowTokenAccess) {
-        String accessToken = Nexus.getInstance().getConfig().getGitHubApiKey(userLogin);
+        if (userLogin == null || userLogin.isEmpty()) {
+            return "?access_token=" + Nexus.getInstance().getGitHubConfig().getNexusGitHubApiKey();
+        }
+        String accessToken = Nexus.getInstance().getGitHubConfig().getGitHubApiKey(userLogin);
         if (accessToken.isEmpty() && onlyAllowTokenAccess) {
             throw new GitHubAPIKeyInvalidException("GitHub API key for " + userLogin + " is invalid. Please provide one to access this part of the GitHub API");
         }
         // Make sure that we have a valid API key to use. Provide the default Nexus API key if this user doesn't have one.
-        return "?access_token=" + (accessToken.isEmpty() ? Nexus.getInstance().getConfig().getNexusGitHubApiKey() : accessToken);
+        return "?access_token=" + (accessToken.isEmpty() ? Nexus.getInstance().getGitHubConfig().getNexusGitHubApiKey() : accessToken);
     }
 
     public String getAccessToken(String userLogin) {

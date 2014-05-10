@@ -17,12 +17,17 @@
 
 package com.dsh105.nexus.util;
 
+import com.dsh105.nexus.Nexus;
+import com.dsh105.nexus.listener.EventManager;
 import org.pircbotx.User;
 
 public class StringUtil {
 
     public static String getIdent(User user) {
-        return user.getLogin().replaceAll("^\\W", "");
+        //Nexus.getInstance().sendMessage(Nexus.getInstance().getUser("NickServ"), "info " + user.getNick());
+        String accountName = Nexus.getInstance().getGitHubConfig().getAccountNameFor(user.getNick());
+        return accountName != null ? accountName : "";
+        //return user.getLogin().replaceAll("^\\W", "");
     }
 
     public static String removePing(String nick) {

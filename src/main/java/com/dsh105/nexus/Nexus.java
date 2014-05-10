@@ -19,6 +19,7 @@ package com.dsh105.nexus;
 
 import com.dsh105.nexus.command.CommandManager;
 import com.dsh105.nexus.command.module.RemindCommand;
+import com.dsh105.nexus.config.GitHubConfig;
 import com.dsh105.nexus.config.OptionsConfig;
 import com.dsh105.nexus.hook.github.GitHub;
 import com.dsh105.nexus.hook.jenkins.Jenkins;
@@ -45,6 +46,7 @@ public class Nexus extends PircBotX {
     public static JsonUtil JSON = new JsonUtil();
     public static String CONFIG_FILE_NAME = "options.txt";
     private OptionsConfig config;
+    private GitHubConfig githubConfig;
     private CommandManager commandManager;
     private ResponseManager responseManager;
     private Jenkins jenkins;
@@ -58,6 +60,7 @@ public class Nexus extends PircBotX {
         INSTANCE = this;
         this.registerLogger();
         config = new OptionsConfig();
+        githubConfig = new GitHubConfig();
         commandManager = new CommandManager();
         commandManager.registerDefaults();
         responseManager = new ResponseManager();
@@ -124,6 +127,8 @@ public class Nexus extends PircBotX {
     }
 
     public void saveAll() {
+        this.getConfig().save();
+        this.getGitHubConfig().save();
         this.saveChannels();
         RemindCommand remindCommand = this.getCommandManager().getModuleOfType(RemindCommand.class);
         if (remindCommand != null) {
@@ -157,6 +162,10 @@ public class Nexus extends PircBotX {
 
     public OptionsConfig getConfig() {
         return config;
+    }
+
+    public GitHubConfig getGitHubConfig() {
+        return githubConfig;
     }
 
     public CommandManager getCommandManager() {

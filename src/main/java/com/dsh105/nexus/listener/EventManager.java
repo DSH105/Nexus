@@ -24,6 +24,10 @@ import org.pircbotx.User;
 import org.pircbotx.hooks.ListenerAdapter;
 import org.pircbotx.hooks.events.*;
 
+import java.util.HashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class EventManager extends ListenerAdapter<Nexus> {
 
     @Override
@@ -54,14 +58,17 @@ public class EventManager extends ListenerAdapter<Nexus> {
 
     @Override
     public void onPrivateMessage(PrivateMessageEvent<Nexus> event) throws Exception {
-        Nexus.getInstance().getCommandManager().onCommand(null, event.getUser(), event.getMessage());
-        // Some commands can be performed through PM
-        /*String message = event.getMessage();
-        String commandPrefix = Nexus.getInstance().getConfig().getCommandPrefix();
-        if (message.startsWith(commandPrefix)) {
-            String[] split = message.substring(commandPrefix.length()).replaceAll("\\s+", " ").split(" ");
-            Nexus.getInstance().getCommandManager().onCommand(event.getUser(), split[0].toLowerCase(), StringUtil.splitArgs(1, split, " "));
-        }*/
+        if (event.getUser().getNick().equals("NickServ")) {
+            // Attempt to retrieve static login information for a user
+            Matcher matcher = Pattern.compile("Information on (.+?) \\(account (.+?)\\):").matcher(event.getMessage());
+            if (matcher.matches()) {
+                while (matcher.find()) {
+                    Nexus.getInstance().getGitHubConfig().storeNick(matcher.group(1), matcher.group(2));
+                }
+            }
+        } else {
+            Nexus.getInstance().getCommandManager().onCommand(null, event.getUser(), event.getMessage());
+        }
     }
 
     @Override

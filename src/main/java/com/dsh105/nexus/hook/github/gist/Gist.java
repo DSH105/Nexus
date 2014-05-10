@@ -82,7 +82,7 @@ public class Gist {
             gistJson.add("files", filesJson);
 
             HttpResponse<JsonNode> response = Unirest.post(GitHub.GISTS_API_URL)
-                    .basicAuth(Nexus.getInstance().getConfig().getGistAccountName(), Nexus.getInstance().getConfig().getGistAccountPassword())
+                    .basicAuth(Nexus.getInstance().getGitHubConfig().getGistAccountName(), Nexus.getInstance().getGitHubConfig().getGistAccountPassword())
                     .header("accept", "application/json")
                     .header("content-type", "application/json; charset=utf-8")
                     .body(gistJson.toString())
