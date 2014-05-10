@@ -30,7 +30,7 @@ public class TimeUtil {
         String number = "";
         for (int i = 0; i < input.length(); i++) {
             char c = input.charAt(i);
-            if (Character.isDigit(c)) {
+            if (c >= '0' && c <= '9') {
                 number += c;
             } else if (Character.isLetter(c) && !number.isEmpty()) {
                 result += convert(Integer.parseInt(number), c);
