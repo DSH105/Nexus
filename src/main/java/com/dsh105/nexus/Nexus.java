@@ -105,7 +105,7 @@ public class Nexus extends PircBotX {
             LOGGER.info("Loading saved reminders");
             remindCommand.loadReminders();
         }
-        //this.sendMessage(this.getChannel(this.getConfig().getAdminChannel()), "I'm back! ;D");
+        this.sendMessage(this.getChannel(this.getConfig().getAdminChannel()), "I'm back! ;D");
         LOGGER.info("Done! Nexus is ready!");
 
         ConsoleReader console = null;
