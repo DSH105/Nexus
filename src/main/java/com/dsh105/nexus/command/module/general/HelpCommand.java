@@ -40,7 +40,7 @@ public class HelpCommand extends CommandModule {
             }
             event.respond("Help info for {0}{1}:", true, event.getCommandPrefix(), module.getCommand());
             for (String part : module.getCommandInfo().extendedHelp()) {
-                event.respond(part.replace("{c}", event.getCommand()).replace("{p}", event.getCommandPrefix()).replace("{b}", Colors.BOLD).replace("{/b}", Colors.NORMAL), true);
+                event.respond(part.replace("{c}", module.getCommand()).replace("{p}", event.getCommandPrefix()).replace("{b}", Colors.BOLD).replace("{/b}", Colors.NORMAL), true);
             }
             return true;
         }
