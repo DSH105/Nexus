@@ -33,12 +33,11 @@ import org.pircbotx.User;
 import org.pircbotx.exception.IrcException;
 import org.pircbotx.exception.NickAlreadyInUseException;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.util.Scanner;
-import java.util.logging.FileHandler;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
+import java.util.logging.*;
 
 public class Nexus extends PircBotX {
 
@@ -59,6 +58,12 @@ public class Nexus extends PircBotX {
 
     public Nexus() {
         INSTANCE = this;
+        Runtime.getRuntime().addShutdownHook(new Thread() {
+            @Override
+            public void run() {
+                INSTANCE.shutdown(true);
+            }
+        });
         this.registerLogger();
         config = new OptionsConfig();
         githubConfig = new GitHubConfig();
