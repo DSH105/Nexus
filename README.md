@@ -48,14 +48,15 @@ We'll happily work with you on any PRs to ensure they can be pulled ASAP. :smile
 The most common contributions will be in the form of adding a new command. This is a relatively painless procedure. The general steps for doing so are outlined below:
 
 1. Fork the repository and clone your fork
-2. Navigate to the com.dsh105.nexus.command.module package in your IDE (in the src/main/java/com/dsh105/nexus/command/module/ directory)
-3. Create a new class that extends the com.dsh105.nexus.command.CommandModule class
-4. Add the @Command (com.dsh105.nexus.command.Command) annotation to your class and implement the interface
-5. Implement the onCommand method
+2. Navigate to the ``com.dsh105.nexus.command.module package`` in your IDE (in the ``src/main/java/com/dsh105/nexus/command/module/`` directory)
+3. Choose the right category for your command, if not create one
+4. Create a new class that extends the ``com.dsh105.nexus.command.CommandModule`` class
+5. Add the @Command (``com.dsh105.nexus.command.Command``) annotation to your class and implement the interface
+6. Implement the **onCommand** method
   - In general returning true signifies a valid command (i.e. args were valid)
   - Returning false will result in a help message on command usage
 
-You can take a look at the [channel stats command](https://github.com/DSH105/Nexus/blob/master/src/main/java/com/dsh105/nexus/command/module/ChannelStatsCommand.java) to give you a head-start.
+You can take a look at the [channel stats command](https://github.com/DSH105/Nexus/blob/master/src/main/java/com/dsh105/nexus/command/module/general/ChannelStatsCommand.java) to give you a head-start.
 
 Building
 ========
