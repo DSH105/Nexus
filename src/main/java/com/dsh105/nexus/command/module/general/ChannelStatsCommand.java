@@ -1,4 +1,4 @@
-package com.dsh105.nexus.command.module;
+package com.dsh105.nexus.command.module.general;
 
 import com.dsh105.nexus.command.Command;
 import com.dsh105.nexus.command.CommandModule;

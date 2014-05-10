@@ -15,7 +15,7 @@
  * along with Nexus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.dsh105.nexus.command.module;
+package com.dsh105.nexus.command.module.general;
 
 import com.dsh105.nexus.Nexus;
 import com.dsh105.nexus.command.Command;
@@ -40,7 +40,7 @@ public class HelpCommand extends CommandModule {
             }
             event.respond("Help info for {0}{1}:", true, event.getCommandPrefix(), module.getCommand());
             for (String part : module.getCommandInfo().extendedHelp()) {
-                event.respond(part.replace("{c}", event.getCommand()).replace("{p}", event.getCommandPrefix()).replace("{b}", Colors.BOLD).replace("{/b}", Colors.NORMAL), true);
+                event.respond(part.replace("{c}", module.getCommand()).replace("{p}", event.getCommandPrefix()).replace("{b}", Colors.BOLD).replace("{/b}", Colors.NORMAL), true);
             }
             return true;
         }
