@@ -70,4 +70,6 @@ Todo List
 * Custom command prefix for each channel
 * More hooking into GitHub
   * For example, retrieving information on specific users
+  * Currently per-user authentication with GitHub is implemented (see `ghkey` command). Maybe there's a nicer way to do this instead of having to post Nexus the link?
 * Plenty more commands
+* Travis integration
