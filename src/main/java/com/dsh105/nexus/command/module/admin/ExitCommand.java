@@ -34,8 +34,7 @@ public class ExitCommand extends CommandModule {
         } else {
             Nexus.getInstance().sendAction(event.getChannel(), "glides off into the distance...");
         }
-        while (Nexus.getInstance().getOutgoingQueueSize() > 0);
-        Nexus.getInstance().shutdown(true);
+        Nexus.endProcess();
         return true;
     }
 

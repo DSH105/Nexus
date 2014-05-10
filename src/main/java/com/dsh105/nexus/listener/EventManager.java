@@ -44,44 +44,70 @@ public class EventManager extends ListenerAdapter<Nexus> {
 
     @Override
     public void onInvite(InviteEvent<Nexus> event) throws Exception {
+        Nexus.LOGGER.info("Received invite to " + event.getChannel() + " from " + event.getUser());
         User user = Nexus.getInstance().getUser(event.getUser());
         Channel channel = Nexus.getInstance().getChannel(event.getChannel());
         if (user != null && channel != null) {
             if (Nexus.getInstance().isAdmin(user)) {
                 Nexus.getInstance().joinChannel(event.getChannel());
                 Nexus.getInstance().sendMessage(channel, event.getUser() + " wanted me in here.");
+                Nexus.LOGGER.info("Channel invite accepted");
             } else {
                 Nexus.getInstance().sendMessage(user, "You are not allowed to invite me.");
+                Nexus.LOGGER.info("Channel invite denied");
             }
         }
     }
 
-
-
     @Override
     public void onNotice(NoticeEvent<Nexus> event) throws Exception {
+        System.out.println("Received notice: " + event.getNotice());
         // Attempt to retrieve static login information for a user
-        System.out.println("NOTICE: " + event.getNotice());
         Matcher matcher = Pattern.compile("Information on (.+?) \\(account (.+?)\\):").matcher(event.getNotice());
         while (matcher.find()) {
             Nexus.getInstance().getGitHubConfig().storeNick(matcher.group(1), matcher.group(2));
-            System.out.println("STORING: " + matcher.group(1) + " : " + matcher.group(2));
-            System.out.println("STORED: " + Nexus.getInstance().getGitHubConfig().getAccountNameFor(matcher.group(1)));
         }
     }
 
     @Override
     public void onPrivateMessage(PrivateMessageEvent<Nexus> event) throws Exception {
+        Nexus.LOGGER.info("Received PM from " + event.getUser().getNick() + ": " + event.getMessage());
         Nexus.getInstance().getCommandManager().onCommand(null, event.getUser(), event.getMessage());
     }
 
     @Override
     public void onJoin(JoinEvent<Nexus> event) throws Exception {
         Nexus.getInstance().saveChannels();
+        Nexus.LOGGER.info("Joining channel: " + event.getChannel());
     }
 
     @Override
     public void onPart(PartEvent<Nexus> event) throws Exception {
         Nexus.getInstance().saveChannels();
+        Nexus.LOGGER.info("Parting channel: " + event.getChannel());
+    }
+
+    @Override
+    public void onConnect(ConnectEvent<Nexus> event) throws Exception {
+        Nexus.LOGGER.info("Connected to IRC");
+    }
+
+    @Override
+    public void onDisconnect(DisconnectEvent<Nexus> event) throws Exception {
+        Nexus.LOGGER.info("Disconnected");
+    }
+
+    @Override
+    public void onKick(KickEvent<Nexus> event) throws Exception {
+        if (event.getRecipient().getNick().equalsIgnoreCase(Nexus.getInstance().getNick())) {
+            Nexus.LOGGER.info("Kicked from " + event.getChannel() + " by " + event.getSource());
+        }
+    }
+
+    @Override
+    public void onVoice(VoiceEvent<Nexus> event) throws Exception {
+        if (event.getRecipient().getNick().equalsIgnoreCase(Nexus.getInstance().getNick())) {
+            Nexus.LOGGER.info("Voice " + (event.hasVoice() ? " given to " : " removed from ") + event.getRecipient().getNick() + " by " + event.getSource().getNick() + "in " + event.getChannel());
+        }
     }
 }

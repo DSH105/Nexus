@@ -157,6 +157,7 @@ public class GitHub {
     }
 
     public GitHubRepo getRepo(String name, String userLogin) {
+        Nexus.LOGGER.info("Requesting GitHub repo (" + name + ") on behalf of " + userLogin);
         if (repositories.get(name) != null) {
             return repositories.get(name);
         }
@@ -190,6 +191,7 @@ public class GitHub {
     }
 
     public GitHubUser getUser(String ghUserLogin, String userLogin) {
+        Nexus.LOGGER.info("Requesting GitHub user (" + ghUserLogin + ") on behalf of " + userLogin);
         try {
             return Nexus.JSON.read(makeRequest(getUserUrl(ghUserLogin), userLogin).getRawBody(), GitHubUser.class);
         } catch (UnirestException e) {
@@ -213,6 +215,7 @@ public class GitHub {
     }
 
     public GitHubIssue getIssue(GitHubRepo repo, int id, String userLogin) {
+        Nexus.LOGGER.info("Requesting GitHub issue (" + repo.getFullName() + " - #" + id + ") on behalf of " + userLogin);
         Iterator<GitHubIssue> iter = new ArrayList<>(issues).iterator();
         while (iter.hasNext()) {
             GitHubIssue i = iter.next();
@@ -310,6 +313,7 @@ public class GitHub {
     }
 
     public GitHubHook[] getHooks(String name, String userLogin) {
+        Nexus.LOGGER.info("Requesting GitHub hooks for " + name + " on behalf of " + userLogin);
         try {
             return Nexus.JSON.read(makeRequest(getHooksUrl(name), userLogin, false, true).getRawBody(), GitHubHook[].class);
         } catch (UnirestException e) {
@@ -357,6 +361,7 @@ public class GitHub {
             for (GitHubEvent e : events) {
                 s += s.isEmpty() ? "\"" + e.getJsonName() + "\"" : "," + "\"" + e.getJsonName() + "\"";
             }
+            Nexus.LOGGER.info("Attempting to set IRC notifications for " + repo + " to " + s + " on behalf of " + userLogin);
             ArrayList<String> eventsList = new ArrayList<>();
             for (GitHubEvent e : events) {
                 eventsList.add(e.getJsonName());
@@ -382,6 +387,7 @@ public class GitHub {
         GitHubHook hook = getHook(repo, "irc", userLogin);
         if (hook != null) {
             try {
+                Nexus.LOGGER.info("Requesting GitHub IRC notification settings for " + repo+ " on behalf of " + userLogin);
                 ArrayList<GitHubEvent> events = new ArrayList<>();
                 JSONArray eventsJsonArray = makeRequest(getHooksUrl(repo) + "/" + hook.getId(), userLogin, false, true).getBody().getObject().getJSONArray("events");
                 for (int i = 0; i < eventsJsonArray.length(); i++) {
@@ -403,6 +409,7 @@ public class GitHub {
 
         @Override
         public void run() {
+            Nexus.LOGGER.info("Updating GitHub repo storage...");
             HashMap<String, GitHubRepo> fullNameToRepoMapCopy = new HashMap<>(repositories);
             ArrayList<GitHubIssue> issuesCopy = new ArrayList<>(issues);
             for (Map.Entry<String, GitHubRepo> entry : fullNameToRepoMapCopy.entrySet()) {
