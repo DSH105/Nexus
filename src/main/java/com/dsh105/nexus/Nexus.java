@@ -112,12 +112,6 @@ public class Nexus extends PircBotX {
             remindCommand.loadReminders();
         }
         this.sendMessage(this.getChannel(this.getConfig().getAdminChannel()), "I'm back! ;D");
-
-        for (Channel channel : this.getChannels()) {
-            for (User u : channel.getUsers()) {
-
-            }
-        }
         LOGGER.info("Done! Nexus is ready!");
 
         ConsoleReader console = null;
