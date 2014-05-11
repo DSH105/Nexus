@@ -25,7 +25,7 @@ public class StringUtil {
 
     public static String getIdent(User user) {
         //Nexus.getInstance().sendMessage(Nexus.getInstance().getUser("NickServ"), "info " + user.getNick());
-        String accountName = Nexus.getInstance().getGitHubConfig().getAccountNameFor(user.getNick());
+        String accountName = Nexus.getInstance().getNicksConfig().getAccountNameFor(user.getNick());
         return accountName != null ? accountName : "";
         //return user.getLogin().replaceAll("^\\W", "");
     }

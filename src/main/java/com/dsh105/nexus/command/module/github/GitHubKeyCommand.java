@@ -81,7 +81,7 @@ public class GitHubKeyCommand extends CommandModule {
                             @Override
                             public void run() {
                                 System.out.println("Attempting to retrieve account name...");
-                                String account = Nexus.getInstance().getGitHubConfig().getAccountNameFor(nick);
+                                String account = Nexus.getInstance().getNicksConfig().getAccountNameFor(nick);
                                 if (account != null && !account.isEmpty()) {
                                     Nexus.getInstance().getGitHubConfig().set("github-key-" + account, accessToken);
                                     Nexus.getInstance().getGitHubConfig().save();

@@ -20,6 +20,7 @@ package com.dsh105.nexus;
 import com.dsh105.nexus.command.CommandManager;
 import com.dsh105.nexus.config.GitHubConfig;
 import com.dsh105.nexus.command.module.general.RemindCommand;
+import com.dsh105.nexus.config.NicksConfig;
 import com.dsh105.nexus.config.OptionsConfig;
 import com.dsh105.nexus.hook.github.GitHub;
 import com.dsh105.nexus.hook.jenkins.Jenkins;
@@ -48,6 +49,7 @@ public class Nexus extends PircBotX {
     public static String CONFIG_FILE_NAME = "options.yml";
     private OptionsConfig config;
     private GitHubConfig githubConfig;
+    private NicksConfig nicksConfig;
     private CommandManager commandManager;
     private ResponseManager responseManager;
     private Jenkins jenkins;
@@ -73,6 +75,7 @@ public class Nexus extends PircBotX {
         LOGGER.info("Loading config files");
         config = new OptionsConfig();
         githubConfig = new GitHubConfig();
+        nicksConfig = new NicksConfig();
 
         Unirest.setDefaultHeader("user-agent", getConfig().get("user-agent", "Nexus"));
 
@@ -106,6 +109,12 @@ public class Nexus extends PircBotX {
             remindCommand.loadReminders();
         }
         this.sendMessage(this.getChannel(this.getConfig().getAdminChannel()), "I'm back! ;D");
+
+        for (Channel channel : this.getChannels()) {
+            for (User u : channel.getUsers()) {
+
+            }
+        }
         LOGGER.info("Done! Nexus is ready!");
 
         ConsoleReader console = null;
@@ -248,6 +257,10 @@ public class Nexus extends PircBotX {
 
     public GitHubConfig getGitHubConfig() {
         return githubConfig;
+    }
+
+    public NicksConfig getNicksConfig() {
+        return nicksConfig;
     }
 
     public CommandManager getCommandManager() {
