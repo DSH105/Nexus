@@ -31,7 +31,7 @@ public class GitHubIssueCommand extends CommandModule {
             String fullName = event.getArgs().length == 2 ? event.getArgs()[0] : event.getArgs()[0] + " " + event.getArgs()[1];
             String issueNumber = event.getArgs().length == 2 ? event.getArgs()[1] : event.getArgs()[2];
             if (!StringUtil.isInt(issueNumber)) {
-                event.respondWithPing("{0} needs to be an integer.", issueNumber);
+                event.respondWithPing("{0} needs to be a number.", issueNumber);
                 return true;
             }
             Nexus.getInstance().getCommandManager().onCommand(event.getChannel(), event.getSender(), "repo " + fullName + " issue " + issueNumber);
