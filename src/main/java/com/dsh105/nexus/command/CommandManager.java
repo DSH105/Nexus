@@ -121,7 +121,7 @@ public class CommandManager {
                     return true;
                 }
                 if (!module.onCommand(event)) {
-                    event.error("Use " + Nexus.getInstance().getConfig().getCommandPrefix() + "{0} for help.", Nexus.getInstance().getConfig().getCommandPrefix() + "help " + event.getCommand());
+                    event.errorWithPing("Use " + Nexus.getInstance().getConfig().getCommandPrefix() + "{0} for help.", Nexus.getInstance().getConfig().getCommandPrefix() + "help " + event.getCommand());
                     return true;
                     /*Suggestion suggestion = new Suggestion(event.getArgs()[1], module.getCommandInfo().subCommands());
                     if (suggestion.getSuggestions() != null && suggestion.getSuggestions().length() > 0) {
