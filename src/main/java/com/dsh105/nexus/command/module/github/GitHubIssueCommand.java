@@ -23,7 +23,7 @@ import com.dsh105.nexus.command.CommandModule;
 import com.dsh105.nexus.command.CommandPerformEvent;
 import com.dsh105.nexus.util.StringUtil;
 
-@Command(command = "githubissue", aliases = {"ghi", "issue"}, needsChannel = false, help = "Retrieve issue information for a GitHub repository", extendedHelp = "This command is simply an alias of {p}{b}repo <name> issue <number>{/b}")
+@Command(command = "issue", aliases = {"githubissue", "ghi"}, needsChannel = false, help = "Retrieve issue information for a GitHub repository", extendedHelp = "This command is simply an alias of {p}{b}repo <name> issue <number>{/b}")
 public class GitHubIssueCommand extends CommandModule {
     @Override
     public boolean onCommand(CommandPerformEvent event) {
@@ -31,7 +31,7 @@ public class GitHubIssueCommand extends CommandModule {
             String fullName = event.getArgs().length == 2 ? event.getArgs()[0] : event.getArgs()[0] + " " + event.getArgs()[1];
             String issueNumber = event.getArgs().length == 2 ? event.getArgs()[1] : event.getArgs()[2];
             if (!StringUtil.isInt(issueNumber)) {
-                event.respondWithPing("{0} needs to be an integer.", issueNumber);
+                event.respondWithPing("{0} needs to be a number.", issueNumber);
                 return true;
             }
             Nexus.getInstance().getCommandManager().onCommand(event.getChannel(), event.getSender(), "repo " + fullName + " issue " + issueNumber);

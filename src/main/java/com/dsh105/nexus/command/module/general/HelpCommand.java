@@ -39,6 +39,7 @@ public class HelpCommand extends CommandModule {
                 event.respondWithPing("Check your private messages for help information.");
             }
             event.respond("Help info for {0}{1}:", true, event.getCommandPrefix(), module.getCommand());
+            event.respond("(Aliases for {0}: {1})", true, module.getCommand(), StringUtil.combineSplit(0, module.getCommandInfo().aliases(), ", "));
             for (String part : module.getCommandInfo().extendedHelp()) {
                 event.respond(part.replace("{c}", module.getCommand()).replace("{p}", event.getCommandPrefix()).replace("{b}", Colors.BOLD).replace("{/b}", Colors.NORMAL), true);
             }

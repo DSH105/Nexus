@@ -22,7 +22,6 @@ import com.dsh105.nexus.command.Command;
 import com.dsh105.nexus.command.CommandModule;
 import com.dsh105.nexus.command.CommandPerformEvent;
 import com.dsh105.nexus.exception.general.GenericUrlConnectionException;
-import com.dsh105.nexus.util.StringUtil;
 import com.dsh105.nexus.util.shorten.URLShortener;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
@@ -36,7 +35,7 @@ import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
 
-@Command(command = "githubkey", aliases = {"ghk", "ghkey"}, needsChannel = false, help = "Authenticate with GitHub through Nexus to allow the use of various GitHub commands requiring an API key.",
+@Command(command = "ghkey", aliases = {"ghk", "githubkey"}, needsChannel = false, help = "Authenticate with GitHub through Nexus to allow the use of various GitHub commands requiring an API key.",
         extendedHelp = {"{b}{p}{c}{/b} - Provides instructions on how to set this up."})
 public class GitHubKeyCommand extends CommandModule {
 
@@ -75,13 +74,13 @@ public class GitHubKeyCommand extends CommandModule {
 
                     try {
                         final String accessToken = response.getBody().getObject().getString("access_token");
-                        Nexus.getInstance().sendMessage(Nexus.getInstance().getUser("NickServ"), "info " + event.getSender().getNick());
                         final String nick = event.getSender().getNick();
+                        Nexus.getInstance().sendMessage(Nexus.getInstance().getUser("NickServ"), "info " + nick);
                         new Timer().schedule(new TimerTask() {
                             @Override
                             public void run() {
                                 System.out.println("Attempting to retrieve account name...");
-                                String account = Nexus.getInstance().getGitHubConfig().getAccountNameFor(nick);
+                                String account = Nexus.getInstance().getNicksConfig().getAccountNameFor(nick);
                                 if (account != null && !account.isEmpty()) {
                                     Nexus.getInstance().getGitHubConfig().set("github-key-" + account, accessToken);
                                     Nexus.getInstance().getGitHubConfig().save();

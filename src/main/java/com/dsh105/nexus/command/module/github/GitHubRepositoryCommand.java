@@ -30,7 +30,7 @@ import org.pircbotx.Colors;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 
-@Command(command = "githubrepository", aliases = {"repo", "repository", "ghrepo"}, needsChannel = false, help = "Management of GitHub repositories.",
+@Command(command = "repo", aliases = {"githubrepository", "repository", "ghrepo"}, needsChannel = false, help = "Management of GitHub repositories.",
         extendedHelp = {
                 "The repo command contains various commands to manage GitHub repositories.",
                 "{b}{p}{c} <name>{/b} - retrieves repository information for the given repo. Uses the sender's nick as the GitHub login",
@@ -216,7 +216,7 @@ public class GitHubRepositoryCommand extends CommandModule {
                         event.respond("Title: " + issue.getTitle());
                         //event.respond("Body: \"" + body + "\"");
                         event.respond("Status: {0} | Comments: {1}", state, String.valueOf(issue.getComments()));
-                        event.respond("Created: {0} | Updated: {1} | " + (issue.getDateClosed() != null ? " | Closed {2}" : ""), issue.getDateCreated(), issue.getDateUpdated(), issue.getDateClosed());
+                        event.respond("Created: {0} | Updated: {1}" + (issue.getDateClosed() != null ? " | Closed {2}" : ""), issue.getDateCreated(), issue.getDateUpdated(), issue.getDateClosed());
                     }
                     return true;
                 }

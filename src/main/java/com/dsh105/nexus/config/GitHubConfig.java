@@ -23,8 +23,6 @@ import java.util.Map;
 
 public class GitHubConfig extends YamlConfig {
 
-    private HashMap<String, String> nicks = new HashMap<>();
-
     public GitHubConfig() {
         super("github-config.yml");
         this.setDefaults();
@@ -41,37 +39,6 @@ public class GitHubConfig extends YamlConfig {
         this.options.put("github-oauth-state", "change-me");
         this.options.put("gist-account-name", "");
         this.options.put("gist-account-password", "");
-    }
-
-    @Override
-    public void loadData(Map<String, Object> loadedData) {
-        super.loadData(loadedData);
-        for (String s : this.get("nicks", new ArrayList<String>())) {
-            String[] parts = s.split(":");
-            this.nicks.put(parts[0], parts[1]);
-        }
-    }
-
-    @Override
-    public void save() {
-        ArrayList<String> list = new ArrayList<>();
-        for (Map.Entry<String, String> entry : nicks.entrySet()) {
-            list.add(entry.getValue() + ":" + entry.getValue());
-        }
-        this.set("nicks", list);
-        super.save();
-    }
-
-    public HashMap<String, String> getAllStoredNicks() {
-        return new HashMap<>(nicks);
-    }
-
-    public String getAccountNameFor(String nick) {
-        return nicks.get(nick);
-    }
-
-    public void storeNick(String nick, String account) {
-        nicks.put(nick, account);
     }
 
     public String getGitHubApiKey(String userLogin) {
