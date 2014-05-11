@@ -39,20 +39,27 @@ public class ResponseManager {
                 responsesFolder.mkdirs();
             }
             for (File f : responsesFolder.listFiles()) {
-                String triggerWord = f.getName().split("-")[1];
-
-                FileInputStream input = new FileInputStream(f);
-                Yaml yaml = new Yaml();
-                Map<String, Object> data = (Map<String, Object>) yaml.load(input);
-                if (data != null && !data.isEmpty()) {
-                    try {
-                        ArrayList<String> responses = (ArrayList<String>) data.get("responses");
-                        int chance = (Integer) data.get("chance");
-                        this.responses.put(new ResponseTrigger(chance, triggerWord), responses);
-                    } catch (Exception ignored) {
-                    }
+                int extIndex = f.getName().lastIndexOf(".");
+                String extension = "";
+                if (extIndex > 0) {
+                    extension = f.getName().substring(extIndex + 1);
                 }
-                toRemove.add(f);
+                if (extension.equalsIgnoreCase("YML")) {
+                    String triggerWord = f.getName().substring(0, extIndex);
+
+                    FileInputStream input = new FileInputStream(f);
+                    Yaml yaml = new Yaml();
+                    Map<String, Object> data = (Map<String, Object>) yaml.load(input);
+                    if (data != null && !data.isEmpty()) {
+                        try {
+                            ArrayList<String> responses = (ArrayList<String>) data.get("responses");
+                            int chance = (Integer) data.get("chance");
+                            this.responses.put(new ResponseTrigger(chance, triggerWord), responses);
+                        } catch (Exception ignored) {
+                        }
+                    }
+                    toRemove.add(f);
+                }
             }
 
             Iterator<File> i = toRemove.iterator();
@@ -78,7 +85,7 @@ public class ResponseManager {
             }
             PrintWriter writer = null;
             try {
-                File file = new File(rootFolder, trigger.getTrigger() + ".txt");
+                File file = new File(rootFolder, trigger.getTrigger() + ".yml");
                 if (file.exists()) {
                     file.delete();
                 }
@@ -118,7 +125,12 @@ public class ResponseManager {
 
     public boolean onMention(ResponseTrigger trigger, Channel channel, User user, String message, ArrayList<String> possibleResponses) {
         if (r.nextInt(100) < trigger.getChance()) {
-            Nexus.getInstance().sendMessage(channel, getRandomResponse(possibleResponses));
+            String randomResponse = getRandomResponse(possibleResponses);
+            if (channel == null) {
+                Nexus.getInstance().sendMessage(user, randomResponse);
+            } else {
+                Nexus.getInstance().sendMessage(channel, randomResponse);
+            }
             return true;
         }
         return false;

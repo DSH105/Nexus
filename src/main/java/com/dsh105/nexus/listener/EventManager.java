@@ -72,7 +72,9 @@ public class EventManager extends ListenerAdapter<Nexus> {
     @Override
     public void onPrivateMessage(PrivateMessageEvent<Nexus> event) throws Exception {
         Nexus.LOGGER.info("Received PM from " + event.getUser().getNick() + ": " + event.getMessage());
-        Nexus.getInstance().getCommandManager().onCommand(null, event.getUser(), event.getMessage());
+        if (!Nexus.getInstance().getCommandManager().onCommand(null, event.getUser(), event.getMessage())) {
+            Nexus.getInstance().getResponseManager().trigger(null, event.getUser(), event.getMessage());
+        }
     }
 
     @Override
