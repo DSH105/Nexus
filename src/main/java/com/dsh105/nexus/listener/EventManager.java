@@ -78,13 +78,13 @@ public class EventManager extends ListenerAdapter<Nexus> {
     @Override
     public void onJoin(JoinEvent<Nexus> event) throws Exception {
         Nexus.getInstance().saveChannels();
-        Nexus.LOGGER.info("Joining channel: " + event.getChannel());
+        Nexus.LOGGER.info("Joining channel: " + event.getChannel().getName());
     }
 
     @Override
     public void onPart(PartEvent<Nexus> event) throws Exception {
         Nexus.getInstance().saveChannels();
-        Nexus.LOGGER.info("Parting channel: " + event.getChannel());
+        Nexus.LOGGER.info("Parting channel: " + event.getChannel().getName());
     }
 
     @Override
