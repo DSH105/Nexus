@@ -219,6 +219,7 @@ public class Nexus extends PircBotX {
     public void saveAll() {
         LOGGER.info("Saving config files");
         this.getConfig().save();
+        this.getNicksConfig().save();
         this.getGitHubConfig().save();
         LOGGER.info("Saving channels");
         this.saveChannels();

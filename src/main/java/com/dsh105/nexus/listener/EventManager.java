@@ -61,7 +61,7 @@ public class EventManager extends ListenerAdapter<Nexus> {
 
     @Override
     public void onNotice(NoticeEvent<Nexus> event) throws Exception {
-        System.out.println("Received notice: " + event.getNotice());
+        Nexus.LOGGER.info("Received notice: " + event.getNotice());
         // Attempt to retrieve static login information for a user
         Matcher matcher = Pattern.compile("Information on (.+?) \\(account (.+?)\\):").matcher(event.getNotice());
         while (matcher.find()) {
@@ -94,7 +94,7 @@ public class EventManager extends ListenerAdapter<Nexus> {
 
     @Override
     public void onDisconnect(DisconnectEvent<Nexus> event) throws Exception {
-        Nexus.LOGGER.info("Disconnected");
+        Nexus.LOGGER.info("Disconnected from IRC");
     }
 
     @Override

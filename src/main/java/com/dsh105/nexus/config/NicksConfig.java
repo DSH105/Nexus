@@ -38,7 +38,8 @@ public class NicksConfig extends YamlConfig {
     @Override
     public void loadData(Map<String, Object> loadedData) {
         super.loadData(loadedData);
-        for (String s : this.get("nicks", new ArrayList<String>())) {
+        ArrayList<String> loadedNicks = this.get("nicks", new ArrayList<String>());
+        for (String s : loadedNicks) {
             String[] parts = s.split(":");
             this.nicks.put(parts[0], parts[1]);
         }
@@ -48,9 +49,9 @@ public class NicksConfig extends YamlConfig {
     public void save() {
         ArrayList<String> list = new ArrayList<>();
         for (Map.Entry<String, String> entry : nicks.entrySet()) {
-            list.add(entry.getValue() + ":" + entry.getValue());
+            list.add(entry.getKey() + ":" + entry.getValue());
         }
-        this.set("nicks", list);
+        this.set("nicks", list.toArray(new String[list.size()]));
         super.save();
     }
 
@@ -59,10 +60,10 @@ public class NicksConfig extends YamlConfig {
     }
 
     public String getAccountNameFor(String nick) {
-        return nicks.get(nick);
+        return nicks.get(nick.replaceAll("\\W", ""));
     }
 
     public void storeNick(String nick, String account) {
-        nicks.put(nick, account);
+        nicks.put(nick.replaceAll("\\W", ""), account.replaceAll("\\W", ""));
     }
 }

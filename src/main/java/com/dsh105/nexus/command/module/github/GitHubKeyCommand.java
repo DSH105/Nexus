@@ -22,7 +22,6 @@ import com.dsh105.nexus.command.Command;
 import com.dsh105.nexus.command.CommandModule;
 import com.dsh105.nexus.command.CommandPerformEvent;
 import com.dsh105.nexus.exception.general.GenericUrlConnectionException;
-import com.dsh105.nexus.util.StringUtil;
 import com.dsh105.nexus.util.shorten.URLShortener;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
@@ -80,7 +79,6 @@ public class GitHubKeyCommand extends CommandModule {
                         new Timer().schedule(new TimerTask() {
                             @Override
                             public void run() {
-                                System.out.println("Attempting to retrieve account name...");
                                 String account = Nexus.getInstance().getNicksConfig().getAccountNameFor(nick);
                                 if (account != null && !account.isEmpty()) {
                                     Nexus.getInstance().getGitHubConfig().set("github-key-" + account, accessToken);
