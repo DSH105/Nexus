@@ -52,7 +52,7 @@ public class GitHubOctocatCommand extends CommandModule {
 
         Octocat oc = octocats.get(id);
         if (oc == null) {
-            event.respondWithPing("An unknown error occurred! Try again later.");
+            event.respondWithPing("Invalid Octocat Specified!");
         } else if (id == -1) {
             event.respondWithPing("{0} is an invalid ID!", String.valueOf(id));
         } else {
