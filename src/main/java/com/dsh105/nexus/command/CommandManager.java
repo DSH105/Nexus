@@ -133,13 +133,11 @@ public class CommandManager {
         } catch (Exception e) {
             if (e instanceof GitHubAPIKeyInvalidException) {
                 event.respondWithPing(Colors.RED + e.getMessage());
-                return true;
-            }
-            if (e instanceof GitHubRateLimitExceededException) {
+            } else if (e instanceof GitHubRateLimitExceededException) {
                 event.respondWithPing(Colors.RED + "Rate limit for this GitHub API Key exceeded. Further requests cannot be executed on the behalf of this user.");
-                return true;
+            } else {
+                event.respondWithPing(Colors.RED + "Houston, we have a problem! Here is a conveniently provided stacktrace: " + GitHub.getGitHub().createGist(e));
             }
-            event.respondWithPing(Colors.RED + "Houston, we have a problem! Here is a conveniently provided stacktrace: " + GitHub.getGitHub().createGist(e));
             return true;
         }
         return false;
