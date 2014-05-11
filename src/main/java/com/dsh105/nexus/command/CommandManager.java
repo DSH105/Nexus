@@ -80,7 +80,15 @@ public class CommandManager {
         for (CommandModule module : modules) {
             if (module.getCommandInfo().command().equalsIgnoreCase(commandArguments)) {
                 return module;
-            } else if (module.getCommand().startsWith(commandArguments)) {
+            }
+
+            for (String alias : module.getCommandInfo().aliases()) {
+                if (commandArguments.equalsIgnoreCase(alias) || alias.startsWith(commandArguments)) {
+                    return module;
+                }
+            }
+
+            if (module.getCommand().startsWith(commandArguments)) {
                 possibleMatch = module;
             }
         }

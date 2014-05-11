@@ -65,7 +65,7 @@ public class EventManager extends ListenerAdapter<Nexus> {
         // Attempt to retrieve static login information for a user
         Matcher matcher = Pattern.compile("Information on (.+?) \\(account (.+?)\\):").matcher(event.getNotice());
         while (matcher.find()) {
-            Nexus.getInstance().getGitHubConfig().storeNick(matcher.group(1), matcher.group(2));
+            Nexus.getInstance().getNicksConfig().storeNick(matcher.group(1), matcher.group(2));
         }
     }
 
