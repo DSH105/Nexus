@@ -87,7 +87,7 @@ public class Nexus extends PircBotX {
         responseManager = new ResponseManager();
 
         this.setName(this.getConfig().getNick());
-        this.setLogin("Nexus");
+        this.setLogin(this.getConfig().getNick());
         this.setVersion("Nexus");
         this.setVerbose(false);
         this.setAutoReconnectChannels(true);

@@ -21,8 +21,7 @@ import com.dsh105.nexus.Nexus;
 import com.dsh105.nexus.command.Command;
 import com.dsh105.nexus.command.CommandModule;
 import com.dsh105.nexus.command.CommandPerformEvent;
-import com.dsh105.nexus.exception.general.GenericUrlConnectionException;
-import com.dsh105.nexus.util.StringUtil;
+import com.dsh105.nexus.exception.general.GenericUrlConnectionExceptio;
 import com.dsh105.nexus.util.shorten.URLShortener;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
@@ -99,7 +98,7 @@ public class GitHubKeyCommand extends CommandModule {
                     return true;
                 }
             } catch (UnirestException e) {
-                throw new GenericUrlConnectionException("Failed to connect.", e);
+                throw new GenericUrlConnectionExceptio("Failed to connect.", e);
             } catch (MalformedURLException e) {
                 event.errorWithPing("Invalid URL code provided. Please make sure you copy the entire URL into the command.");
                 return true;
