@@ -39,6 +39,7 @@ import org.pircbotx.exception.NickAlreadyInUseException;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.logging.*;
 
 public class Nexus extends PircBotX {
@@ -69,6 +70,12 @@ public class Nexus extends PircBotX {
             }
         });
         Unirest.setTimeouts(10000, 10000);
+        try {
+            setEncoding("UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            LOGGER.severe("Failed to set bot encoding!");
+            e.printStackTrace();
+        }
 
         this.registerLogger();
 

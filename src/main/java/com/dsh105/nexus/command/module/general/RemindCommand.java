@@ -183,7 +183,7 @@ public class RemindCommand extends CommandModule {
         @Override
         public void run() {
             if (channel != null) {
-                Nexus.getInstance().sendMessage(channel, "I have a reminder for you, " + userToRemind + "! \"" + Colors.BOLD + reminder + Colors.NORMAL + "\"" + (from.equals(userToRemind) ? "" : " (from " + StringUtil.removePing(from) + ")"));
+                Nexus.getInstance().sendRawLine("PRIVMSG " + channel + ":I have a reminder for you, " + userToRemind + "! \"" + Colors.BOLD + reminder + Colors.NORMAL + "\"" + (from.equals(userToRemind) ? "" : " (from " + StringUtil.removePing(from) + ")"));
             }
             this.cancel(true);
         }
