@@ -36,7 +36,7 @@ import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
 
-@Command(command = "githubkey", aliases = {"ghk", "ghkey"}, needsChannel = false, help = "Authenticate with GitHub through Nexus to allow the use of various GitHub commands requiring an API key.",
+@Command(command = "ghkey", aliases = {"ghk", "githubkey"}, needsChannel = false, help = "Authenticate with GitHub through Nexus to allow the use of various GitHub commands requiring an API key.",
         extendedHelp = {"{b}{p}{c}{/b} - Provides instructions on how to set this up."})
 public class GitHubKeyCommand extends CommandModule {
 
@@ -75,8 +75,8 @@ public class GitHubKeyCommand extends CommandModule {
 
                     try {
                         final String accessToken = response.getBody().getObject().getString("access_token");
-                        Nexus.getInstance().sendMessage(Nexus.getInstance().getUser("NickServ"), "info " + event.getSender().getNick());
                         final String nick = event.getSender().getNick();
+                        Nexus.getInstance().sendMessage(Nexus.getInstance().getUser("NickServ"), "info " + nick);
                         new Timer().schedule(new TimerTask() {
                             @Override
                             public void run() {
