@@ -3,6 +3,8 @@ Nexus
 
 DSH105's IRC bot. A versatile Java IRC bot using the PircBotX library.
 
+According to Latin (`C17`), Nexus can be defined as `a binding together` (from `nectere` - `to bind`). Therefore, Nexus is the bot that brings everyone together.
+
 I like contributions ;D
 
 Current Features
