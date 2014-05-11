@@ -39,7 +39,7 @@ public class OptionsConfig extends YamlConfig {
         this.options.put("server", "irc.esper.net");
         this.options.put("port", 5555);
         this.options.put("server-password", "");
-        this.options.put("account-password", "");
+        this.options.put("nickserv-password", "");
         this.options.put("command-prefix", "\\");
         this.options.put("nick", "Nexus");
         this.options.put("admin-channel", "");
@@ -87,12 +87,12 @@ public class OptionsConfig extends YamlConfig {
         return get("ready", false);
     }
 
-    public String getAccountPassword() {
-        return get("account-password", "");
-    }
-
     public String getServerPassword() {
         return get("server-password", "");
+    }
+
+    public String getNickServPassword() {
+        return get("nickserv-password", "");
     }
 
     public String getCommandPrefix() {

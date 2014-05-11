@@ -39,7 +39,6 @@ import org.pircbotx.exception.NickAlreadyInUseException;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Set;
 import java.util.logging.*;
 
 public class Nexus extends PircBotX {
@@ -95,8 +94,8 @@ public class Nexus extends PircBotX {
         this.setVersion(this.getConfig().getNick());
         this.setVerbose(false);
         this.setAutoReconnectChannels(true);
-        if (this.config.getAccountPassword() != null && !this.config.getAccountPassword().isEmpty()) {
-            this.identify(this.config.getAccountPassword());
+        if (this.config.getNickServPassword() != null && !this.config.getNickServPassword().isEmpty()) {
+            this.identify(this.config.getNickServPassword());
         }
         this.connect();
 
@@ -201,7 +200,7 @@ public class Nexus extends PircBotX {
 
             LOGGER.info("Attempting to connect to " + this.config.getServer());
 
-            this.connect(this.config.getServer(), this.config.getPort(), this.config.getAccountPassword());
+            this.connect(this.config.getServer(), this.config.getPort(), this.config.getServerPassword());
             for (String channel : this.config.getChannels()) {
                 this.joinChannel(channel);
             }
