@@ -51,7 +51,7 @@ The most common contributions will be in the form of adding a new command. This 
 2. Navigate to the ``com.dsh105.nexus.command.module package`` in your IDE (in the ``src/main/java/com/dsh105/nexus/command/module/`` directory)
 3. Choose the right category for your command, if not create one
 4. Create a new class that extends the ``com.dsh105.nexus.command.CommandModule`` class
-5. Add the @Command (``com.dsh105.nexus.command.Command``) annotation to your class and implement the interface
+5. Add the [@Command](https://github.com/DSH105/Nexus/blob/master/src/main/java/com/dsh105/nexus/command/Command.java) (``com.dsh105.nexus.command.Command``) annotation to your class and implement the interface
 6. Implement the **onCommand** method
   - In general returning true signifies a valid command (i.e. args were valid)
   - Returning false will result in a help message on command usage
@@ -69,7 +69,6 @@ Todo List
 * Allow disabling of certain commands per channel
 * Custom command prefix for each channel
 * More hooking into GitHub
-  * For example, retrieving information on specific users
   * Currently per-user authentication with GitHub is implemented (see `ghkey` command). Maybe there's a nicer way to do this instead of having to post Nexus the link?
 * Plenty more commands
 * Travis integration ([Click for more information](http://docs.travis-ci.com/api/))
