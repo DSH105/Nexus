@@ -90,11 +90,13 @@ public class Nexus extends PircBotX {
         responseManager = new ResponseManager();
 
         this.setName(this.getConfig().getNick());
-        this.setLogin("Nexus");
-        this.setVersion("Nexus");
+        this.setLogin(this.getConfig().getNick());
+        this.setVersion(this.getConfig().getNick());
         this.setVerbose(false);
         this.setAutoReconnectChannels(true);
-        this.identify(this.config.getAccountPassword());
+        if (this.config.getAccountPassword() != null && !this.config.getAccountPassword().isEmpty()) {
+            this.identify(this.config.getAccountPassword());
+        }
         this.connect();
 
         if (!this.config.getJenkinsUrl().isEmpty()) {
@@ -165,7 +167,7 @@ public class Nexus extends PircBotX {
     private void registerLogger() {
         try {
             Logger root = Logger.getLogger("");
-            root.setLevel(Level.ALL);
+            root.setLevel(Level.INFO);
             Formatter formatter = new ShortLoggerFormatter();
 
             FileHandler handler = new FileHandler("Nexus.log", true);
@@ -185,7 +187,7 @@ public class Nexus extends PircBotX {
                 console = new ConsoleHandler();
                 registerWithRoot = true;
             }
-            console.setLevel(Level.ALL);
+            console.setLevel(Level.INFO);
             console.setFormatter(formatter);
             if (registerWithRoot) {
                 root.addHandler(console);
