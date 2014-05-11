@@ -15,8 +15,8 @@ import org.pircbotx.Colors;
 import java.util.HashMap;
 import java.util.Random;
 
-@Command(command = "githuboctocat",
-        aliases = {"octocat", "octo"},
+@Command(command = "octo",
+        aliases = {"githuboctocat", "octocat"},
         needsChannel = false,
         help = "Give information on a random or specified Octocat.",
         extendedHelp = {"{b}{p}{c}{/b} - Display a random Octocat.", "{b}{p}{c}{/b} <id> - Display a specified Octocat."})

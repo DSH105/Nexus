@@ -129,7 +129,7 @@ public class Nexus extends PircBotX {
 
             while ((line = console.readLine("")) != null) {
                 if (INSTANCE != null) {
-                    if (line.equalsIgnoreCase("EXIT")) {
+                    if (line.equalsIgnoreCase("EXIT") || line.equalsIgnoreCase("END") || line.equalsIgnoreCase("STOP") || line.equalsIgnoreCase("QUIT")) {
                         endProcess();
                     }
                 }
