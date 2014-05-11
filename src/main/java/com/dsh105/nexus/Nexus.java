@@ -88,6 +88,7 @@ public class Nexus extends PircBotX {
 
         LOGGER.info("Preparing response manager");
         responseManager = new ResponseManager();
+        responseManager.load();
 
         this.setName(this.getConfig().getNick());
         this.setLogin(this.getConfig().getNick());
@@ -222,6 +223,8 @@ public class Nexus extends PircBotX {
             LOGGER.info("Saving reminders");
             remindCommand.saveReminders();
         }
+        LOGGER.info("Saving responses");
+        responseManager.save();
     }
 
     public void saveChannels() {

@@ -20,55 +20,87 @@ package com.dsh105.nexus.response;
 import com.dsh105.nexus.Nexus;
 import org.pircbotx.Channel;
 import org.pircbotx.User;
+import org.yaml.snakeyaml.Yaml;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Random;
+import java.io.*;
+import java.util.*;
 
 public class ResponseManager {
 
     private HashMap<ResponseTrigger, ArrayList<String>> responses = new HashMap<>();
     private Random r = new Random();
 
-    public ResponseManager() {
-        this.load();
-    }
-
     public void load() {
         try {
+            ArrayList<File> toRemove = new ArrayList<>();
+
             File responsesFolder = new File("responses");
             if (!responsesFolder.exists()) {
                 responsesFolder.mkdirs();
             }
             for (File f : responsesFolder.listFiles()) {
-                if (f.getName().startsWith("responses-")) {
-                    BufferedReader reader = null;
-                    try {
-                        String s = f.getName().split("-")[1];
-                        ArrayList<String> responses = new ArrayList<>();
-                        reader = new BufferedReader(new FileReader(f));
-                        String line;
-                        while ((line = reader.readLine()) != null) {
-                            responses.add(line);
-                        }
-                        reader.close();
+                String triggerWord = f.getName().split("-")[1];
 
-                        this.responses.put(new ResponseTrigger(Nexus.getInstance().getConfig().get("responses." + s + ".chance", 5), s), responses);
-                    } catch (IOException e) {
-                        if (reader != null) {
-                            reader.close();
-                        }
+                FileInputStream input = new FileInputStream(f);
+                Yaml yaml = new Yaml();
+                Map<String, Object> data = (Map<String, Object>) yaml.load(input);
+                if (data != null && !data.isEmpty()) {
+                    try {
+                        ArrayList<String> responses = (ArrayList<String>) data.get("responses");
+                        int chance = (Integer) data.get("chance");
+                        this.responses.put(new ResponseTrigger(chance, triggerWord), responses);
+                    } catch (Exception ignored) {
                     }
                 }
+                toRemove.add(f);
+            }
+
+            Iterator<File> i = toRemove.iterator();
+            while (i.hasNext()) {
+                File f = i.next();
+                f.delete();
+                i.remove();
             }
         } catch (IOException e) {
             Nexus.LOGGER.severe("Could not load responses!");
             e.printStackTrace();
         }
+    }
+
+    public void save() {
+        for (Map.Entry<ResponseTrigger, ArrayList<String>> entry : responses.entrySet()) {
+            ResponseTrigger trigger = entry.getKey();
+            ArrayList<String> responses = entry.getValue();
+
+            File rootFolder = new File("responses");
+            if (!rootFolder.exists()) {
+                rootFolder.mkdirs();
+            }
+            PrintWriter writer = null;
+            try {
+                File file = new File(rootFolder, trigger.getTrigger() + ".txt");
+                if (file.exists()) {
+                    file.delete();
+                }
+                file.createNewFile();
+
+                HashMap<String, Object> valueMap = new HashMap<>();
+                valueMap.put("chance", trigger.getChance());
+                valueMap.put("responses", responses);
+
+                writer = new PrintWriter(new FileOutputStream(file));
+                Yaml yaml = new Yaml();
+                writer.write(yaml.dump(valueMap));
+                writer.close();
+            } catch (IOException e) {
+                Nexus.LOGGER.severe("Could not save reminders!");
+                e.printStackTrace();
+                if (writer != null) {
+                    writer.close();
+                }
+            }
+        }
+        this.responses.clear();
     }
 
     public boolean trigger(Channel channel, User user, String message) {
