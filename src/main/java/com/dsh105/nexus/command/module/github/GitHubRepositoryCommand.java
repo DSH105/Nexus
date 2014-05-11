@@ -216,7 +216,7 @@ public class GitHubRepositoryCommand extends CommandModule {
                         event.respond("Title: " + issue.getTitle());
                         //event.respond("Body: \"" + body + "\"");
                         event.respond("Status: {0} | Comments: {1}", state, String.valueOf(issue.getComments()));
-                        event.respond("Created: {0} | Updated: {1} | " + (issue.getDateClosed() != null ? " | Closed {2}" : ""), issue.getDateCreated(), issue.getDateUpdated(), issue.getDateClosed());
+                        event.respond("Created: {0} | Updated: {1}" + (issue.getDateClosed() != null ? " | Closed {2}" : ""), issue.getDateCreated(), issue.getDateUpdated(), issue.getDateClosed());
                     }
                     return true;
                 }
