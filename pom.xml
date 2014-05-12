@@ -117,6 +117,13 @@
             <artifactId>junit</artifactId>
             <version>4.11</version>
         </dependency>
+        
+        <!-- PrettyTime -->
+        <dependency>
+            <groupId>org.ocpsoft.prettytime</groupId>
+            <artifactId>prettytime</artifactId>
+            <version>3.2.5.Final</version>
+        </dependency>
     </dependencies>
 
     <!-- Build -->
