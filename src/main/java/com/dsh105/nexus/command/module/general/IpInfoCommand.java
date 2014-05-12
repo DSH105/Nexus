@@ -56,14 +56,14 @@ public class IpInfoCommand extends CommandModule {
             builder.append(Colors.BOLD + info);
 
             if (object.has("country")) {
-                builder.append("Country: ").append(Colors.BOLD + object.getString("country")).append(" ");
+                builder.append("Country: ").append(Colors.BOLD + object.getString("country") + Colors.NORMAL).append(" ");
             }
 
             if (object.has("isp")) {
-                builder.append("ISP: ").append(Colors.BOLD + object.getString("isp")).append(" ");
+                builder.append("ISP: ").append(Colors.BOLD + object.getString("isp") + Colors.NORMAL).append(" ");
             }
 
-            event.respondWithPing(builder.toString().trim() + "(" + URLShortener.shorten(maps) + ")");
+            event.respondWithPing(builder.toString().trim() + " (" + URLShortener.shorten(maps) + ")");
 
         } catch (UnirestException e) {
             return false;

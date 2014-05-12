@@ -27,8 +27,12 @@ public class ShortLoggerFormatter extends Formatter {
 
     private final SimpleDateFormat date;
 
+    public ShortLoggerFormatter(boolean includeDate) {
+        this.date = new SimpleDateFormat((includeDate ? "dd/MM/yyyy " : "") + "HH:mm:ss");
+    }
+
     public ShortLoggerFormatter() {
-        this.date = new SimpleDateFormat("HH:mm:ss");
+        this(false);
     }
 
     // From https://github.com/Bukkit/CraftBukkit/blob/master/src/main/java/org/bukkit/craftbukkit/util/ShortConsoleLogFormatter.java
