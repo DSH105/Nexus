@@ -1,9 +1,15 @@
 package com.dsh105.nexus.command.module.minecraft;
 
+import com.dsh105.nexus.Nexus;
 import com.dsh105.nexus.command.Command;
 import com.dsh105.nexus.command.CommandModule;
 import com.dsh105.nexus.command.CommandPerformEvent;
+import com.dsh105.nexus.exception.general.GenericUrlConnectionException;
 import com.dsh105.nexus.util.JsonUtil;
+import com.mashape.unirest.http.HttpResponse;
+import com.mashape.unirest.http.JsonNode;
+import com.mashape.unirest.http.Unirest;
+import com.mashape.unirest.http.exceptions.UnirestException;
 import org.pircbotx.Colors;
 
 import java.io.BufferedReader;
@@ -34,76 +40,28 @@ public class MinecraftUserCommand extends CommandModule {
             boolean isValid;
             boolean hasPaid;
             try {
-                JsonUtil jsonUtil = new JsonUtil();
-                UserProfile[] profile = jsonUtil.read(getUUIDConnection(username), "profiles", UserProfile[].class);
-
-                uuid = profile[0].id;
+                uuid = getProfiles(username)[0].id;
                 isValid = getPageContents("https://account.minecraft.net/buy/frame/checkName/" + username).equalsIgnoreCase("TAKEN");
-                hasPaid = getPageContents("https://minecraft.net/haspaid.jsp?user=" + username).equalsIgnoreCase("true");
-            } catch (Exception e) {
-                e.printStackTrace();
-                event.respondWithPing(Colors.RED + "Error occured while fetching data! Try again later...");
-                return true;
+                hasPaid = getPageContents("https://minecraft.net/haspaid.jsp?user=" + username).equalsIgnoreCase("TRUE");
+            } catch (UnirestException e) {
+                throw new GenericUrlConnectionException("Failed to fetch data on Minecraft username (" + username + ").", e);
             }
 
             event.respond("Minecraft Username " + Colors.BOLD + username + Colors.NORMAL + " (" + Colors.BOLD + uuid + Colors.NORMAL + "):");
-            event.respond(
-                    Colors.BOLD + "Valid Username? " + (isValid ?
-                            Colors.BOLD + Colors.UNDERLINE + Colors.GREEN + "Yes" :
-                            Colors.BOLD + Colors.UNDERLINE + Colors.RED + "No") + Colors.NORMAL + " | "
-                            + Colors.BOLD + "Paid Account? " + (hasPaid ?
-                            Colors.BOLD + Colors.UNDERLINE + Colors.GREEN + "Yes" :
-                            Colors.BOLD + Colors.UNDERLINE + Colors.RED + "No")
-            );
+            event.respond(Colors.BOLD + "Valid Username? " + (isValid ? Colors.BOLD + Colors.UNDERLINE + Colors.GREEN + "Yes" : Colors.BOLD + Colors.UNDERLINE + Colors.RED + "No") + Colors.NORMAL + " | "
+                            + Colors.BOLD + "Paid Account? " + (hasPaid ? Colors.BOLD + Colors.UNDERLINE + Colors.GREEN + "Yes" : Colors.BOLD + Colors.UNDERLINE + Colors.RED + "No"));
             return true;
         }
         return false;
     }
 
-    private String getPageContents(String urlString) throws IOException {
-        URL url = new URL(urlString);
-
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-
-        connection.setConnectTimeout(10000);
-        connection.setReadTimeout(10000);
-        connection.setUseCaches(false);
-
-        BufferedReader input = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-
-        StringBuilder buffer = new StringBuilder();
-        String line;
-
-        while ((line = input.readLine()) != null) {
-            buffer.append(line);
-        }
-
-        String page = buffer.toString();
-
-        input.close();
-
-        return page;
+    private String getPageContents(String urlString) throws UnirestException {
+        return Unirest.get(urlString).asString().getBody();
     }
 
-    private BufferedReader getUUIDConnection(String username) throws IOException {
-        URL url = new URL("https://api.mojang.com/profiles/page/1");
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-
-        connection.setRequestMethod("POST");
-        connection.setRequestProperty("Content-Type", "application/json");
-        connection.setUseCaches(false);
-        connection.setDoInput(true);
-        connection.setDoOutput(true);
-
-        String JSON = String.format("[{\"name\":\"%s\", \"agent\":\"Minecraft\"}]", username);
-
-        OutputStream stream = connection.getOutputStream();
-        stream.write(JSON.getBytes());
-        stream.flush();
-        stream.close();
-
-        BufferedReader input = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-        return input;
+    private UserProfile[] getProfiles(String username) throws UnirestException {
+        HttpResponse<JsonNode> response = Unirest.post("https://api.mojang.com/profiles/page/1").header("content-type", "application/json").body("[{\"name\":\"" + username + "\", \"agent\":\"Minecraft\"}]").asJson();
+        return Nexus.JSON.read(response.getRawBody(), "profiles", UserProfile[].class);
     }
 
     private class UserProfile {
