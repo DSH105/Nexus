@@ -170,11 +170,10 @@ public class Nexus extends PircBotX {
         try {
             Logger root = Logger.getLogger("");
             root.setLevel(Level.INFO);
-            Formatter formatter = new ShortLoggerFormatter();
 
             FileHandler handler = new FileHandler("Nexus.log", true);
             handler.setLevel(Level.ALL);
-            handler.setFormatter(formatter);
+            handler.setFormatter(new ShortLoggerFormatter(true));
             root.addHandler(handler);
 
             ConsoleHandler console = null;
@@ -190,7 +189,7 @@ public class Nexus extends PircBotX {
                 registerWithRoot = true;
             }
             console.setLevel(Level.INFO);
-            console.setFormatter(formatter);
+            console.setFormatter(new ShortLoggerFormatter());
             if (registerWithRoot) {
                 root.addHandler(console);
             }
