@@ -32,7 +32,7 @@ import org.pircbotx.Colors;
         extendedHelp = {
                 "The CI allows you to connect to a set (unchangeable) Jenkins server to retrieve build information for certain jobs.",
                 "{b}{p}{c} <job_name>{/b} - fetches information on a certain jenkins job and presents to the user"})
-public class CICommand extends CommandModule {
+public class JenkinsCommand extends CommandModule {
 
     @Override
     public boolean onCommand(CommandPerformEvent event) {
