@@ -36,11 +36,14 @@ public class MinecraftUserCommand extends CommandModule {
                 return true;
             }
 
-            String uuid;
+            String uuid = "N/A";
             boolean isValid;
             boolean hasPaid;
             try {
-                uuid = getProfiles(username)[0].id;
+                UserProfile[] profiles = getProfiles(username);
+                if (profiles.length > 0) {
+                    uuid = profiles[0].id;
+                }
                 isValid = getPageContents("https://account.minecraft.net/buy/frame/checkName/" + username).equalsIgnoreCase("TAKEN");
                 hasPaid = getPageContents("https://minecraft.net/haspaid.jsp?user=" + username).equalsIgnoreCase("TRUE");
             } catch (UnirestException e) {
