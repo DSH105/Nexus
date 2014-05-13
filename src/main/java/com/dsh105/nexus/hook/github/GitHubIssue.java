@@ -19,6 +19,7 @@ package com.dsh105.nexus.hook.github;
 
 import com.dsh105.nexus.Nexus;
 import com.dsh105.nexus.exception.general.DateParseException;
+import com.dsh105.nexus.util.TimeUtil;
 import com.google.gson.annotations.SerializedName;
 
 import java.text.DateFormat;
@@ -93,36 +94,21 @@ public class GitHubIssue {
 
     public String getDateCreated() {
         if (createdAt != null) {
-            //return createdAt.split("T")[0];
-            try {
-                return Nexus.PRETTY_TIME.format(DateFormat.getInstance().parse(createdAt));
-            } catch (ParseException e) {
-                throw new DateParseException("Failed to parse date: " + createdAt,e);
-            }
+            return TimeUtil.parseGitHubDate(createdAt);
         }
         return null;
     }
 
     public String getDateUpdated() {
         if (updatedAt != null) {
-            //return updatedAt.split("T")[0];
-            try {
-                return Nexus.PRETTY_TIME.format(DateFormat.getInstance().parse(updatedAt));
-            } catch (ParseException e) {
-                throw new DateParseException("Failed to parse date: " + updatedAt, e);
-            }
+            return TimeUtil.parseGitHubDate(updatedAt);
         }
         return null;
     }
 
     public String getDateClosed() {
         if (closedAt != null) {
-            //return closedAt.split("T")[0];
-            try {
-                return Nexus.PRETTY_TIME.format(DateFormat.getInstance().parse(closedAt));
-            } catch (ParseException e) {
-                throw new DateParseException("Failed to parse date: " + closedAt, e);
-            }
+            return TimeUtil.parseGitHubDate(closedAt);
         }
         return null;
     }

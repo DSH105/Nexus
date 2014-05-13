@@ -17,6 +17,13 @@
 
 package com.dsh105.nexus.util;
 
+import com.dsh105.nexus.Nexus;
+import com.dsh105.nexus.exception.general.DateParseException;
+
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+
 public class TimeUtil {
 
     /**
@@ -57,5 +64,14 @@ public class TimeUtil {
             case 's' : return value * 1000;
         }
         return 0;
+    }
+
+    public static String parseGitHubDate(String ghDate) {
+        String date = ghDate.split("T")[0];
+        try {
+            return Nexus.PRETTY_TIME.format(new SimpleDateFormat("yyyy-MM-dd").parse(date));
+        } catch (ParseException e) {
+            throw new DateParseException("Failed to parse date: " + date, e);
+        }
     }
 }
