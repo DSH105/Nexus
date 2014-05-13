@@ -87,12 +87,7 @@ public class GitHub {
     }
 
     public static GitHub getGitHub() {
-        /*if (Nexus.getInstance().getConfig().getGitHubApiKey().isEmpty()) {
-            throw new GitHubAPIKeyInvalidException("Invalid GitHub API key!");
-        }*/
-        GitHub gh = Nexus.getInstance().getGithub();
-
-        return gh;
+        return Nexus.getInstance().getGithub();
     }
 
     public String createGist(Exception e) {
@@ -146,8 +141,8 @@ public class GitHub {
         if (!assumeAccess) {
             try {
                 String checkAccess = response.getBody().getObject().getString("message");
-                if (checkAccess != null && (checkAccess.equalsIgnoreCase("NOT FOUND") || checkAccess.equalsIgnoreCase("BAD CREDENTIALS"))) {
-                    throw new GitHubAPIKeyInvalidException("Either that doesn't exist, or your GitHub API key does not have access to this.");
+                if (checkAccess != null && checkAccess.equalsIgnoreCase("BAD CREDENTIALS")) {
+                    throw new GitHubAPIKeyInvalidException("Invalid GitHub API key!");
                 }
                 return response;
             } catch (JSONException e) {
