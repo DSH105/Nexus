@@ -145,7 +145,8 @@ public class GitHub {
                     throw new GitHubAPIKeyInvalidException("Invalid GitHub API key!");
                 }
                 return response;
-            } catch (JSONException e) {
+            } catch (JSONException ignored) {
+            } catch (NullPointerException ignored) {
             }
         }
         return response;
