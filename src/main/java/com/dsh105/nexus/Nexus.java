@@ -31,6 +31,7 @@ import com.dsh105.nexus.util.ShortLoggerFormatter;
 import com.mashape.unirest.http.Unirest;
 import jline.console.ConsoleReader;
 import jline.console.completer.FileNameCompleter;
+import org.ocpsoft.prettytime.PrettyTime;
 import org.pircbotx.Channel;
 import org.pircbotx.PircBotX;
 import org.pircbotx.User;
@@ -47,6 +48,7 @@ public class Nexus extends PircBotX {
     private static Nexus INSTANCE;
     public static Logger LOGGER = Logger.getLogger(Nexus.class.getName());
     public static JsonUtil JSON = new JsonUtil();
+    public static PrettyTime PRETTY_TIME = new PrettyTime();
     public static String CONFIG_FILE_NAME = "options.yml";
     private OptionsConfig config;
     private GitHubConfig githubConfig;
