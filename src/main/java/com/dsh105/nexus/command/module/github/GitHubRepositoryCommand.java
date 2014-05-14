@@ -236,7 +236,7 @@ public class GitHubRepositoryCommand extends CommandModule {
             }
             for (GitHubUser user : repo.getCollaborators()) {
                 // Filter out anyone who hasn't actually contributed yet
-                if (contributors.contains(user.getLogin())) {
+                if (contributors.contains(user.getLogin()) || user.getLogin().equalsIgnoreCase(repo.getRepoOwner().getLogin())) {
                     activeCollaborators.add(event.removePing(user.getLogin()));
                 }
             }
