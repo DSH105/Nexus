@@ -133,7 +133,7 @@ public class CommandManager {
             }
         } catch (Exception e) {
             if (e instanceof GitHubAPIKeyInvalidException) {
-                event.respondWithPing(Colors.RED + e.getMessage());
+                event.respondWithPing(Colors.RED + e.getMessage() + " Use {0} to authenticate with GitHub through Nexus.", Nexus.getInstance().getConfig().getCommandPrefix() + "ghk");
             } else if (e instanceof DateParseException) {
                 event.respondWithPing(Colors.RED + e.getMessage());
             } else if (e instanceof GitHubRateLimitExceededException) {
