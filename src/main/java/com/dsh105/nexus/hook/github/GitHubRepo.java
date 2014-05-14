@@ -66,12 +66,14 @@ public class GitHubRepo {
     @SerializedName("pushed_at")
     private String pushedAt;
 
+    @SerializedName("private")
     protected boolean isPrivate;
+
     protected GitHubUser repoOwner;
     protected GitHubUser[] collaborators;
     protected GitHubUser[] contributors;
     protected String[] languages;
-    protected String accessToken;
+    protected String userLoginForAccessToken;
 
     public GitHubUser getRepoOwner() {
         return repoOwner;

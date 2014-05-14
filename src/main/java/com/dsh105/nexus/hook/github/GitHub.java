@@ -137,6 +137,7 @@ public class GitHub {
             throw new GitHubRateLimitExceededException("Rate limit for GitHub API exceeded. Further requests cannot be executed.");
         }
 
+        Nexus.LOGGER.info("Connecting to " + urlPath + " with ACCESS_TOKEN of " + userLogin);
         HttpResponse<JsonNode> response = Unirest.get(urlPath + accessToken).asJson();
         if (!assumeAccess) {
             try {
@@ -161,11 +162,6 @@ public class GitHub {
             HttpResponse<JsonNode> response = makeRequest(getRepoApiUrl(name), userLogin);
             InputStream input = response.getRawBody();
             GitHubRepo repo = Nexus.JSON.read(input, GitHubRepo.class);
-            try {
-                repo.isPrivate = response.getBody().getObject().getBoolean("private");
-            } catch (JSONException e) {
-                // ignore it
-            }
             if (repo == null || repo.getUrl() == null) {
                 throw new GitHubRepoNotFoundException("Failed to locate GitHub Repo: " + name);
             }
@@ -173,7 +169,7 @@ public class GitHub {
             repo.collaborators = getCollaborators(repo, userLogin);
             repo.contributors = getContributors(repo, userLogin);
             repo.languages = getLanguages(repo, userLogin);
-            repo.accessToken = userLogin;
+            repo.userLoginForAccessToken = userLogin;
             if (repo != null) {
                 cache(repo);
             }
@@ -280,6 +276,9 @@ public class GitHub {
                 throw new GitHubRepoNotFoundException("Failed to locate GitHub Repo: " + name, e);
             }
             throw new GitHubException("Error connecting to GitHub API! ", e);
+        } catch (NullPointerException ignored) {
+            // in the event that there's no collaborators
+            return new GitHubUser[0];
         }
     }
 
@@ -415,7 +414,7 @@ public class GitHub {
                     expirationDates.remove(entry.getValue());
                     // Only keep them in memory for a certain period of time
                     if (new Date().before(new Date(expiration))) {
-                        GitHubRepo repo = getRepo(entry.getKey(), entry.getValue().accessToken);
+                        GitHubRepo repo = getRepo(entry.getKey(), entry.getValue().userLoginForAccessToken);
                         cache(repo);
                     }
                 }
@@ -423,7 +422,7 @@ public class GitHub {
 
             for (GitHubIssue issue : issuesCopy) {
                 issues.remove(issue);
-                cache(getIssue(issue.getRepo(), issue.getNumber(), issue.repo.accessToken));
+                cache(getIssue(issue.getRepo(), issue.getNumber(), issue.repo.userLoginForAccessToken));
             }
         }
     }
