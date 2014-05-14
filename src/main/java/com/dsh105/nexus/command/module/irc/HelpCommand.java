@@ -41,7 +41,7 @@ public class HelpCommand extends CommandModule {
             event.respond("Help info for {0}{1}:", true, event.getCommandPrefix(), module.getCommand());
             event.respond("(Aliases for {0}: {1})", true, module.getCommand(), StringUtil.combineSplit(0, module.getCommandInfo().aliases(), ", "));
             for (String part : module.getCommandInfo().extendedHelp()) {
-                event.respond(part.replace("{c}", module.getCommand()).replace("{p}", event.getCommandPrefix()).replace("{b}", Colors.BOLD).replace("{/b}", Colors.NORMAL), true);
+                event.respond(format(event, module, part), true);
             }
             return true;
         }
@@ -49,8 +49,13 @@ public class HelpCommand extends CommandModule {
             event.respondWithPing("Check your private messages for help information.");
         }
         for (CommandModule module : Nexus.getInstance().getCommandManager().getRegisteredCommands()) {
-            event.respond(Colors.BOLD + Nexus.getInstance().getConfig().getCommandPrefix() + module.getCommand() + Colors.NORMAL + " - " + module.getCommandInfo().help() + (module.getCommandInfo().aliases().length <= 0 ? "" : " (Aliases: " + Colors.BOLD + StringUtil.combineSplit(0, module.getCommandInfo().aliases(), ", ") + Colors.NORMAL + ")"), true);
+            String aliases = (module.getCommandInfo().aliases().length <= 0 ? "" : " (Aliases: " + Colors.BOLD + StringUtil.combineSplit(0, module.getCommandInfo().aliases(), ", ") + Colors.NORMAL + ")");
+            event.respond(format(event, module, "{b}{p}{c}{/b} - " + module.getCommandInfo().help()) + aliases, true);
         }
         return true;
+    }
+
+    private String format(CommandPerformEvent event, CommandModule module, String s) {
+        return s.replace("{c}", module.getCommand()).replace("{p}", event.getCommandPrefix()).replace("{b}", Colors.BOLD).replace("{/b}", Colors.NORMAL);
     }
 }
