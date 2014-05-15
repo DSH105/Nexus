@@ -28,12 +28,12 @@ public class GitHubIssueCommand extends CommandModule {
 
     @Override
     public boolean onCommand(CommandPerformEvent event) {
-        int idArg = -1;
+        int issueId = -1;
         String fullName = "";
         String postArgs = "";
         for (int i = 0; i < event.getArgs().length; i++) {
             if (StringUtil.isInt(event.getArgs()[i]) && i >= 1) {
-                idArg = i;
+                issueId = Integer.parseInt(event.getArgs()[i]);
                 for (int j = 0; j < i; j++) {
                     fullName += (fullName != null && !fullName.isEmpty() ? " " : "") + event.getArgs()[j];
                 }
@@ -43,6 +43,6 @@ public class GitHubIssueCommand extends CommandModule {
                 break;
             }
         }
-        return Nexus.getInstance().getCommandManager().onCommand(event.getChannel(), event.getSender(), "repo " + fullName + " issue " + idArg + postArgs);
+        return Nexus.getInstance().getCommandManager().onCommand(event.getChannel(), event.getSender(), "repo " + fullName + " issue " + issueId + postArgs);
     }
 }
