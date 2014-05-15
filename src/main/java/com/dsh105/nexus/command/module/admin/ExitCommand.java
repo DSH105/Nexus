@@ -15,7 +15,7 @@
  * along with Nexus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.dsh105.nexus.command.module;
+package com.dsh105.nexus.command.module.admin;
 
 import com.dsh105.nexus.Nexus;
 import com.dsh105.nexus.command.Command;
@@ -34,8 +34,7 @@ public class ExitCommand extends CommandModule {
         } else {
             Nexus.getInstance().sendAction(event.getChannel(), "glides off into the distance...");
         }
-        while (Nexus.getInstance().getOutgoingQueueSize() > 0);
-        Nexus.getInstance().shutdown(true);
+        Nexus.endProcess();
         return true;
     }
 

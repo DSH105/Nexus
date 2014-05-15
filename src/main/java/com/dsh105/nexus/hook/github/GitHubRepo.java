@@ -18,7 +18,12 @@
 package com.dsh105.nexus.hook.github;
 
 import com.dsh105.nexus.Nexus;
+import com.dsh105.nexus.exception.general.DateParseException;
+import com.dsh105.nexus.util.TimeUtil;
 import com.google.gson.annotations.SerializedName;
+
+import java.text.DateFormat;
+import java.text.ParseException;
 
 public class GitHubRepo {
 
@@ -61,37 +66,28 @@ public class GitHubRepo {
     @SerializedName("pushed_at")
     private String pushedAt;
 
+    @SerializedName("private")
     protected boolean isPrivate;
-    private GitHubUser repoOwner;
-    private GitHubUser[] collaborators;
-    private GitHubUser[] contributors;
-    private String[] languages;
+
+    protected GitHubUser repoOwner;
+    protected GitHubUser[] collaborators;
+    protected GitHubUser[] contributors;
+    protected String[] languages;
+    protected String userLoginForAccessToken;
 
     public GitHubUser getRepoOwner() {
-        if (repoOwner == null) {
-            repoOwner = GitHub.getGitHub().getOwnerOf(this);
-        }
         return repoOwner;
     }
 
     public GitHubUser[] getCollaborators() {
-        if (collaborators == null) {
-            collaborators = GitHub.getGitHub().getCollaborators(this);
-        }
         return collaborators;
     }
 
     public GitHubUser[] getContributors() {
-        if (contributors == null) {
-            contributors = GitHub.getGitHub().getContributors(this);
-        }
         return contributors;
     }
 
     public String[] getLanguages() {
-        if (languages == null) {
-            languages = GitHub.getGitHub().getLanguages(this);
-        }
         return languages;
     }
 
@@ -136,15 +132,24 @@ public class GitHubRepo {
     }
 
     public String getDateCreated() {
-        return createdAt;
+        if (createdAt != null) {
+            return TimeUtil.parseGitHubDate(createdAt);
+        }
+        return null;
     }
 
     public String getDateLastUpdated() {
-        return updatedAt;
+        if (updatedAt != null) {
+            return TimeUtil.parseGitHubDate(updatedAt);
+        }
+        return null;
     }
 
     public String getDateLastPushedTo() {
-        return pushedAt;
+        if (pushedAt != null) {
+            return TimeUtil.parseGitHubDate(pushedAt);
+        }
+        return null;
     }
 
 }

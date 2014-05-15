@@ -15,7 +15,7 @@
  * along with Nexus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.dsh105.nexus.command.module;
+package com.dsh105.nexus.command.module.github;
 
 import com.dsh105.nexus.Nexus;
 import com.dsh105.nexus.command.Command;
@@ -23,19 +23,19 @@ import com.dsh105.nexus.command.CommandModule;
 import com.dsh105.nexus.command.CommandPerformEvent;
 import com.dsh105.nexus.util.StringUtil;
 
-@Command(command = "issue", needsChannel = false, help = "Retrieve issue information for a GitHub repository", extendedHelp = "This command is simply an alias of {p}{b}repo <name> issue <number>{/b}")
-public class IssueCommand extends CommandModule {
+@Command(command = "merge", aliases = {"githubmerge", "ghmerge", "ghm"}, needsChannel = false, help = "Merge a pull request", extendedHelp = "This command is simply an alias of {p}{b}repo <name> issue <number>{/b}")
+public class GitHubMergePullRequestCommand extends CommandModule {
+
     @Override
     public boolean onCommand(CommandPerformEvent event) {
         if (event.getArgs().length == 2 || event.getArgs().length == 3) {
             String fullName = event.getArgs().length == 2 ? event.getArgs()[0] : event.getArgs()[0] + " " + event.getArgs()[1];
             String issueNumber = event.getArgs().length == 2 ? event.getArgs()[1] : event.getArgs()[2];
             if (!StringUtil.isInt(issueNumber)) {
-                event.respondWithPing("{0} needs to be an integer.", issueNumber);
+                event.errorWithPing("{0} needs to be a number.", issueNumber);
                 return true;
             }
-            Nexus.getInstance().getCommandManager().onCommand(event.getChannel(), event.getSender(), "repo " + fullName + " issue " + issueNumber);
-            return true;
+            return Nexus.getInstance().getCommandManager().onCommand(event.getChannel(), event.getSender(), "repo " + fullName + " issue " + issueNumber + " merge");
         }
         return false;
     }

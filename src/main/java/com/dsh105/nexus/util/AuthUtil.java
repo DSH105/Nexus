@@ -15,22 +15,15 @@
  * along with Nexus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.dsh105.nexus.command;
+package com.dsh105.nexus.util;
 
-import java.lang.annotation.*;
+import com.dsh105.nexus.Nexus;
+import org.pircbotx.User;
 
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE)
-@Inherited
-public @interface Command {
+public class AuthUtil {
 
-    public boolean needsChannel() default true;
-
-    public String command();
-
-    public String[] aliases() default {};
-
-    public String[] extendedHelp();
-
-    public String help();
+    public static String getIdent(User user) {
+        String accountName = Nexus.getInstance().getNicksConfig().getAccountNameFor(user.getNick());
+        return accountName != null ? accountName : "";
+    }
 }

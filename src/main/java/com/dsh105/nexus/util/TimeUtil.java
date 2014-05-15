@@ -17,6 +17,13 @@
 
 package com.dsh105.nexus.util;
 
+import com.dsh105.nexus.Nexus;
+import com.dsh105.nexus.exception.general.DateParseException;
+
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+
 public class TimeUtil {
 
     /**
@@ -30,7 +37,7 @@ public class TimeUtil {
         String number = "";
         for (int i = 0; i < input.length(); i++) {
             char c = input.charAt(i);
-            if (Character.isDigit(c)) {
+            if (c >= '0' && c <= '9') {
                 number += c;
             } else if (Character.isLetter(c) && !number.isEmpty()) {
                 result += convert(Integer.parseInt(number), c);
@@ -49,6 +56,7 @@ public class TimeUtil {
      */
     private static long convert(int value, char unit) {
         switch(unit) {
+            case 'y' : return (long) (value * 1000*60*60*24*7*364.25);
             case 'w' : return value * 1000*60*60*24*7;
             case 'd' : return value * 1000*60*60*24;
             case 'h' : return value * 1000*60*60;
@@ -56,5 +64,14 @@ public class TimeUtil {
             case 's' : return value * 1000;
         }
         return 0;
+    }
+
+    public static String parseGitHubDate(String ghDate) {
+        String date = ghDate.split("T")[0];
+        try {
+            return Nexus.PRETTY_TIME.format(new SimpleDateFormat("yyyy-MM-dd").parse(date));
+        } catch (ParseException e) {
+            throw new DateParseException("Failed to parse date: " + date, e);
+        }
     }
 }

@@ -15,7 +15,7 @@
  * along with Nexus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.dsh105.nexus.command.module;
+package com.dsh105.nexus.command.module.general;
 
 import com.dsh105.nexus.Nexus;
 import com.dsh105.nexus.command.Command;
@@ -24,6 +24,7 @@ import com.dsh105.nexus.command.CommandPerformEvent;
 import com.dsh105.nexus.util.StringUtil;
 import com.dsh105.nexus.util.TimeUtil;
 import org.pircbotx.Channel;
+import org.pircbotx.Colors;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.*;
@@ -47,10 +48,13 @@ public class RemindCommand extends CommandModule {
         if (event.getArgs().length >= 2) {
             long timePeriod = -1;
             boolean forOtherUser = false;
+            final String timeString = event.getArgs()[1];
             try {
-                timePeriod = TimeUtil.parse(event.getArgs()[1]);
-                forOtherUser = true;
-            } catch (NumberFormatException e) {
+                timePeriod = TimeUtil.parse(timeString);
+                if (timePeriod > 0) {
+                    forOtherUser = true;
+                }
+            } catch (NumberFormatException ignored) {
             }
 
             String userToRemind = forOtherUser ? event.getArgs()[0] : event.getSender().getNick();
@@ -58,10 +62,10 @@ public class RemindCommand extends CommandModule {
             if (!forOtherUser) {
                 try {
                     timePeriod = TimeUtil.parse(event.getArgs()[0]);
-                } catch (NumberFormatException e) {
+                } catch (NumberFormatException ignored) {
                 }
             }
-            if (timePeriod <= 0) {
+            if (timePeriod <= 0 || timeString.contains("-")) {
                 event.respondWithPing("Invalid time period entered: {0}. Examples: {1} (1 day), {2} (2 hours), {3} (5 minutes, 30 seconds), {4} (1 week, 3 days)", event.getArgs()[0], "1d", "2h", "5m30s", "1w3d");
                 return true;
             }
@@ -179,7 +183,7 @@ public class RemindCommand extends CommandModule {
         @Override
         public void run() {
             if (channel != null) {
-                Nexus.getInstance().sendMessage(channel, "I have a reminder for you, " + userToRemind + "! \"" + reminder + "\"" + (from.equals(userToRemind) ? "" : " (from " + StringUtil.removePing(from) + ")"));
+                Nexus.getInstance().sendRawLine("PRIVMSG " + channel.getName() + " :I have a reminder for you, " + userToRemind + "! \"" + Colors.BOLD + reminder + Colors.NORMAL + "\"" + (from.equals(userToRemind) ? "" : " (from " + StringUtil.removePing(from) + ")"));
             }
             this.cancel(true);
         }

@@ -15,22 +15,15 @@
  * along with Nexus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.dsh105.nexus.command;
+package com.dsh105.nexus.exception.github;
 
-import java.lang.annotation.*;
+public class GitHubUserNotFoundException extends GitHubException {
 
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE)
-@Inherited
-public @interface Command {
+    public GitHubUserNotFoundException(String s) {
+        super(s);
+    }
 
-    public boolean needsChannel() default true;
-
-    public String command();
-
-    public String[] aliases() default {};
-
-    public String[] extendedHelp();
-
-    public String help();
+    public GitHubUserNotFoundException(String s, Throwable throwable) {
+        super(s, throwable);
+    }
 }

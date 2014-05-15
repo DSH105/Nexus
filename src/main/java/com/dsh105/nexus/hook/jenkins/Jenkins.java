@@ -34,7 +34,7 @@ public class Jenkins {
 
     public Jenkins() {
         this.JENKINS_URL = Nexus.getInstance().getConfig().getJenkinsUrl();
-        new Timer(true).schedule(new RefreshTask(), 0, 6000000);
+        new Timer(true).schedule(new RefreshTask(), 0, 600000);
     }
 
     public static Jenkins getJenkins() {
@@ -42,6 +42,7 @@ public class Jenkins {
     }
 
     public void requestBuild(String jobName) {
+        Nexus.LOGGER.info("Requesting build initiation of Jenkins job (" + jobName + ") at " + JENKINS_URL);
         JenkinsJob job = getJob(jobName);
         if (job == null) {
             throw new JenkinsJobNotFoundException("Failed to locate Jenkins API!");
@@ -65,6 +66,7 @@ public class Jenkins {
     }
 
     public JenkinsJob getJob(String jobName) {
+        Nexus.LOGGER.info("Requesting Jenkins job (" + jobName + ") at " + JENKINS_URL);
         if (!this.jobs.isEmpty()) {
             for (JenkinsJob job : getJobs()) {
                 if (job.getJobName().equalsIgnoreCase(jobName)) {
@@ -120,6 +122,7 @@ public class Jenkins {
 
         @Override
         public void run() {
+            Nexus.LOGGER.info("Updating all jenkins jobs at " + JENKINS_URL);
             getJobs(true);
         }
     }

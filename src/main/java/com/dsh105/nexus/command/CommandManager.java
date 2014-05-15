@@ -18,6 +18,7 @@
 package com.dsh105.nexus.command;
 
 import com.dsh105.nexus.Nexus;
+import com.dsh105.nexus.exception.general.DateParseException;
 import com.dsh105.nexus.exception.github.GitHubAPIKeyInvalidException;
 import com.dsh105.nexus.exception.github.GitHubRateLimitExceededException;
 import com.dsh105.nexus.hook.github.GitHub;
@@ -28,6 +29,7 @@ import org.pircbotx.User;
 import org.reflections.Reflections;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Set;
 
@@ -67,7 +69,7 @@ public class CommandManager {
 
     public CommandModule getModuleFor(String commandArguments) {
         for (CommandModule module : modules) {
-            if (module.getCommandInfo().command().equalsIgnoreCase(commandArguments)) {
+            if (module.getCommandInfo().command().equalsIgnoreCase(commandArguments) || Arrays.asList(module.getCommandInfo().aliases()).contains(commandArguments.toLowerCase())) {
                 return module;
             }
         }
@@ -79,7 +81,15 @@ public class CommandManager {
         for (CommandModule module : modules) {
             if (module.getCommandInfo().command().equalsIgnoreCase(commandArguments)) {
                 return module;
-            } else if (module.getCommand().startsWith(commandArguments)) {
+            }
+
+            for (String alias : module.getCommandInfo().aliases()) {
+                if (commandArguments.equalsIgnoreCase(alias) || alias.startsWith(commandArguments)) {
+                    return module;
+                }
+            }
+
+            if (module.getCommand().startsWith(commandArguments)) {
                 possibleMatch = module;
             }
         }
@@ -112,7 +122,7 @@ public class CommandManager {
                     return true;
                 }
                 if (!module.onCommand(event)) {
-                    event.error("Use " + Nexus.getInstance().getConfig().getCommandPrefix() + "{0} for help.", Nexus.getInstance().getConfig().getCommandPrefix() + "help " + event.getCommand());
+                    event.errorWithPing("Use " + Nexus.getInstance().getConfig().getCommandPrefix() + "{0} for help.", Nexus.getInstance().getConfig().getCommandPrefix() + "help " + event.getCommand());
                     return true;
                     /*Suggestion suggestion = new Suggestion(event.getArgs()[1], module.getCommandInfo().subCommands());
                     if (suggestion.getSuggestions() != null && suggestion.getSuggestions().length() > 0) {
@@ -123,13 +133,14 @@ public class CommandManager {
             }
         } catch (Exception e) {
             if (e instanceof GitHubAPIKeyInvalidException) {
-                event.respondWithPing(Colors.RED + "Failed to connect to GitHub. My API key is not configured!");
-                return true;
+                event.respondWithPing(Colors.RED + e.getMessage() + " Use {0} to authenticate with GitHub through Nexus.", Nexus.getInstance().getConfig().getCommandPrefix() + "ghk");
+            } else if (e instanceof DateParseException) {
+                event.respondWithPing(Colors.RED + e.getMessage());
+            } else if (e instanceof GitHubRateLimitExceededException) {
+                event.respondWithPing(Colors.RED + "Rate limit for this GitHub API Key exceeded. Further requests cannot be executed on the behalf of this user.");
+            } else {
+                event.respondWithPing(Colors.RED + "Houston, we have a problem! Here is a conveniently provided stacktrace: " + GitHub.getGitHub().createGist(e));
             }
-            if (e instanceof GitHubRateLimitExceededException) {
-                event.respondWithPing(Colors.RED + "Rate limit for GitHub API exceeded. Further requests cannot be executed.");
-            }
-            event.respondWithPing(Colors.RED + "Houston, we have a problem! Here is a conveniently provided stacktrace: " + GitHub.getGitHub().createGist(e));
             return true;
         }
         return false;

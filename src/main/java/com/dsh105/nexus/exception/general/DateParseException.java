@@ -15,22 +15,11 @@
  * along with Nexus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.dsh105.nexus.command;
+package com.dsh105.nexus.exception.general;
 
-import java.lang.annotation.*;
+public class DateParseException extends RuntimeException {
 
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE)
-@Inherited
-public @interface Command {
-
-    public boolean needsChannel() default true;
-
-    public String command();
-
-    public String[] aliases() default {};
-
-    public String[] extendedHelp();
-
-    public String help();
+    public DateParseException(String s, Throwable throwable) {
+        super(s, throwable);
+    }
 }

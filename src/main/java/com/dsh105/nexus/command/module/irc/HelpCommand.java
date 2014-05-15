@@ -15,12 +15,13 @@
  * along with Nexus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.dsh105.nexus.command.module;
+package com.dsh105.nexus.command.module.irc;
 
 import com.dsh105.nexus.Nexus;
 import com.dsh105.nexus.command.Command;
 import com.dsh105.nexus.command.CommandModule;
 import com.dsh105.nexus.command.CommandPerformEvent;
+import com.dsh105.nexus.util.StringUtil;
 import org.pircbotx.Colors;
 
 @Command(command = "help", needsChannel = false, help = "Show this help information", extendedHelp = "Use {p}{c} <command> for more information on a specific command.")
@@ -38,8 +39,9 @@ public class HelpCommand extends CommandModule {
                 event.respondWithPing("Check your private messages for help information.");
             }
             event.respond("Help info for {0}{1}:", true, event.getCommandPrefix(), module.getCommand());
+            event.respond("(Aliases for {0}: {1})", true, module.getCommand(), StringUtil.combineSplit(0, module.getCommandInfo().aliases(), ", "));
             for (String part : module.getCommandInfo().extendedHelp()) {
-                event.respond(part.replace("{c}", event.getCommand()).replace("{p}", event.getCommandPrefix()).replace("{b}", Colors.BOLD).replace("{/b}", Colors.NORMAL), true);
+                event.respond(format(event, module, part), true);
             }
             return true;
         }
@@ -47,8 +49,13 @@ public class HelpCommand extends CommandModule {
             event.respondWithPing("Check your private messages for help information.");
         }
         for (CommandModule module : Nexus.getInstance().getCommandManager().getRegisteredCommands()) {
-            event.respond(Colors.BOLD + Nexus.getInstance().getConfig().getCommandPrefix() + module.getCommand() + Colors.NORMAL + " - " + module.getCommandInfo().help(), true);
+            String aliases = (module.getCommandInfo().aliases().length <= 0 ? "" : " (Aliases: " + Colors.BOLD + StringUtil.combineSplit(0, module.getCommandInfo().aliases(), ", ") + Colors.NORMAL + ")");
+            event.respond(format(event, module, "{b}{p}{c}{/b} - " + module.getCommandInfo().help()) + aliases, true);
         }
         return true;
+    }
+
+    private String format(CommandPerformEvent event, CommandModule module, String s) {
+        return s.replace("{c}", module.getCommand()).replace("{p}", event.getCommandPrefix()).replace("{b}", Colors.BOLD).replace("{/b}", Colors.NORMAL);
     }
 }

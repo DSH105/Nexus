@@ -24,14 +24,87 @@ public class GitHubUser {
     @SerializedName("login")
     private String login;
 
+    @SerializedName("name")
+    private String name;
+
     @SerializedName("html_url")
     private String url;
+
+    @SerializedName("id")
+    private int id;
+
+    @SerializedName("avatar_url")
+    private String avatarUrl;
+
+    @SerializedName("company")
+    private String company;
+
+    @SerializedName("location")
+    private String location;
+
+    @SerializedName("public_repos")
+    private int publicRepos;
+
+    @SerializedName("public_gists")
+    private int publicGists;
+
+    @SerializedName("followers")
+    private int followers;
+
+    @SerializedName("following")
+    private int following;
+
+    @SerializedName("created_at")
+    private String dateJoined;
 
     public String getLogin() {
         return login;
     }
 
+    public String getName() {
+        return name;
+    }
+
     public String getUrl() {
         return url;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public String getAvatarUrl() {
+        return avatarUrl;
+    }
+
+    public String getCompany() {
+        return company;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public int getPublicRepos() {
+        return publicRepos;
+    }
+
+    public int getPublicGists() {
+        return publicGists;
+    }
+
+    public int getFollowers() {
+        return followers;
+    }
+
+    public int getFollowing() {
+        return following;
+    }
+
+    public String getDateJoined() {
+        if (dateJoined != null) {
+            return dateJoined.split("T")[0];
+        }
+        return null;
     }
 }

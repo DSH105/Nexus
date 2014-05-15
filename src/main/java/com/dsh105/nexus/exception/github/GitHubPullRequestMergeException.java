@@ -17,13 +17,9 @@
 
 package com.dsh105.nexus.exception.github;
 
-public class GitHubRepoNotFoundException extends GitHubException {
+public class GitHubPullRequestMergeException extends RuntimeException {
 
-    public GitHubRepoNotFoundException(String s) {
+    public GitHubPullRequestMergeException(String s) {
         super(s);
-    }
-
-    public GitHubRepoNotFoundException(String s, Throwable throwable) {
-        super(s, throwable);
     }
 }

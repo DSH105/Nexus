@@ -29,7 +29,6 @@ public class OptionsConfig extends YamlConfig {
 
     public OptionsConfig() {
         super(Nexus.CONFIG_FILE_NAME);
-        channels = new ArrayList<>();
         this.setDefaults();
         this.load();
     }
@@ -40,20 +39,16 @@ public class OptionsConfig extends YamlConfig {
         this.options.put("server", "irc.esper.net");
         this.options.put("port", 5555);
         this.options.put("server-password", "");
-        this.options.put("account-password", "");
+        this.options.put("nickserv-password", "");
         this.options.put("command-prefix", "\\");
         this.options.put("nick", "Nexus");
         this.options.put("admin-channel", "");
         this.options.put("append-nicks", true);
-        this.options.put("jenkins-url", "");
+        this.options.put("jenkins-url", "change-me");
         this.options.put("jenkins-token-jobName", "change-me");
         this.options.put("response-chance", "");
-        this.options.put("github-key", "");
-        this.options.put("github-repo-repoName", "change-to-author");
-        this.options.put("github-account-name", "");
-        this.options.put("github-account-password", "");
-        this.options.put("gist-account-name", "");
-        this.options.put("gist-account-password", "");
+        this.options.put("user-agent", "Nexus");
+        //this.options.put("trello-key", "");
         if (this.getAdminChannel() != null && !this.getAdminChannel().isEmpty()) {
             channels.add(this.getAdminChannel());
         }
@@ -92,12 +87,12 @@ public class OptionsConfig extends YamlConfig {
         return get("ready", false);
     }
 
-    public String getAccountPassword() {
-        return get("account-password", "");
-    }
-
     public String getServerPassword() {
         return get("server-password", "");
+    }
+
+    public String getNickServPassword() {
+        return get("nickserv-password", "");
     }
 
     public String getCommandPrefix() {
@@ -122,10 +117,6 @@ public class OptionsConfig extends YamlConfig {
 
     public int getResponseChance() {
         return get("response-chance", 5);
-    }
-
-    public String getGitHubApiKey() {
-        return get("github-key", "");
     }
 
     public void clearChannels() {
@@ -160,19 +151,7 @@ public class OptionsConfig extends YamlConfig {
         return new ArrayList<>(admins);
     }
 
-    public String getGitHubAccountName() {
-        return get("github-account-name", "");
-    }
-
-    public String getGitHubAccountPassword() {
-        return get("github-account-password", "");
-    }
-
-    public String getGistAccountName() {
-        return get("gist-account-name", "");
-    }
-
-    public String getGistAccountPassword() {
-        return get("gist-account-password", "");
+    public String getTrelloApiKey() {
+        return get("trello-key", "");
     }
 }

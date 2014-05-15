@@ -138,7 +138,7 @@ public class CommandPerformEvent {
         if (this.inPrivateMessage || forcePrivateMessage) {
             this.sender.sendMessage(message);
         } else {
-            Nexus.getInstance().sendMessage(this.channel, message);
+            Nexus.getInstance().sendRawLine("PRIVMSG " + this.channel.getName() + " :" + message);
         }
     }
 }

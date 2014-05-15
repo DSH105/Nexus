@@ -80,46 +80,5 @@ Commit messages must be appropriate and abide by the following expectations:
 * If necessary, the body of the commit message may be used to further elaborate the need for the change addressed in the commit.
 
 ##Pull Request Formatting
-Pull Request formatting guidelines for HoloAPI are very similar to that of Bukkit (if you are familiar with that).
 
-Pull Requests should be formatted as follows.
-
-####Title
-> Brief Summary. Fixes #1
->
-> Title example
-> Provide a PR formatting example for Wiki. Fixes #1
-
-####Description
-> #####The Issue
-> Brief summary explaining what this PR is addressing
->
-> #####Justification for this PR:
-> Provide an explanation of why the proposed changes are required
->
-> #####PR Breakdown
-> Explanation of what this PR achieves and what the code is doing.
->
-> #####Relevant PR(s) and Issue(s)
-> If applicable, link to any related PR(s) and Issue(s), accompanied with a reason as to why it is being referenced.
->
-> e.g.
-> https://github.com/DSH105/Nexus/pull/#### - Reason
-
-*The code:*
-```
-**The Issue**
-Brief summary explaining what this PR is addressing
-
-**Justification for this PR:**
-Provide an explanation of why the proposed changes are required
-
-**PR Breakdown**
-Explanation of what this PR achieves and what the code is doing.
-
-**Relevant PR(s) and Issue(s)**
-If applicable, link to any related PR(s) and Issue(s), accompanied with a reason as to why it is being referenced.
-
-e.g.
-https://github.com/DSH105/Nexus/pull/#### - Reason
-```
+Pull Requests should contain a brief summary of what is being addressed. _**Pull Requests without a sufficient description will not be accepted (merged).**_

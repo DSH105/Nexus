@@ -18,14 +18,20 @@
 package com.dsh105.nexus;
 
 import com.dsh105.nexus.command.CommandManager;
-import com.dsh105.nexus.command.module.RemindCommand;
+import com.dsh105.nexus.command.module.general.RemindCommand;
+import com.dsh105.nexus.config.GitHubConfig;
+import com.dsh105.nexus.config.NicksConfig;
 import com.dsh105.nexus.config.OptionsConfig;
 import com.dsh105.nexus.hook.github.GitHub;
 import com.dsh105.nexus.hook.jenkins.Jenkins;
 import com.dsh105.nexus.listener.EventManager;
 import com.dsh105.nexus.response.ResponseManager;
 import com.dsh105.nexus.util.JsonUtil;
+import com.dsh105.nexus.util.ShortLoggerFormatter;
 import com.mashape.unirest.http.Unirest;
+import jline.console.ConsoleReader;
+import jline.console.completer.FileNameCompleter;
+import org.ocpsoft.prettytime.PrettyTime;
 import org.pircbotx.Channel;
 import org.pircbotx.PircBotX;
 import org.pircbotx.User;
@@ -33,59 +39,129 @@ import org.pircbotx.exception.IrcException;
 import org.pircbotx.exception.NickAlreadyInUseException;
 
 import java.io.IOException;
-import java.util.logging.FileHandler;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
+import java.util.logging.*;
 
 public class Nexus extends PircBotX {
 
     private static Nexus INSTANCE;
     public static Logger LOGGER = Logger.getLogger(Nexus.class.getName());
     public static JsonUtil JSON = new JsonUtil();
-    public static String CONFIG_FILE_NAME = "options.txt";
+    public static PrettyTime PRETTY_TIME = new PrettyTime();
+    public static String CONFIG_FILE_NAME = "options.yml";
     private OptionsConfig config;
+    private GitHubConfig githubConfig;
+    private NicksConfig nicksConfig;
     private CommandManager commandManager;
     private ResponseManager responseManager;
     private Jenkins jenkins;
     private GitHub github;
 
     public static void main(String[] args) throws Exception {
+        System.out.println("Starting up Nexus, please wait...");
         new Nexus();
     }
 
     public Nexus() {
         INSTANCE = this;
+        Runtime.getRuntime().addShutdownHook(new Thread() {
+            @Override
+            public void run() {
+                endProcess();
+            }
+        });
+        Unirest.setTimeouts(10000, 10000);
+        try {
+            setEncoding("UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            LOGGER.severe("Failed to set bot encoding!");
+            e.printStackTrace();
+        }
+
         this.registerLogger();
+
+        LOGGER.info("Loading config files");
         config = new OptionsConfig();
+        githubConfig = new GitHubConfig();
+        nicksConfig = new NicksConfig();
+
+        Unirest.setDefaultHeader("user-agent", getConfig().get("user-agent", "Nexus"));
+
+        LOGGER.info("Registering event listeners");
+        this.registerListeners();
+
+        LOGGER.info("Registering commands");
         commandManager = new CommandManager();
         commandManager.registerDefaults();
+
+        LOGGER.info("Preparing response manager");
         responseManager = new ResponseManager();
-        Unirest.setTimeouts(10000, 10000);
+        responseManager.load();
+
         this.setName(this.getConfig().getNick());
-        this.setLogin("Nexus");
-        this.setVersion("Nexus");
+        this.setLogin(this.getConfig().getNick());
+        this.setVersion(this.getConfig().getNick());
         this.setVerbose(false);
         this.setAutoReconnectChannels(true);
-        this.identify(this.config.getAccountPassword());
+        if (this.config.getNickServPassword() != null && !this.config.getNickServPassword().isEmpty()) {
+            this.identify(this.config.getNickServPassword());
+        }
         this.connect();
-        this.registerListeners();
+
         if (!this.config.getJenkinsUrl().isEmpty()) {
+            LOGGER.info("Initiating Jenkins hook");
             this.jenkins = new Jenkins();
         }
+        LOGGER.info("Initiating GitHub hook");
         this.github = new GitHub();
         RemindCommand remindCommand = this.getCommandManager().getModuleOfType(RemindCommand.class);
         if (remindCommand != null) {
+            LOGGER.info("Loading saved reminders");
             remindCommand.loadReminders();
         }
-        //this.sendMessage(this.getChannel(this.getConfig().getAdminChannel()), "Hi. I have returned.");
+        this.sendMessage(this.getChannel(this.getConfig().getAdminChannel()), "I'm back! ;D");
+        LOGGER.info("Done! Nexus is ready!");
+
+        ConsoleReader console = null;
+        try {
+            console = new ConsoleReader();
+            console.addCompleter(new FileNameCompleter());
+            console.setPrompt("> ");
+            String line;
+            PrintWriter out = new PrintWriter(System.out);
+
+            while ((line = console.readLine("")) != null) {
+                if (INSTANCE != null) {
+                    if (line.equalsIgnoreCase("EXIT") || line.equalsIgnoreCase("END") || line.equalsIgnoreCase("STOP") || line.equalsIgnoreCase("QUIT")) {
+                        endProcess();
+                    }
+                }
+                out.flush();
+            }
+        } catch(IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (console != null) {
+                try {
+                    console.getTerminal().restore();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
-    @Override
-    public void shutdown(boolean noReconnect) {
-        this.saveAll();
-        super.shutdown(noReconnect);
-        INSTANCE = null;
+    public static void endProcess() {
+        if (INSTANCE != null) {
+            LOGGER.info("Shutting down Nexus...");
+            INSTANCE.saveAll();
+            LOGGER.info("Waiting for outgoing queue");
+            while (Nexus.getInstance().getOutgoingQueueSize() > 0);
+            INSTANCE.shutdown(true);
+            INSTANCE = null;
+            System.exit(0);
+        }
     }
 
     private void registerListeners() {
@@ -94,10 +170,31 @@ public class Nexus extends PircBotX {
 
     private void registerLogger() {
         try {
-            FileHandler handler = new FileHandler("Nexus.log");
+            Logger root = Logger.getLogger("");
+            root.setLevel(Level.INFO);
+
+            FileHandler handler = new FileHandler("Nexus.log", true);
             handler.setLevel(Level.ALL);
-            handler.setFormatter(new SimpleFormatter());
-            LOGGER.addHandler(handler);
+            handler.setFormatter(new ShortLoggerFormatter(true));
+            root.addHandler(handler);
+
+            ConsoleHandler console = null;
+            for (Handler h : root.getHandlers()) {
+                if (h instanceof ConsoleHandler) {
+                    console = (ConsoleHandler) h;
+                    break;
+                }
+            }
+            boolean registerWithRoot = false;
+            if (console == null) {
+                console = new ConsoleHandler();
+                registerWithRoot = true;
+            }
+            console.setLevel(Level.INFO);
+            console.setFormatter(new ShortLoggerFormatter());
+            if (registerWithRoot) {
+                root.addHandler(console);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -112,7 +209,7 @@ public class Nexus extends PircBotX {
 
             LOGGER.info("Attempting to connect to " + this.config.getServer());
 
-            this.connect(this.config.getServer(), this.config.getPort(), this.config.getAccountPassword());
+            this.connect(this.config.getServer(), this.config.getPort(), this.config.getServerPassword());
             for (String channel : this.config.getChannels()) {
                 this.joinChannel(channel);
             }
@@ -123,11 +220,19 @@ public class Nexus extends PircBotX {
     }
 
     public void saveAll() {
+        LOGGER.info("Saving config files");
+        this.getConfig().save();
+        this.getNicksConfig().save();
+        this.getGitHubConfig().save();
+        LOGGER.info("Saving channels");
         this.saveChannels();
         RemindCommand remindCommand = this.getCommandManager().getModuleOfType(RemindCommand.class);
         if (remindCommand != null) {
+            LOGGER.info("Saving reminders");
             remindCommand.saveReminders();
         }
+        LOGGER.info("Saving responses");
+        responseManager.save();
     }
 
     public void saveChannels() {
@@ -158,6 +263,14 @@ public class Nexus extends PircBotX {
         return config;
     }
 
+    public GitHubConfig getGitHubConfig() {
+        return githubConfig;
+    }
+
+    public NicksConfig getNicksConfig() {
+        return nicksConfig;
+    }
+
     public CommandManager getCommandManager() {
         return commandManager;
     }
@@ -171,7 +284,15 @@ public class Nexus extends PircBotX {
     }
 
     public boolean isAdmin(User user) {
-        return this.getChannel(this.getConfig().getAdminChannel()).getOps().contains(user) || this.getConfig().getAdmins().contains(user.getNick());
+        return isChannelAdmin(user) || isNexusAdmin(user);
+    }
+
+    public boolean isChannelAdmin(User user) {
+        return this.getChannel(this.getConfig().getAdminChannel()).getOps().contains(user);
+    }
+
+    public boolean isNexusAdmin(User user) {
+        return this.getConfig().getAdmins().contains(user.getNick());
     }
 
     public ResponseManager getResponseManager() {

@@ -41,35 +41,49 @@ public class YamlConfig {
     }
 
     public void save() {
+        PrintWriter writer = null;
         try {
             File file = new File(this.getFileName());
             if (file.exists()) {
                 file.delete();
             }
             file.createNewFile();
-            PrintWriter writer = new PrintWriter(new FileOutputStream(file));
-            Yaml yaml = new Yaml();
-            writer.write(yaml.dump(this.options));
-            writer.close();
+
+            writer = new PrintWriter(file);
+            writer.write(new Yaml().dump(this.options));
         } catch (IOException e) {
             Nexus.LOGGER.severe("Failed to save configuration file: " + fileName);
+        } finally {
+            if (writer != null) {
+                writer.close();
+            }
         }
     }
 
     public void load() {
+        FileInputStream input = null;
         try {
             File file = new File(fileName);
             if (!file.exists()) {
                 file.createNewFile();
             }
-            FileInputStream input = new FileInputStream(file);
+            input = new FileInputStream(file);
             Yaml yaml = new Yaml();
             Map<String, Object> loaded = (Map<String, Object>) yaml.load(input);
-            if (loaded != null && !loaded.isEmpty()) {
+            if (loaded != null) {
                 this.loadData(loaded);
             }
         } catch (IOException e) {
             Nexus.LOGGER.severe("Failed to load configuration file: " + fileName);
+            e.printStackTrace();
+        } finally {
+            if (input != null) {
+                try {
+                    input.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
         this.save();
     }

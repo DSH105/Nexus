@@ -17,9 +17,19 @@
 
 package com.dsh105.nexus.hook.github;
 
+import com.dsh105.nexus.Nexus;
+import com.dsh105.nexus.exception.general.DateParseException;
+import com.dsh105.nexus.util.TimeUtil;
 import com.google.gson.annotations.SerializedName;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.util.Date;
+
 public class GitHubIssue {
+
+    @SerializedName("url")
+    private String apiUrl;
 
     @SerializedName("html_url")
     private String url;
@@ -48,18 +58,23 @@ public class GitHubIssue {
     @SerializedName("closed_at")
     private String closedAt;
 
-    protected String repoFullName;
+    protected GitHubRepo repo;
     protected GitHubUser reportedBy;
 
+    public GitHubRepo getRepo() {
+        return repo;
+    }
+
     public GitHubUser getReporter() {
-        if (reportedBy == null) {
-            reportedBy = GitHub.getGitHub().getReporterOf(this);
-        }
         return reportedBy;
     }
 
     public String getUrl() {
         return url;
+    }
+
+    public String getApiUrl() {
+        return apiUrl;
     }
 
     public int getNumber() {
@@ -84,21 +99,21 @@ public class GitHubIssue {
 
     public String getDateCreated() {
         if (createdAt != null) {
-            return createdAt.split("T")[0];
+            return TimeUtil.parseGitHubDate(createdAt);
         }
         return null;
     }
 
     public String getDateUpdated() {
         if (updatedAt != null) {
-            return updatedAt.split("T")[0];
+            return TimeUtil.parseGitHubDate(updatedAt);
         }
         return null;
     }
 
     public String getDateClosed() {
         if (closedAt != null) {
-            return closedAt.split("T")[0];
+            return TimeUtil.parseGitHubDate(closedAt);
         }
         return null;
     }
