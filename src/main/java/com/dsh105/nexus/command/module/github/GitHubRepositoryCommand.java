@@ -23,6 +23,7 @@ import com.dsh105.nexus.command.CommandModule;
 import com.dsh105.nexus.command.CommandPerformEvent;
 import com.dsh105.nexus.exception.github.GitHubRepoNotFoundException;
 import com.dsh105.nexus.hook.github.*;
+import com.dsh105.nexus.util.AuthUtil;
 import com.dsh105.nexus.util.shorten.URLShortener;
 import com.dsh105.nexus.util.StringUtil;
 import org.pircbotx.Colors;
@@ -34,12 +35,11 @@ import java.util.regex.Pattern;
         extendedHelp = {
                 "The repo command contains various commands to manage GitHub repositories.",
                 "{b}{p}{c} <name>{/b} - retrieves repository information for the given repo. Uses the sender's nick as the GitHub login",
-                "{b}{p}{c} [owner] <name>{/b} - retrieves repository information for the given repo and login.",
-                "--------",
-                "Following the above arguments, these commands can also be performed:",
-                "{b}{p}{c} <...> save{/b} - save a repo and owner combination for later ease of command use.",
-                "{b}{p}{c} <...> set <option> <args>{/b} - sets the value of the given event option for a repo.",
-                "{b}{p}{c} <..> get <option>{/b} - retrieves information on the given event option.",
+                "{b}{p}{c} [owner] <name>{/b} - Retrieves repository information for the given repo and login.",
+                "{b}{p}{c} <...> save{/b} - Save a repository and owner combination for later ease of command use.",
+                "{b}{p}{c} <...> issue <number>{/b} - Retrieve issue information for a GitHub repository.",
+                "{b}{p}{c} <...> set <option> <args>{/b} - Sets the value of the given event option for a repository.",
+                "{b}{p}{c} <...> get <option>{/b} - Retrieves information on the given event option for a repository.",
                 "Valid options are: irc"})
 public class GitHubRepositoryCommand extends CommandModule {
 
@@ -65,21 +65,21 @@ public class GitHubRepositoryCommand extends CommandModule {
 
         GitHubRepo repo;
         try {
-            repo = GitHub.getGitHub().getRepo(owner + "/" + repoName, StringUtil.getIdent(event.getSender()));
+            repo = GitHub.getGitHub().getRepo(owner + "/" + repoName, AuthUtil.getIdent(event.getSender()));
         } catch (GitHubRepoNotFoundException e) {
             try {
                 String owner2 = repoName;
                 repoName = owner;
                 owner = owner2;
 
-                repo = GitHub.getGitHub().getRepo(owner + "/" + repoName, StringUtil.getIdent(event.getSender()));
+                repo = GitHub.getGitHub().getRepo(owner + "/" + repoName, AuthUtil.getIdent(event.getSender()));
             } catch (GitHubRepoNotFoundException e2) {
                 String storedCase = Nexus.getInstance().getGitHubConfig().get("github-repo-" + owner.toLowerCase(), ""); // temporarily use the owner so that the error message outputs correctly
                 if (!storedCase.isEmpty()) {
                     repoName = owner;
                     owner = storedCase;
                     try {
-                        repo = GitHub.getGitHub().getRepo(owner + "/" + repoName, StringUtil.getIdent(event.getSender()));
+                        repo = GitHub.getGitHub().getRepo(owner + "/" + repoName, AuthUtil.getIdent(event.getSender()));
                     } catch (GitHubRepoNotFoundException e3) {
                         event.errorWithPing("The GitHub repository {0} could not be found! :(", repoName + "/" + owner);
                         return true;
@@ -137,7 +137,7 @@ public class GitHubRepositoryCommand extends CommandModule {
                         }
 
                         if (!events.isEmpty()) {
-                            GitHub.getGitHub().setIrcNotifications(repo, StringUtil.getIdent(event.getSender()), events.toArray(new GitHubEvent[events.size()]));
+                            GitHub.getGitHub().setIrcNotifications(repo, AuthUtil.getIdent(event.getSender()), events.toArray(new GitHubEvent[events.size()]));
                             String eventsStr = "";
                             for (GitHubEvent e : events) {
                                 eventsStr += (eventsStr.isEmpty()) ? e.getJsonName() : ", " + e.getJsonName();
@@ -154,7 +154,7 @@ public class GitHubRepositoryCommand extends CommandModule {
                 if (event.getArgs().length >= startIndex + 2) {
                     if (event.getArgs()[startIndex + 1].equalsIgnoreCase("irc")) {
                         String eventsStr = "";
-                        for (GitHubEvent e : GitHub.getGitHub().getIrcNotifications(repo, StringUtil.getIdent(event.getSender()))) {
+                        for (GitHubEvent e : GitHub.getGitHub().getIrcNotifications(repo, AuthUtil.getIdent(event.getSender()))) {
                             eventsStr += (eventsStr.isEmpty()) ? e.getJsonName() : ", " + e.getJsonName();
                         }
                         event.respondWithPing("IRC notifications for GitHub repository ({0}) are{1}", repo.getFullName(), eventsStr.isEmpty() ? " empty" : ": " + eventsStr);
@@ -184,7 +184,7 @@ public class GitHubRepositoryCommand extends CommandModule {
                     }
                     GitHubIssue issue;
                     try {
-                        issue = GitHub.getGitHub().getIssue(repo, Integer.parseInt(issueNumber), StringUtil.getIdent(event.getSender()));
+                        issue = GitHub.getGitHub().getIssue(repo, Integer.parseInt(issueNumber), AuthUtil.getIdent(event.getSender()));
                     } catch (GitHubRepoNotFoundException e) {
                         event.respondWithPing("I couldn't find that for you. Either that repository doesn't have issues enabled, or issue #{0} doesn't exist.");
                         return true;

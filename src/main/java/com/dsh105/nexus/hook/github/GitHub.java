@@ -100,14 +100,14 @@ public class GitHub {
 
     public String getAccessToken(String userLogin, boolean onlyAllowTokenAccess) {
         if (userLogin == null || userLogin.isEmpty()) {
-            return "?access_token=" + Nexus.getInstance().getGitHubConfig().getNexusGitHubApiKey();
+            return Nexus.getInstance().getGitHubConfig().getNexusGitHubApiKey();
         }
         String accessToken = Nexus.getInstance().getGitHubConfig().getGitHubApiKey(userLogin);
         if (accessToken.isEmpty() && onlyAllowTokenAccess) {
-            throw new GitHubAPIKeyInvalidException("GitHub API key for " + userLogin + " is invalid. Please provide one to access this part of the GitHub API");
+            throw new GitHubAPIKeyInvalidException("Please provide a GitHub API key (via the ghkey command) to access this part of the GitHub API");
         }
         // Make sure that we have a valid API key to use. Provide the default Nexus API key if this user doesn't have one.
-        return "?access_token=" + (accessToken.isEmpty() ? Nexus.getInstance().getGitHubConfig().getNexusGitHubApiKey() : accessToken);
+        return accessToken.isEmpty() ? Nexus.getInstance().getGitHubConfig().getNexusGitHubApiKey() : accessToken;
     }
 
     public String getAccessToken(String userLogin) {
@@ -138,7 +138,7 @@ public class GitHub {
         }
 
         Nexus.LOGGER.info("Connecting to " + urlPath + " with ACCESS_TOKEN of " + userLogin);
-        HttpResponse<JsonNode> response = Unirest.get(urlPath + accessToken).asJson();
+        HttpResponse<JsonNode> response = Unirest.get(urlPath).header("Authorization", "token " + accessToken).asJson();
         if (!assumeAccess) {
             try {
                 String checkAccess = response.getBody().getObject().getString("message");
@@ -362,7 +362,8 @@ public class GitHub {
                 eventsList.add(e.getJsonName());
             }
             try {
-                Unirest.patch(getHooksUrl(repo) + "/" + hook.getId() + getAccessToken(userLogin, true))
+                Unirest.patch(getHooksUrl(repo) + "/" + hook.getId())
+                        .header("Authorization", "token " + getAccessToken(userLogin, true))
                         .header("accept", "application/json")
                         .header("content-type", "application/json")
                         .body("{\"events\":[" + s + "]}").asJson();

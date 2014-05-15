@@ -23,13 +23,6 @@ import org.pircbotx.User;
 
 public class StringUtil {
 
-    public static String getIdent(User user) {
-        //Nexus.getInstance().sendMessage(Nexus.getInstance().getUser("NickServ"), "info " + user.getNick());
-        String accountName = Nexus.getInstance().getNicksConfig().getAccountNameFor(user.getNick());
-        return accountName != null ? accountName : "";
-        //return user.getLogin().replaceAll("^\\W", "");
-    }
-
     public static String removePing(String nick) {
         return nick == null ? null : (nick.substring(0, 1) + '\u200b' + (nick.length() >= 2 ? nick.substring(1, nick.length()) : ""));
     }

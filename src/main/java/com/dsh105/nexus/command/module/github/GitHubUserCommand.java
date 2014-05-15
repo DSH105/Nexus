@@ -23,6 +23,7 @@ import com.dsh105.nexus.command.CommandPerformEvent;
 import com.dsh105.nexus.exception.github.GitHubUserNotFoundException;
 import com.dsh105.nexus.hook.github.GitHub;
 import com.dsh105.nexus.hook.github.GitHubUser;
+import com.dsh105.nexus.util.AuthUtil;
 import com.dsh105.nexus.util.StringUtil;
 import com.dsh105.nexus.util.shorten.URLShortener;
 import org.pircbotx.Colors;
@@ -39,7 +40,7 @@ public class GitHubUserCommand extends CommandModule {
         String userLogin = event.getArgs()[0];
         GitHubUser user;
         try {
-            user = GitHub.getGitHub().getUser(userLogin, StringUtil.getIdent(event.getSender()));
+            user = GitHub.getGitHub().getUser(userLogin, AuthUtil.getIdent(event.getSender()));
         } catch (GitHubUserNotFoundException e) {
             event.respondWithPing("GitHub user ({0}) could not be found.", userLogin);
             return true;
