@@ -26,6 +26,10 @@ import com.dsh105.nexus.hook.github.*;
 import com.dsh105.nexus.util.AuthUtil;
 import com.dsh105.nexus.util.shorten.URLShortener;
 import com.dsh105.nexus.util.StringUtil;
+import com.mashape.unirest.http.HttpResponse;
+import com.mashape.unirest.http.JsonNode;
+import com.mashape.unirest.http.async.Callback;
+import com.mashape.unirest.http.exceptions.UnirestException;
 import org.pircbotx.Colors;
 
 import java.util.ArrayList;
@@ -38,20 +42,22 @@ import java.util.regex.Pattern;
                 "{b}{p}{c} [owner] <name>{/b} - Retrieves repository information for the given repo and login.",
                 "{b}{p}{c} <...> save{/b} - Save a repository and owner combination for later ease of command use.",
                 "{b}{p}{c} <...> issue <number>{/b} - Retrieve issue information for a GitHub repository.",
+                "{b}{p}{c} <...> fork{/b} - Fork a repository. Requires a GitHub API key (see {b}{p}ghkey{/b})",
                 "{b}{p}{c} <...> set <option> <args>{/b} - Sets the value of the given event option for a repository.",
                 "{b}{p}{c} <...> get <option>{/b} - Retrieves information on the given event option for a repository.",
                 "Valid options are: irc"})
 public class GitHubRepositoryCommand extends CommandModule {
 
     @Override
-    public boolean onCommand(CommandPerformEvent event) {
+    public boolean onCommand(final CommandPerformEvent event) {
         if (event.getArgs().length == 0) {
             Nexus.getInstance().getCommandManager().onCommand(event.getChannel(), event.getSender(), "repo DSH105 Nexus");
             return true;
         }
         int startCheck = 2;
-        boolean subMatchesSecond = event.getArgs().length >= startCheck && Pattern.compile("(set|get|save|issue)").matcher(event.getArgs()[startCheck - 1]).matches();
-        boolean subMatchesThird = event.getArgs().length >= (startCheck + 1) && Pattern.compile("(set|get|save|issue)").matcher(event.getArgs()[startCheck]).matches();
+        String subCommands = "set|get|save|issue|fork";
+        boolean subMatchesSecond = event.getArgs().length >= startCheck && Pattern.compile("(" + subCommands + ")").matcher(event.getArgs()[startCheck - 1]).matches();
+        boolean subMatchesThird = event.getArgs().length >= (startCheck + 1) && Pattern.compile("(" + subCommands + ")").matcher(event.getArgs()[startCheck]).matches();
 
         String repoName = subMatchesSecond ? event.getArgs()[0] : ((subMatchesThird || event.getArgs().length == 2) ? event.getArgs()[1] : event.getArgs()[0]);
         String owner = subMatchesSecond ? event.getSender().getNick() : ((subMatchesThird || event.getArgs().length == 2) ? event.getArgs()[0] : event.getSender().getNick());
@@ -220,6 +226,25 @@ public class GitHubRepositoryCommand extends CommandModule {
                     }
                     return true;
                 }
+            } else if (event.getArgs()[startIndex].equalsIgnoreCase("fork")) {
+                final String toFork = repo.getFullName();
+                GitHub.getGitHub().forkAsync(repo, AuthUtil.getIdent(event.getSender()), new Callback<JsonNode>() {
+                    @Override
+                    public void completed(HttpResponse<JsonNode> response) {
+                        event.respondWithPing("Repository ({0}) forked to {1} on your behalf.", toFork, response.getBody().getObject().getString("full_name"));
+                    }
+
+                    @Override
+                    public void failed(UnirestException e) {
+                        event.respondWithPing("Failed to fork repository ({0}). Reason: " + GitHub.getGitHub().createGist(e), toFork);
+                    }
+
+                    @Override
+                    public void cancelled() {
+                        event.respondWithPing("Failed to fork repository ({0}). Reason: {1}", toFork, "Request cancelled");
+                    }
+                });
+                return true;
             }
         }
         if (repo != null) {

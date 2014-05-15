@@ -24,6 +24,7 @@ import com.dsh105.nexus.hook.github.gist.GistFile;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
+import com.mashape.unirest.http.async.Callback;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -45,6 +46,7 @@ public class GitHub {
     public static String HOOKS = "/hooks";
     public static String COLLABORATORS = "/collaborators";
     public static String LANGUAGES = "/languages";
+    public static String FORKS = "/forks";
 
     public static String getRepoApiUrl(String repoName) {
         return REPO_API_URL.replace("{name}", repoName);
@@ -72,6 +74,10 @@ public class GitHub {
 
     public static String getLanguagesUrl(String repoName) {
         return getRepoApiUrl(repoName) + LANGUAGES;
+    }
+
+    public static String getForksUrl(String repoName) {
+        return getRepoApiUrl(repoName) + FORKS;
     }
 
     public static String getUserUrl(String userLogin) {
@@ -180,6 +186,20 @@ public class GitHub {
             }
             throw new GitHubException("Error connecting to GitHub API! ", e);
         }
+    }
+
+    public void fork(GitHubRepo repo, String userLogin) {
+        Nexus.LOGGER.info("Attempting to fork repo (" + repo.getFullName() + ") on behalf of " + userLogin);
+        try {
+            Unirest.post(getForksUrl(repo.getFullName())).header("Authorization", "token " + getAccessToken(userLogin, true)).asJson();
+        } catch (UnirestException e) {
+            throw new GitHubException("Error connecting to GitHub API! ", e);
+        }
+    }
+
+    public void forkAsync(GitHubRepo repo, String userLogin, Callback<JsonNode> callback) {
+        Nexus.LOGGER.info("Attempting to fork repo (" + repo.getFullName() + ") on behalf of " + userLogin);
+        Unirest.post(getForksUrl(repo.getFullName())).header("Authorization", "token " + getAccessToken(userLogin, true)).asJsonAsync(callback);
     }
 
     public GitHubUser getUser(String ghUserLogin, String userLogin) {
