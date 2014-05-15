@@ -17,11 +17,13 @@
 
 package com.dsh105.nexus.util;
 
-import com.dsh105.nexus.Nexus;
-import com.dsh105.nexus.listener.EventManager;
-import org.pircbotx.User;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Iterator;
 
 public class StringUtil {
+
+    private static final String EMPTY = "";
 
     public static String removePing(String nick) {
         return nick == null ? null : (nick.substring(0, 1) + '\u200b' + (nick.length() >= 2 ? nick.substring(1, nick.length()) : ""));
@@ -110,5 +112,126 @@ public class StringUtil {
             return new String[0];
         }
         return combined.split(separator);
+    }
+
+    /**
+     * Joins the elements of an iterator together separated by the given separator.
+     * @param iterator
+     * @param separator
+     * @return
+     */
+    public static String join(Iterator iterator, char separator) {
+        if (iterator == null) {
+            return null;
+        }
+        if (!iterator.hasNext()) {
+            return EMPTY;
+        }
+        Object first = iterator.next();
+        if (!iterator.hasNext()) {
+            return first.toString();
+        }
+
+        StringBuilder buf = new StringBuilder(256);
+        if (first != null) {
+            buf.append(first);
+        }
+
+        while (iterator.hasNext()) {
+            buf.append(separator);
+            Object obj = iterator.next();
+            if (obj != null) {
+                buf.append(obj);
+            }
+        }
+
+        return buf.toString();
+    }
+
+    /**
+     * Joins the elements of an iterator together separated by the given separator.
+     * @param iterator
+     * @param separator
+     * @return
+     */
+    public static String join(Iterator iterator, String separator) {
+        if (iterator == null) {
+            return null;
+        }
+        if (!iterator.hasNext()) {
+            return EMPTY;
+        }
+        Object first = iterator.next();
+        if (!iterator.hasNext()) {
+            return first.toString();
+        }
+
+        StringBuilder buf = new StringBuilder(256);
+        if (first != null) {
+            buf.append(first);
+        }
+
+        while (iterator.hasNext()) {
+            if (separator != null) {
+                buf.append(separator);
+            }
+            Object obj = iterator.next();
+            if (obj != null) {
+                buf.append(obj);
+            }
+        }
+        return buf.toString();
+    }
+
+    /**
+     * Joins the elements of a collection together separated by the given separator.
+     * @param collection
+     * @param separator
+     * @return
+     */
+    public static String join(Collection collection, char separator) {
+        if (collection == null) {
+            return null;
+        }
+        return join(collection.iterator(), separator);
+    }
+
+    /**
+     * Joins the elements of a collection together separated by the given separator.
+     * @param collection
+     * @param separator
+     * @return
+     */
+    public static String join(Collection collection, String separator) {
+        if (collection == null) {
+            return null;
+        }
+        return join(collection.iterator(), separator);
+    }
+
+    /**
+     * Joins the elements of an array together separated by the given separator.
+     * @param array
+     * @param separator
+     * @return
+     */
+    public static String join(Object[] array, char separator){
+        if(array == null){
+            return null;
+        }
+        return join(Arrays.asList(array), separator);
+    }
+
+    /**
+     * Joins the elements of an array together separated by the given separator.
+     * @param array
+     * @param separator
+     * @return
+     */
+    public static String join(Object[] array, String separator){
+        if(array == null){
+            return null;
+        }
+        return join(Arrays.asList(array), separator);
     }
 }
