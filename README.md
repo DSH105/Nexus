@@ -3,7 +3,7 @@ Nexus
 
 DSH105's IRC bot. A versatile Java IRC bot using the PircBotX library.
 
-I like contributions ;D
+I like contributions :D
 
 Current Features
 ================
