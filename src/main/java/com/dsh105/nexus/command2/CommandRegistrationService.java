@@ -96,14 +96,14 @@ public class CommandRegistrationService {
                 if (help.length() == 0) {
                     help = desc;
                 }
-
+                final String commandPrefix = Nexus.getInstance().getConfig().getCommandPrefix();
                 final CharSequence arguments = getArguments(cmd);
                 for (String alias : cmd.aliases()) {
-                    final String helpMessage = "/" + alias + " " + arguments + "\n\n" + help;
-                    final String key = alias.replaceAll("/", "");
+                    final String helpMessage = commandPrefix + alias + " " + arguments + "\n\n" + help;
+                    final String key = alias.replaceAll(commandPrefix, "");
                     String previous = helpMessages.put(key, helpMessage);
 
-                    if (previous != null && !previous.replaceAll("^/[^ ]+ ", "").equals(helpMessage.replaceAll("^/[^ ]+ ", ""))) {
+                    if (previous != null && !previous.replaceAll("^" + commandPrefix + "[^ ]+ ", "").equals(helpMessage.replaceAll("^" + commandPrefix + "[^ ]+ ", ""))) {
                         helpMessages.put(key, previous + "\n\n" + helpMessage);
                     }
                 }
@@ -143,7 +143,7 @@ public class CommandRegistrationService {
     protected String getUsage(String[] args, int level, Command cmd) {
         final StringBuilder command = new StringBuilder();
 
-        command.append('/');
+        command.append(Nexus.getInstance().getConfig().getCommandPrefix());
 
         for (int i = 0; i <= level; ++i) {
             command.append(args[i]);
@@ -183,7 +183,7 @@ public class CommandRegistrationService {
     protected String getNestedUsage(String[] args, int level, Method method, User user) throws CommandException {
         StringBuilder command = new StringBuilder();
 
-        command.append("/");
+        command.append(Nexus.getInstance().getConfig().getCommandPrefix());
 
         for (int i = 0; i <= level; ++i) {
             command.append(args[i] + " ");

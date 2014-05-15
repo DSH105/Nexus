@@ -1,12 +1,17 @@
 package com.dsh105.nexus.command2;
 
 import com.dsh105.nexus.Nexus;
-import com.dsh105.nexus.command2.exceptions.CommandException;
+import com.dsh105.nexus.command2.exceptions.*;
 import com.dsh105.nexus.util.StringUtil;
 import org.pircbotx.Channel;
+import org.pircbotx.Colors;
 import org.pircbotx.User;
 
 public class CommandManager {
+
+    private String NO_PERMISSION = Colors.RED + "Error: You don't have permission";
+    private String ERROR_OCCURRED = Colors.RED + "An unknown error occurred. See the console for more info.";
+    private String NUMBER_EXCEPTION = Colors.RED + "Number expected, string received instead.";
 
     protected CommandRegistrationService registrationService;
 
@@ -33,8 +38,22 @@ public class CommandManager {
     public void onCommand(Channel channel, User sender, String command, String... args) {
         try {
             this.registrationService.execute(command, args, sender, channel);
+        } catch (CommandPermissionsException e) {
+            sender.sendMessage(this.NO_PERMISSION);
+        } catch (MissingNestedCommandException e) {
+            sender.sendMessage(Colors.RED + e.getUsage());
+        } catch (CommandUsageException e) {
+            sender.sendMessage(Colors.RED + e.getMessage());
+            sender.sendMessage(Colors.RED + e.getUsage());
+        } catch (WrappedCommandException e) {
+            if (e.getCause() instanceof NumberFormatException) {
+                sender.sendMessage(this.NUMBER_EXCEPTION);
+            } else {
+                sender.sendMessage(this.ERROR_OCCURRED);
+                e.printStackTrace();
+            }
         } catch (CommandException e) {
-            e.printStackTrace();
+            sender.sendMessage(Colors.RED + e.getMessage());
         }
     }
 }
