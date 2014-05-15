@@ -290,6 +290,9 @@ public class GitHub {
             } catch (JSONException e) {
             }
             if (!mergeStatus) {
+                if (message.equalsIgnoreCase("NOT FOUND")) {
+                    message = "You do not have access to this";
+                }
                 throw new GitHubPullRequestMergeException(message);
             }
         } catch (UnirestException e) {
