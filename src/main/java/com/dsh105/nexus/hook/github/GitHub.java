@@ -170,7 +170,7 @@ public class GitHub {
             InputStream input = response.getRawBody();
             GitHubRepo repo = Nexus.JSON.read(input, GitHubRepo.class);
             if (repo == null || repo.getUrl() == null) {
-                throw new GitHubRepoNotFoundException("Failed to locate GitHub Repo: " + name);
+                throw new GitHubNotFoundException("Failed to locate GitHub Repo: " + name);
             }
             repo.repoOwner = getUser(response.getBody().getObject().getJSONObject("owner").getString("login"), userLogin);
             repo.collaborators = getCollaborators(repo, userLogin);
@@ -183,7 +183,7 @@ public class GitHub {
             return repo;
         } catch (UnirestException e) {
             if (e.getCause() instanceof FileNotFoundException) {
-                throw new GitHubRepoNotFoundException("Failed to locate GitHub Repo: " + name, e);
+                throw new GitHubNotFoundException("Failed to locate GitHub Repo: " + name, e);
             }
             throw new GitHubException("Error connecting to GitHub API! ", e);
         }
@@ -221,7 +221,7 @@ public class GitHub {
             return getUser(response.getBody().getObject().getJSONObject("user").getString("login"), userLogin);
         } catch (UnirestException e) {
             if (e.getCause() instanceof FileNotFoundException) {
-                throw new GitHubRepoNotFoundException("Failed to locate GitHub Repo: " + issue.getRepo().getFullName(), e);
+                throw new GitHubNotFoundException("Failed to locate GitHub Repo: " + issue.getRepo().getFullName(), e);
             }
             throw new GitHubException("Error connecting to GitHub API! ", e);
         }
@@ -240,15 +240,23 @@ public class GitHub {
         try {
             HttpResponse<JsonNode> response = makeRequest(getIssuesUrl(repo.getFullName(), id), userLogin);
             InputStream input = response.getRawBody();
-            GitHubIssue issue;
+            GitHubIssue issue = null;
+            boolean checkForPullRequest = false;
             try {
                 if (response.getBody().getObject().get("pull_request") != null) {
+                    checkForPullRequest = true;
+                } else {
+                }
+            } catch (JSONException e) {
+            }
+            try {
+                if (checkForPullRequest) {
                     issue = Nexus.JSON.read(makeRequest(getPullsUrl(repo.getFullName(), id), userLogin).getRawBody(), GitHubPullRequest.class);
                 } else {
                     issue = Nexus.JSON.read(input, GitHubIssue.class);
                 }
             } catch (JSONException e) {
-                issue = Nexus.JSON.read(input, GitHubIssue.class);
+                throw new GitHubNotFoundException("Issue #" + id + " doesn't exist at " + repo.getFullName(), e);
             }
             issue.repo = repo;
             issue.reportedBy = getReporterOf(issue, userLogin);
@@ -258,7 +266,7 @@ public class GitHub {
             return issue;
         } catch (UnirestException e) {
             if (e.getCause() instanceof FileNotFoundException) {
-                throw new GitHubRepoNotFoundException("Failed to locate GitHub Repo: " + repo.getFullName(), e);
+                throw new GitHubNotFoundException("Failed to locate GitHub Repo: " + repo.getFullName(), e);
             }
             throw new GitHubException("Error connecting to GitHub API! ", e);
         }
@@ -296,7 +304,7 @@ public class GitHub {
             return Nexus.JSON.read(makeRequest(getCollaboratorsUrl(name), userLogin, true).getRawBody(), GitHubUser[].class);
         } catch (UnirestException e) {
             if (e.getCause() instanceof FileNotFoundException) {
-                throw new GitHubRepoNotFoundException("Failed to locate GitHub Repo: " + name, e);
+                throw new GitHubNotFoundException("Failed to locate GitHub Repo: " + name, e);
             }
             throw new GitHubException("Error connecting to GitHub API! ", e);
         }
@@ -312,7 +320,7 @@ public class GitHub {
             return Nexus.JSON.read(makeRequest(getContributorsUrl(name), userLogin, true).getRawBody(), GitHubUser[].class);
         } catch (UnirestException e) {
             if (e.getCause() instanceof FileNotFoundException) {
-                throw new GitHubRepoNotFoundException("Failed to locate GitHub Repo: " + name, e);
+                throw new GitHubNotFoundException("Failed to locate GitHub Repo: " + name, e);
             }
             throw new GitHubException("Error connecting to GitHub API! ", e);
         } catch (NullPointerException ignored) {
@@ -336,7 +344,7 @@ public class GitHub {
             return languages.toArray(new String[languages.size()]);
         } catch (UnirestException e) {
             if (e.getCause() instanceof FileNotFoundException) {
-                throw new GitHubRepoNotFoundException("Failed to locate GitHub Repo: " + name, e);
+                throw new GitHubNotFoundException("Failed to locate GitHub Repo: " + name, e);
             }
             throw new GitHubException("Error connecting to GitHub API! ", e);
         }
@@ -352,7 +360,7 @@ public class GitHub {
             return Nexus.JSON.read(makeRequest(getHooksUrl(name), userLogin, false, true).getRawBody(), GitHubHook[].class);
         } catch (UnirestException e) {
             if (e.getCause() instanceof FileNotFoundException) {
-                throw new GitHubRepoNotFoundException("Failed to locate GitHub Repo: " + name, e);
+                throw new GitHubNotFoundException("Failed to locate GitHub Repo: " + name, e);
             }
             throw new GitHubException("Error connecting to GitHub API! ", e);
         }

@@ -17,13 +17,13 @@
 
 package com.dsh105.nexus.exception.github;
 
-public class GitHubRepoNotFoundException extends GitHubException {
+public class GitHubNotFoundException extends GitHubException {
 
-    public GitHubRepoNotFoundException(String s) {
+    public GitHubNotFoundException(String s) {
         super(s);
     }
 
-    public GitHubRepoNotFoundException(String s, Throwable throwable) {
+    public GitHubNotFoundException(String s, Throwable throwable) {
         super(s, throwable);
     }
 }

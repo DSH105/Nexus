@@ -21,8 +21,8 @@ import com.dsh105.nexus.Nexus;
 import com.dsh105.nexus.command.Command;
 import com.dsh105.nexus.command.CommandModule;
 import com.dsh105.nexus.command.CommandPerformEvent;
+import com.dsh105.nexus.exception.github.GitHubNotFoundException;
 import com.dsh105.nexus.exception.github.GitHubPullRequestMergeException;
-import com.dsh105.nexus.exception.github.GitHubRepoNotFoundException;
 import com.dsh105.nexus.hook.github.*;
 import com.dsh105.nexus.util.AuthUtil;
 import com.dsh105.nexus.util.StringUtil;
@@ -73,21 +73,21 @@ public class GitHubRepositoryCommand extends CommandModule {
         GitHubRepo repo;
         try {
             repo = GitHub.getGitHub().getRepo(owner + "/" + repoName, AuthUtil.getIdent(event.getSender()));
-        } catch (GitHubRepoNotFoundException e) {
+        } catch (GitHubNotFoundException e) {
             try {
                 String owner2 = repoName;
                 repoName = owner;
                 owner = owner2;
 
                 repo = GitHub.getGitHub().getRepo(owner + "/" + repoName, AuthUtil.getIdent(event.getSender()));
-            } catch (GitHubRepoNotFoundException e2) {
+            } catch (GitHubNotFoundException e2) {
                 String storedCase = Nexus.getInstance().getGitHubConfig().get("github-repo-" + owner.toLowerCase(), ""); // temporarily use the owner so that the error message outputs correctly
                 if (!storedCase.isEmpty()) {
                     repoName = owner;
                     owner = storedCase;
                     try {
                         repo = GitHub.getGitHub().getRepo(owner + "/" + repoName, AuthUtil.getIdent(event.getSender()));
-                    } catch (GitHubRepoNotFoundException e3) {
+                    } catch (GitHubNotFoundException e3) {
                         event.errorWithPing("The GitHub repository {0} could not be found! :(", repoName + "/" + owner);
                         return true;
                     }
@@ -192,8 +192,8 @@ public class GitHubRepositoryCommand extends CommandModule {
                     GitHubIssue issue;
                     try {
                         issue = GitHub.getGitHub().getIssue(repo, Integer.parseInt(issueNumber), AuthUtil.getIdent(event.getSender()));
-                    } catch (GitHubRepoNotFoundException e) {
-                        event.respondWithPing("I couldn't find that for you. Either that repository doesn't have issues enabled, or issue #{0} doesn't exist.");
+                    } catch (GitHubNotFoundException e) {
+                        event.errorWithPing("Issue #{0} doesn't exist at {1} (or that repository doesn't have issues enabled.", issueNumber, repo.getFullName());
                         return true;
                     }
                     if (event.getArgs().length == startIndex + 2) {
