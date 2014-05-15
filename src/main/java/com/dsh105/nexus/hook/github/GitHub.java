@@ -240,7 +240,7 @@ public class GitHub {
         try {
             HttpResponse<JsonNode> response = makeRequest(getIssuesUrl(repo.getFullName(), id), userLogin);
             InputStream input = response.getRawBody();
-            GitHubIssue issue;
+            GitHubIssue issue = null;
             boolean checkForPullRequest = false;
             try {
                 if (response.getBody().getObject().get("pull_request") != null) {
@@ -258,7 +258,7 @@ public class GitHub {
             } catch (JSONException e) {
             }
             if (issue.getNumber() <= 0) {
-                throw new GitHubNotFoundException("Issue #" + id + " doesn't exist at " + repo.getFullName(), e);
+                throw new GitHubNotFoundException("Issue #" + id + " doesn't exist at " + repo.getFullName());
             }
             issue.repo = repo;
             issue.reportedBy = getReporterOf(issue, userLogin);
