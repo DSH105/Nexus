@@ -21,11 +21,12 @@ import com.dsh105.nexus.Nexus;
 import com.dsh105.nexus.command.Command;
 import com.dsh105.nexus.command.CommandModule;
 import com.dsh105.nexus.command.CommandPerformEvent;
+import com.dsh105.nexus.exception.github.GitHubPullRequestMergeException;
 import com.dsh105.nexus.exception.github.GitHubRepoNotFoundException;
 import com.dsh105.nexus.hook.github.*;
 import com.dsh105.nexus.util.AuthUtil;
-import com.dsh105.nexus.util.shorten.URLShortener;
 import com.dsh105.nexus.util.StringUtil;
+import com.dsh105.nexus.util.shorten.URLShortener;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.async.Callback;
@@ -170,7 +171,7 @@ public class GitHubRepositoryCommand extends CommandModule {
                         return true;
                     }
                 }
-            } else if (event.getArgs()[startIndex].equalsIgnoreCase("save")){
+            } else if (event.getArgs()[startIndex].equalsIgnoreCase("save")) {
                 if (event.getArgs().length >= startIndex + 1) {
                     if (Nexus.getInstance().isAdmin(event.getSender())) {
                         Nexus.getInstance().getGitHubConfig().set("github-repo-" + repo.getName().toLowerCase(), repo.getRepoOwner().getLogin());
@@ -182,10 +183,10 @@ public class GitHubRepositoryCommand extends CommandModule {
                     return true;
                 }
             } else if (event.getArgs()[startIndex].equalsIgnoreCase("issue")) {
-                if (event.getArgs().length == startIndex + 2) {
+                if (event.getArgs().length == startIndex + 2 || event.getArgs().length == startIndex + 3) {
                     String issueNumber = event.getArgs()[startIndex + 1];
                     if (!StringUtil.isInt(issueNumber)) {
-                        event.respondWithPing("{0} needs to be an integer.", issueNumber);
+                        event.respondWithPing("{0} needs to be a number.", issueNumber);
                         return true;
                     }
                     GitHubIssue issue;
@@ -195,36 +196,52 @@ public class GitHubRepositoryCommand extends CommandModule {
                         event.respondWithPing("I couldn't find that for you. Either that repository doesn't have issues enabled, or issue #{0} doesn't exist.");
                         return true;
                     }
+                    if (event.getArgs().length == startIndex + 2) {
+                        IssueState issueState = IssueState.getByIdent(issue.getState());
+                        String state = issueState.format(issue.getState()).toUpperCase();
+                        /*String body = issue.getBody();
+                        if (body.length() > 30) {
+                            body = body.substring(0, 70) + "...";
+                        }*/
 
-                    IssueState issueState = IssueState.getByIdent(issue.getState());
-                    String state = issueState.format(issue.getState()).toUpperCase();
-                    /*String body = issue.getBody();
-                    if (body.length() > 30) {
-                        body = body.substring(0, 70) + "...";
-                    }*/
-
-                    if (issue instanceof GitHubPullRequest) {
-                        GitHubPullRequest pr = (GitHubPullRequest) issue;
-                        if (pr.isMerged()) {
-                            state = Colors.PURPLE + Colors.UNDERLINE + "MERGED";
+                        if (issue instanceof GitHubPullRequest) {
+                            GitHubPullRequest pr = (GitHubPullRequest) issue;
+                            if (pr.isMerged()) {
+                                state = Colors.PURPLE + Colors.UNDERLINE + "MERGED";
+                            }
+                            String mergeData = (pr.isMerged() ? " (" + URLShortener.shorten("http://github.com/DSH105/HoloAPI/commit/" + pr.getMergeCommit()) + ")" : "");
+                            event.respond(Colors.BOLD + "GitHub PR #" + pr.getNumber() + Colors.NORMAL + " - " + Colors.BLUE + Colors.BOLD + repo.getName() + Colors.NORMAL + " (" + Colors.BOLD + event.removePing(repo.getRepoOwner().getLogin()) + Colors.NORMAL + ") -  (" + URLShortener.shorten(pr.getUrl()) + ")");
+                            event.respond("Reporter: {0}", event.removePing(pr.getReporter().getLogin()));
+                            event.respond("Title: " + pr.getTitle());
+                            //event.respond("Body: " + body);
+                            event.respond("Status: {0}" + mergeData + " | Comments: {1} | Review Comments: {2}", state, String.valueOf(pr.getComments()), String.valueOf(pr.getReviewComments()));
+                            event.respond("Commits: {0} | Additions: " + Colors.GREEN + "{1} | Deletions: " + Colors.RED + "{2} | Files Changed: {3}", pr.getCommits() + "", pr.getAdditions() + "", pr.getDeletions() + "", pr.getChangedFiles() + "");
+                            event.respond("Created: {0} | Updated: {1} | " + (issue.getDateClosed() != null ? " | Closed: {2}" : ""), issue.getDateCreated(), issue.getDateUpdated(), issue.getDateClosed());
+                        } else {
+                            event.respond(Colors.BOLD + "GitHub Issue #" + issue.getNumber() + Colors.NORMAL + " - " + Colors.BLUE + Colors.BOLD + repo.getName() + Colors.NORMAL + " (" + Colors.BOLD + event.removePing(repo.getRepoOwner().getLogin()) + Colors.NORMAL + ") -  (" + URLShortener.shorten(issue.getUrl()) + ")");
+                            event.respond("Reporter: " + event.removePing(issue.getReporter().getLogin()));
+                            event.respond("Title: " + issue.getTitle());
+                            //event.respond("Body: \"" + body + "\"");
+                            event.respond("Status: {0} | Comments: {1}", state, String.valueOf(issue.getComments()));
+                            event.respond("Created: {0} | Updated: {1}" + (issue.getDateClosed() != null ? " | Closed: {2}" : ""), issue.getDateCreated(), issue.getDateUpdated(), issue.getDateClosed());
                         }
-                        String mergeData = (pr.isMerged() ? " (" + URLShortener.shorten("http://github.com/DSH105/HoloAPI/commit/" + pr.getMergeCommit()) + ")" : "");
-                        event.respond(Colors.BOLD + "GitHub PR #" + pr.getNumber() + Colors.NORMAL + " - " + Colors.BLUE + Colors.BOLD + repo.getName() + Colors.NORMAL + " (" + Colors.BOLD + event.removePing(repo.getRepoOwner().getLogin()) + Colors.NORMAL + ") -  (" + URLShortener.shorten(pr.getUrl()) + ")");
-                        event.respond("Reporter: {0}", event.removePing(pr.getReporter().getLogin()));
-                        event.respond("Title: " + pr.getTitle());
-                        //event.respond("Body: " + body);
-                        event.respond("Status: {0}" + mergeData + " | Comments: {1} | Review Comments: {2}", state, String.valueOf(pr.getComments()), String.valueOf(pr.getReviewComments()));
-                        event.respond("Commits: {0} | Additions: " + Colors.GREEN + "{1} | Deletions: " + Colors.RED + "{2} | Files Changed: {3}", pr.getCommits() + "", pr.getAdditions() + "", pr.getDeletions() + "", pr.getChangedFiles() + "");
-                        event.respond("Created: {0} | Updated: {1} | " + (issue.getDateClosed() != null ? " | Closed: {2}" : ""), issue.getDateCreated(), issue.getDateUpdated(), issue.getDateClosed());
-                    } else {
-                        event.respond(Colors.BOLD + "GitHub Issue #" + issue.getNumber() + Colors.NORMAL + " - " + Colors.BLUE + Colors.BOLD+ repo.getName() + Colors.NORMAL + " (" + Colors.BOLD + event.removePing(repo.getRepoOwner().getLogin()) + Colors.NORMAL + ") -  (" + URLShortener.shorten(issue.getUrl()) + ")");
-                        event.respond("Reporter: " + event.removePing(issue.getReporter().getLogin()));
-                        event.respond("Title: " + issue.getTitle());
-                        //event.respond("Body: \"" + body + "\"");
-                        event.respond("Status: {0} | Comments: {1}", state, String.valueOf(issue.getComments()));
-                        event.respond("Created: {0} | Updated: {1}" + (issue.getDateClosed() != null ? " | Closed: {2}" : ""), issue.getDateCreated(), issue.getDateUpdated(), issue.getDateClosed());
+                        return true;
+                    } else if (event.getArgs().length == startIndex + 3) {
+                        if (event.getArgs()[startIndex + 2].equalsIgnoreCase("merge")) {
+                            if (!(issue instanceof GitHubPullRequest)) {
+                                event.errorWithPing("Issue #" + issue.getNumber() + " is not a pull request!");
+                                return true;
+                            }
+                            GitHubPullRequest pr = (GitHubPullRequest) issue;
+                            try {
+                                GitHub.getGitHub().mergePullRequest(pr, AuthUtil.getIdent(event.getSender()));
+                                event.respondWithPing("Pull Request {0} merged (" + Colors.GREEN + "{1} " + Colors.RED + "{2} in {3} file" + (pr.getChangedFiles() == 1 ? "" : "s") + ".)", "#" + pr.getNumber(), "+" + pr.getAdditions(), "-" + pr.getDeletions(), "" + pr.getChangedFiles());
+                            } catch (GitHubPullRequestMergeException e) {
+                                event.respondWithPing("Failed to merge pull request ({0}). Reason: " + e.getMessage(), pr.getRepo().getFullName() + " #" + pr.getNumber());
+                            }
+                            return true;
+                        }
                     }
-                    return true;
                 }
             } else if (event.getArgs()[startIndex].equalsIgnoreCase("fork")) {
                 final String toFork = repo.getFullName();

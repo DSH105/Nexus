@@ -28,7 +28,8 @@ import java.util.Date;
 
 public class GitHubIssue {
 
-    protected GitHubRepo repo;
+    @SerializedName("url")
+    private String apiUrl;
 
     @SerializedName("html_url")
     private String url;
@@ -57,7 +58,7 @@ public class GitHubIssue {
     @SerializedName("closed_at")
     private String closedAt;
 
-    protected String repoFullName;
+    protected GitHubRepo repo;
     protected GitHubUser reportedBy;
 
     public GitHubRepo getRepo() {
@@ -70,6 +71,10 @@ public class GitHubIssue {
 
     public String getUrl() {
         return url;
+    }
+
+    public String getApiUrl() {
+        return apiUrl;
     }
 
     public int getNumber() {

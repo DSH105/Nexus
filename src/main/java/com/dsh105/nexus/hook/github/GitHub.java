@@ -28,6 +28,7 @@ import com.mashape.unirest.http.async.Callback;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.*;
 import java.util.*;
@@ -216,11 +217,11 @@ public class GitHub {
 
     protected GitHubUser getReporterOf(GitHubIssue issue, String userLogin) {
         try {
-            HttpResponse<JsonNode> response = makeRequest(getIssuesUrl(issue.repoFullName, issue.getNumber()), userLogin);
+            HttpResponse<JsonNode> response = makeRequest(getIssuesUrl(issue.getRepo().getFullName(), issue.getNumber()), userLogin);
             return getUser(response.getBody().getObject().getJSONObject("user").getString("login"), userLogin);
         } catch (UnirestException e) {
             if (e.getCause() instanceof FileNotFoundException) {
-                throw new GitHubRepoNotFoundException("Failed to locate GitHub Repo: " + issue.repoFullName, e);
+                throw new GitHubRepoNotFoundException("Failed to locate GitHub Repo: " + issue.getRepo().getFullName(), e);
             }
             throw new GitHubException("Error connecting to GitHub API! ", e);
         }
@@ -250,7 +251,6 @@ public class GitHub {
                 issue = Nexus.JSON.read(input, GitHubIssue.class);
             }
             issue.repo = repo;
-            issue.repoFullName = repo.getFullName();
             issue.reportedBy = getReporterOf(issue, userLogin);
             if (issue != null) {
                 cache(issue);
@@ -266,6 +266,25 @@ public class GitHub {
 
     public GitHubIssue getIssue(String repoName, int id, String userLogin) {
         return getIssue(getRepo(repoName, userLogin), id, userLogin);
+    }
+
+    public void mergePullRequest(GitHubPullRequest pullRequest, String userLogin) {
+        Nexus.LOGGER.info("Attempting to merge pull request (" + pullRequest.getRepo().getFullName() + " #" + pullRequest.getNumber() + ") on behalf of " + userLogin);
+        try {
+            HttpResponse<JsonNode> response = Unirest.put(pullRequest.getApiUrl() + "/merge").header("Authorization", "token " + getAccessToken(userLogin, true)).asJson();
+            JSONObject responseObject = response.getBody().getObject();
+            String message = responseObject.getString("message");
+            boolean mergeStatus = false;
+            try {
+                mergeStatus = responseObject.getBoolean("merged");
+            } catch (JSONException e) {
+            }
+            if (!mergeStatus) {
+                throw new GitHubPullRequestMergeException(message);
+            }
+        } catch (UnirestException e) {
+            throw new GitHubException("Error connecting to GitHub API! ", e);
+        }
     }
 
     protected GitHubUser[] getCollaborators(GitHubRepo repo, String userLogin) {
