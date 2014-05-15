@@ -240,7 +240,7 @@ public class GitHub {
         try {
             HttpResponse<JsonNode> response = makeRequest(getIssuesUrl(repo.getFullName(), id), userLogin);
             InputStream input = response.getRawBody();
-            GitHubIssue issue = null;
+            GitHubIssue issue;
             boolean checkForPullRequest = false;
             try {
                 if (response.getBody().getObject().get("pull_request") != null) {
@@ -256,6 +256,8 @@ public class GitHub {
                     issue = Nexus.JSON.read(input, GitHubIssue.class);
                 }
             } catch (JSONException e) {
+            }
+            if (issue.getNumber() <= 0) {
                 throw new GitHubNotFoundException("Issue #" + id + " doesn't exist at " + repo.getFullName(), e);
             }
             issue.repo = repo;

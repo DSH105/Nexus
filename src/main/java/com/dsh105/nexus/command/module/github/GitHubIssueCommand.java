@@ -32,7 +32,7 @@ public class GitHubIssueCommand extends CommandModule {
         String fullName = "";
         String postArgs = "";
         for (int i = 0; i < event.getArgs().length; i++) {
-            if (StringUtil.isInt(event.getArgs()[i]) && i > 1) {
+            if (StringUtil.isInt(event.getArgs()[i]) && i >= 1) {
                 idArg = i;
                 for (int j = 0; j < i; j++) {
                     fullName += (fullName != null && !fullName.isEmpty() ? " " : "") + event.getArgs();
