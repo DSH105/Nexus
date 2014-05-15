@@ -1,3 +1,20 @@
+/**
+ * This file is part of Nexus.
+ *
+ * Nexus is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Nexus is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Nexus.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package com.dsh105.nexus.command2;
 
 import com.dsh105.nexus.Nexus;
@@ -6,7 +23,7 @@ import com.dsh105.nexus.command2.core.CommandAlias;
 import com.dsh105.nexus.command2.core.CommandPermissions;
 import com.dsh105.nexus.command2.core.NestedCommand;
 import com.dsh105.nexus.command2.exceptions.*;
-import com.sun.deploy.util.StringUtils;
+import com.dsh105.nexus.util.StringUtil;
 import org.pircbotx.Channel;
 import org.pircbotx.User;
 
@@ -208,7 +225,7 @@ public class CommandRegistrationService {
         }
 
         if (allowedCommands.size() > 0) {
-            command.append(StringUtils.join(allowedCommands, "|"));
+            command.append(StringUtil.join(allowedCommands, "|"));
         } else {
             if (!found) {
                 command.append("?");
@@ -334,7 +351,7 @@ public class CommandRegistrationService {
         } catch (IllegalArgumentException e) {
             Nexus.LOGGER.warning("Failed to execute command!");
             e.printStackTrace();
-        } catch (IllegalAccessException e) {
+        } catch (IllegalAccessException e) {   // http://www.troll.me/images/obama-laughing/oh-juan-you-silly-goose.jpg
             Nexus.LOGGER.warning("Failed to execute command!");
             e.printStackTrace();
         } catch (InvocationTargetException e) {
