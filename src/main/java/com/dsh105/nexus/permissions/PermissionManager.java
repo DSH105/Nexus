@@ -1,6 +1,9 @@
 package com.dsh105.nexus.permissions;
 
-public class PermissionManager {
+import com.dsh105.nexus.command2.PermissionHandler;
+import org.pircbotx.User;
+
+public class PermissionManager implements PermissionHandler {
 
     public PermissionManager() {
 
@@ -8,5 +11,10 @@ public class PermissionManager {
 
     private void loadPermissions() {
 
+    }
+
+    @Override
+    public boolean checkPermission(User user, String permission) {
+        return false;
     }
 }

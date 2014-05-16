@@ -32,8 +32,17 @@ public class CommandManager {
 
     protected CommandRegistrationService registrationService;
 
+    private PermissionHandler permissionHandler;
+
     public CommandManager() {
         this.registrationService = new CommandRegistrationService(this, null);
+    }
+
+    public void setPermissionHandler(PermissionHandler permissionHandler) {
+        if (this.permissionHandler != null) {
+            throw new RuntimeException("PermissionHandler already set!");
+        }
+        this.permissionHandler = permissionHandler;
     }
 
     public void register(Class<?> commandClazz) {

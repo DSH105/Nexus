@@ -23,9 +23,7 @@ import org.pircbotx.User;
  * This will provide a basic permission system.
  * It will make use of the default IRC permissions + a custom system.
  */
-public class PermissionHandler {
+public interface PermissionHandler {
 
-    public boolean checkPermission(User user, String permission) {
-        return false;
-    }
+    public boolean checkPermission(User user, String permission);
 }
