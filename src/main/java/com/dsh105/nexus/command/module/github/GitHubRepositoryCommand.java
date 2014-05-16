@@ -248,7 +248,7 @@ public class GitHubRepositoryCommand extends CommandModule {
                 GitHub.getGitHub().forkAsync(repo, AuthUtil.getIdent(event.getSender()), new Callback<JsonNode>() {
                     @Override
                     public void completed(HttpResponse<JsonNode> response) {
-                        event.respondWithPing("Repository ({0}) forked to {1} on your behalf.", toFork, response.getBody().getObject().getString("full_name"));
+                        event.respondWithPing("Repository ({0}) forked to {1} on your behalf (" + response.getBody().getObject().getString("html_url") + ").", toFork, response.getBody().getObject().getString("full_name"));
                     }
 
                     @Override
