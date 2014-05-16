@@ -145,7 +145,7 @@ public class GitHub {
         }
 
         Nexus.LOGGER.info("Connecting to " + urlPath + " with ACCESS_TOKEN of " + userLogin);
-        HttpResponse<JsonNode> response = Unirest.get(urlPath).header("Time-Zone", Calendar.getInstance().getTimeZone().getID()).header("Authorization", "token " + accessToken).asJson();
+        HttpResponse<JsonNode> response = Unirest.get(urlPath).header("Authorization", "token " + accessToken).asJson();
         if (!assumeAccess) {
             try {
                 String checkAccess = response.getBody().getObject().getString("message");

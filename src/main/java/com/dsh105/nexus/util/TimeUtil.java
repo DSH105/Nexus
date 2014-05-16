@@ -23,6 +23,8 @@ import com.dsh105.nexus.exception.general.DateParseException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.TimeZone;
 
 public class TimeUtil {
 
@@ -69,7 +71,9 @@ public class TimeUtil {
     public static String parseGitHubDate(String ghDate) {
         String date = ghDate.replaceAll("T|Z", "");
         try {
-            return Nexus.PRETTY_TIME.format(new SimpleDateFormat("yyyy-MM-ddHH:mm:ss").parse(date));
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-ddHH:mm:ss");
+            format.setTimeZone(TimeZone.getTimeZone("UTC"));
+            return Nexus.PRETTY_TIME.format(format.parse(date));
         } catch (ParseException e) {
             throw new DateParseException("Failed to parse date: " + date, e);
         }
