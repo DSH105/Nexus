@@ -46,7 +46,7 @@ public class Doge extends CommandModule {
 
 
             } catch (UnirestException e) {
-                throw new DogeCoinException("message", e);
+                throw new DogeCoinException("An error occurred in the conversion process", e);
             }
 
             return true;
