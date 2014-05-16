@@ -46,7 +46,7 @@ public class GitHubKeyCommand extends CommandModule {
     public boolean onCommand(final CommandPerformEvent event) {
         if (event.getArgs().length == 0) {
             event.respond("Please follow the following instructions:", true);
-            event.respond("- Visit " + URLShortener.shorten(AUTHORISE
+            event.respond("- Visit " + URLShortener.shortenGit(AUTHORISE
                     .replace("{client_id}", Nexus.getInstance().getGitHubConfig().getGitHubOauthAppClientId())
                     .replace("{scope}", Nexus.getInstance().getGitHubConfig().getGitHubOauthAppScope())
                     .replace("{state}", Nexus.getInstance().getGitHubConfig().getGitHubOauthAppState())), true);

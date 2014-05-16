@@ -209,8 +209,8 @@ public class GitHubRepositoryCommand extends CommandModule {
                             if (pr.isMerged()) {
                                 state = Colors.PURPLE + Colors.UNDERLINE + "MERGED";
                             }
-                            String mergeData = (pr.isMerged() ? " (" + URLShortener.shorten("http://github.com/DSH105/HoloAPI/commit/" + pr.getMergeCommit()) + ")" : "");
-                            event.respond(Colors.BOLD + "GitHub PR #" + pr.getNumber() + Colors.NORMAL + " - " + Colors.BLUE + Colors.BOLD + repo.getName() + Colors.NORMAL + " (" + Colors.BOLD + event.removePing(repo.getRepoOwner().getLogin()) + Colors.NORMAL + ") -  (" + URLShortener.shorten(pr.getUrl()) + ")");
+                            String mergeData = (pr.isMerged() ? " (" + URLShortener.shortenGit("http://github.com/DSH105/HoloAPI/commit/" + pr.getMergeCommit()) + ")" : "");
+                            event.respond(Colors.BOLD + "GitHub PR #" + pr.getNumber() + Colors.NORMAL + " - " + Colors.BLUE + Colors.BOLD + repo.getName() + Colors.NORMAL + " (" + Colors.BOLD + event.removePing(repo.getRepoOwner().getLogin()) + Colors.NORMAL + ") -  (" + URLShortener.shortenGit(pr.getUrl()) + ")");
                             event.respond("Reporter: {0}", event.removePing(pr.getReporter().getLogin()));
                             event.respond("Title: " + pr.getTitle());
                             //event.respond("Body: " + body);
@@ -218,7 +218,7 @@ public class GitHubRepositoryCommand extends CommandModule {
                             event.respond("Commits: {0} | Additions: " + Colors.GREEN + "{1} | Deletions: " + Colors.RED + "{2} | Files Changed: {3}", pr.getCommits() + "", pr.getAdditions() + "", pr.getDeletions() + "", pr.getChangedFiles() + "");
                             event.respond("Created: {0} | Updated: {1}" + (issue.getDateClosed() != null ? " | Closed: {2}" : ""), issue.getDateCreated(), issue.getDateUpdated(), issue.getDateClosed());
                         } else {
-                            event.respond(Colors.BOLD + "GitHub Issue #" + issue.getNumber() + Colors.NORMAL + " - " + Colors.BLUE + Colors.BOLD + repo.getName() + Colors.NORMAL + " (" + Colors.BOLD + event.removePing(repo.getRepoOwner().getLogin()) + Colors.NORMAL + ") -  (" + URLShortener.shorten(issue.getUrl()) + ")");
+                            event.respond(Colors.BOLD + "GitHub Issue #" + issue.getNumber() + Colors.NORMAL + " - " + Colors.BLUE + Colors.BOLD + repo.getName() + Colors.NORMAL + " (" + Colors.BOLD + event.removePing(repo.getRepoOwner().getLogin()) + Colors.NORMAL + ") -  (" + URLShortener.shortenGit(issue.getUrl()) + ")");
                             event.respond("Reporter: " + event.removePing(issue.getReporter().getLogin()));
                             event.respond("Title: " + issue.getTitle());
                             //event.respond("Body: \"" + body + "\"");
@@ -283,7 +283,17 @@ public class GitHubRepositoryCommand extends CommandModule {
                     activeCollaborators.add(event.removePing(user.getLogin()));
                 }
             }
-            event.respond(Colors.BOLD + "GitHub" + Colors.NORMAL + " - " + Colors.BOLD + Colors.BLUE + repo.getName() + Colors.NORMAL + " (" + Colors.BOLD + event.removePing(repo.getRepoOwner().getLogin()) + Colors.NORMAL + ") - " + StringUtil.combineSplit(0, repo.getLanguages(), ", ") + " (" + URLShortener.shorten(repo.getUrl()) + ")", sendPm);
+
+            int total = 0;
+            for (GitHubLanguage l : repo.getLanguages()) {
+                total += l.getBytes();
+            }
+
+            String languages = "";
+            for (GitHubLanguage l : repo.getLanguages()) {
+                languages += (languages.isEmpty() ? "" : ", ") + l.getName() + " (" + Math.round(((double) l.getBytes() / (double) total) * 100) + "%)";
+            }
+            event.respond(Colors.BOLD + "GitHub" + Colors.NORMAL + " - " + Colors.BOLD + Colors.BLUE + repo.getName() + Colors.NORMAL + " (" + Colors.BOLD + event.removePing(repo.getRepoOwner().getLogin()) + Colors.NORMAL + ") - " + languages + " - (" + URLShortener.shortenGit(repo.getUrl()) + ")", sendPm);
             event.respond("By {0}", sendPm, StringUtil.combineSplit(0, activeCollaborators.toArray(new String[activeCollaborators.size()]), ", "));
             event.respond("Forks: {0} | Issues: {1} | Stars: {2}", sendPm, String.valueOf(repo.getForksCount()), String.valueOf(repo.getOpenIssuesCount()), String.valueOf(repo.getStargazers()));
             event.respond("Created: {0} | Last Pushed: {1}", sendPm, repo.getDateCreated(), repo.getDateLastPushedTo());

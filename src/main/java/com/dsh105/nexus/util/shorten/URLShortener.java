@@ -19,19 +19,36 @@ package com.dsh105.nexus.util.shorten;
 
 import com.dsh105.nexus.Nexus;
 import com.dsh105.nexus.exception.general.GenericUrlConnectionException;
+import com.mashape.unirest.http.Headers;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 
+import java.util.List;
+import java.util.Map;
+
 public class URLShortener {
 
     public static String shorten(String longUrl) {
+        Nexus.LOGGER.info("Shortening URL via goo.gl (" + longUrl + ")");
         try {
             HttpResponse<JsonNode> response = Unirest.post("https://www.googleapis.com/urlshortener/v1/url")
                     .header("content-type", "application/json")
                     .body("{\"longUrl\": \"" + longUrl + "\"}").asJson();
             return Nexus.JSON.read(response.getRawBody(), ShortUrl.class).getId();
+        } catch (UnirestException e) {
+            throw new GenericUrlConnectionException("Failed to shorten URL: " + longUrl, e);
+        }
+    }
+
+    public static String shortenGit(String longUrl) {
+        Nexus.LOGGER.info("Shortening URL via git.io (" + longUrl + ")");
+        try {
+            HttpResponse<String> response = Unirest.post("http://git.io")
+                    .field("url", longUrl)
+                    .asString();
+            return response.getHeaders().get("location").get(0);
         } catch (UnirestException e) {
             throw new GenericUrlConnectionException("Failed to shorten URL: " + longUrl, e);
         }
