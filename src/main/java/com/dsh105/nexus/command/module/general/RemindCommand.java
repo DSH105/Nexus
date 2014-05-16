@@ -70,7 +70,7 @@ public class RemindCommand extends CommandModule {
                 return true;
             }
             String reminderMessage = StringUtil.combineSplit(forOtherUser ? 2 : 1, event.getArgs(), " ");
-            Reminder reminder = new Reminder(event.getChannel(), userToRemind, event.getSender().getNick(), reminderMessage);;
+            Reminder reminder = new Reminder(event.getChannel(), userToRemind, event.getSender().getNick(), reminderMessage);
             new Timer(true).schedule(reminder, timePeriod);
             reminders.add(reminder);
             event.respondWithPing("Reminder scheduled for {0}", event.getArgs()[forOtherUser ? 1 : 0]);

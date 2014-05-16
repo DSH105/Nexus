@@ -42,7 +42,7 @@ public class CommandContext {
     }
 
     /**
-     * @param args An array with arguments. Empty strings outside quotes will be removed.
+     * @param args       An array with arguments. Empty strings outside quotes will be removed.
      * @param valueFlags A set containing all value flags. Pass null to disable value flag parsing.
      * @throws CommandException This is thrown if flag fails for some reason.
      */

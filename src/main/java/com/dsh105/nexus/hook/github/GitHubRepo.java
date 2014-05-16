@@ -17,13 +17,8 @@
 
 package com.dsh105.nexus.hook.github;
 
-import com.dsh105.nexus.Nexus;
-import com.dsh105.nexus.exception.general.DateParseException;
 import com.dsh105.nexus.util.TimeUtil;
 import com.google.gson.annotations.SerializedName;
-
-import java.text.DateFormat;
-import java.text.ParseException;
 
 public class GitHubRepo {
 

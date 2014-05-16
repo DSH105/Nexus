@@ -31,7 +31,7 @@ public class Instantiator {
         this.argInstances = args;
         this.argClasses = new Class[args.length];
 
-        for(int i = 0; i < args.length; i++) {
+        for (int i = 0; i < args.length; i++) {
             argClasses[i] = argInstances[i].getClass();
         }
     }

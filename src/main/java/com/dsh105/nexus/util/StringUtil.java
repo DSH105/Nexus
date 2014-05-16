@@ -102,8 +102,8 @@ public class StringUtil {
      * Capitalizes the first letter of a String
      *
      * @param startIndex the index to start at
-     * @param string the String to be split
-     * @param separator the value to split the string by
+     * @param string     the String to be split
+     * @param separator  the value to split the string by
      * @return capitalized String
      */
     public static String[] splitArgs(int startIndex, String[] string, String separator) {
@@ -116,6 +116,7 @@ public class StringUtil {
 
     /**
      * Joins the elements of an iterator together separated by the given separator.
+     *
      * @param iterator
      * @param separator
      * @return
@@ -150,6 +151,7 @@ public class StringUtil {
 
     /**
      * Joins the elements of an iterator together separated by the given separator.
+     *
      * @param iterator
      * @param separator
      * @return
@@ -185,6 +187,7 @@ public class StringUtil {
 
     /**
      * Joins the elements of a collection together separated by the given separator.
+     *
      * @param collection
      * @param separator
      * @return
@@ -198,6 +201,7 @@ public class StringUtil {
 
     /**
      * Joins the elements of a collection together separated by the given separator.
+     *
      * @param collection
      * @param separator
      * @return
@@ -211,12 +215,13 @@ public class StringUtil {
 
     /**
      * Joins the elements of an array together separated by the given separator.
+     *
      * @param array
      * @param separator
      * @return
      */
-    public static String join(Object[] array, char separator){
-        if(array == null){
+    public static String join(Object[] array, char separator) {
+        if (array == null) {
             return null;
         }
         return join(Arrays.asList(array), separator);
@@ -224,12 +229,13 @@ public class StringUtil {
 
     /**
      * Joins the elements of an array together separated by the given separator.
+     *
      * @param array
      * @param separator
      * @return
      */
-    public static String join(Object[] array, String separator){
-        if(array == null){
+    public static String join(Object[] array, String separator) {
+        if (array == null) {
             return null;
         }
         return join(Arrays.asList(array), separator);

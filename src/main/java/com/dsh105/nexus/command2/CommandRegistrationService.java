@@ -63,7 +63,7 @@ public class CommandRegistrationService {
     }
 
     protected List<Command> registerMethods(Class<?> clazz, Method parent) {
-        if(getInstantiator() != null) {
+        if (getInstantiator() != null) {
             return registerMethods(clazz, parent, getInstantiator().instantiate(clazz));
         } else {
             return registerMethods(clazz, parent, null);
@@ -74,26 +74,26 @@ public class CommandRegistrationService {
         Map<String, Method> map;
         List<Command> registeredCommands = new ArrayList<Command>();
 
-        if(commands.containsKey(parent)) {
+        if (commands.containsKey(parent)) {
             map = commands.get(parent);
         } else {
             map = new HashMap<String, Method>();
             commands.put(parent, map);
         }
 
-        for(Method method : clazz.getMethods()) {
-            if(!method.isAnnotationPresent(Command.class))
+        for (Method method : clazz.getMethods()) {
+            if (!method.isAnnotationPresent(Command.class))
                 continue;
 
             Command cmd = method.getAnnotation(Command.class);
 
             map.put(cmd.name(), method);
-            for(String alias : cmd.aliases()) {
+            for (String alias : cmd.aliases()) {
                 map.put(alias, method);
             }
 
-            if(!Modifier.isStatic(method.getModifiers())) {
-                if(instance == null) {
+            if (!Modifier.isStatic(method.getModifiers())) {
+                if (instance == null) {
                     continue;
                 }
                 instances.put(method, instance);
@@ -137,7 +137,7 @@ public class CommandRegistrationService {
             }
         }
 
-        if(clazz.getSuperclass() != null) {
+        if (clazz.getSuperclass() != null) {
             registerMethods(clazz.getSuperclass(), parent, instance);
         }
 
@@ -147,11 +147,11 @@ public class CommandRegistrationService {
     private boolean hasPermission(User user, Method method) {
         CommandPermissions permissions = method.getAnnotation(CommandPermissions.class);
 
-        if(permissions == null) {
+        if (permissions == null) {
             return true;
         }
 
-        for(String permission : permissions.value()) {
+        for (String permission : permissions.value()) {
             return this.permissionHandler.checkPermission(user, permission);
         }
 

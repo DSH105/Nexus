@@ -17,10 +17,6 @@
 
 package com.dsh105.nexus.config;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-
 public class GitHubConfig extends YamlConfig {
 
     public GitHubConfig() {

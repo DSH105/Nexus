@@ -21,7 +21,6 @@ import com.dsh105.nexus.Nexus;
 import com.dsh105.nexus.command.Command;
 import com.dsh105.nexus.command.CommandModule;
 import com.dsh105.nexus.command.CommandPerformEvent;
-import com.dsh105.nexus.util.StringUtil;
 
 @Command(command = "fork", aliases = {"githubfork", "ghf"}, needsChannel = false, help = "Fork a GitHub repository. Requires a GitHub API key (see {b}{p}ghkey{/b})", extendedHelp = "This command is simply an alias of {b}{p}repo <name> fork{/b}")
 public class GitHubForkCommand extends CommandModule {

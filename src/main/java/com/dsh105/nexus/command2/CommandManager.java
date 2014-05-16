@@ -33,11 +33,11 @@ public class CommandManager {
     protected CommandRegistrationService registrationService;
 
     public CommandManager() {
-         this.registrationService = new CommandRegistrationService(this, null);
+        this.registrationService = new CommandRegistrationService(this, null);
     }
 
     public void register(Class<?> commandClazz) {
-        if(registrationService != null) {
+        if (registrationService != null) {
             this.registrationService.register(commandClazz);
         }
     }

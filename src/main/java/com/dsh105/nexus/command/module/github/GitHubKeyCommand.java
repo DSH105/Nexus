@@ -66,9 +66,9 @@ public class GitHubKeyCommand extends CommandModule {
                 String state = params.get("state");
                 if (code != null && state != null && state.equals(Nexus.getInstance().getGitHubConfig().getGitHubOauthAppState())) {
                     HttpResponse<JsonNode> response = Unirest.get(ACCESS_TOKEN
-                                .replace("{client_id}", Nexus.getInstance().getGitHubConfig().getGitHubOauthAppClientId())
-                                .replace("{client_secret}", Nexus.getInstance().getGitHubConfig().getGitHubOauthAppClientSecret())
-                                .replace("{code}", code))
+                            .replace("{client_id}", Nexus.getInstance().getGitHubConfig().getGitHubOauthAppClientId())
+                            .replace("{client_secret}", Nexus.getInstance().getGitHubConfig().getGitHubOauthAppClientSecret())
+                            .replace("{code}", code))
                             .header("accept", "application/json")
                             .asJson();
 

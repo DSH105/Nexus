@@ -5,19 +5,11 @@ import com.dsh105.nexus.command.Command;
 import com.dsh105.nexus.command.CommandModule;
 import com.dsh105.nexus.command.CommandPerformEvent;
 import com.dsh105.nexus.exception.general.GenericUrlConnectionException;
-import com.dsh105.nexus.util.JsonUtil;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import org.pircbotx.Colors;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 
 
 @Command(command = "mcuser",
@@ -52,7 +44,7 @@ public class MinecraftUserCommand extends CommandModule {
 
             event.respond("Minecraft Username " + Colors.BOLD + username + Colors.NORMAL + " (" + Colors.BOLD + uuid + Colors.NORMAL + "):");
             event.respond(Colors.BOLD + "Valid Username? " + (isValid ? Colors.BOLD + Colors.UNDERLINE + Colors.GREEN + "Yes" : Colors.BOLD + Colors.UNDERLINE + Colors.RED + "No") + Colors.NORMAL + " | "
-                            + Colors.BOLD + "Paid Account? " + (hasPaid ? Colors.BOLD + Colors.UNDERLINE + Colors.GREEN + "Yes" : Colors.BOLD + Colors.UNDERLINE + Colors.RED + "No"));
+                    + Colors.BOLD + "Paid Account? " + (hasPaid ? Colors.BOLD + Colors.UNDERLINE + Colors.GREEN + "Yes" : Colors.BOLD + Colors.UNDERLINE + Colors.RED + "No"));
             return true;
         }
         return false;

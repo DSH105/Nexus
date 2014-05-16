@@ -19,14 +19,10 @@ package com.dsh105.nexus.util.shorten;
 
 import com.dsh105.nexus.Nexus;
 import com.dsh105.nexus.exception.general.GenericUrlConnectionException;
-import com.mashape.unirest.http.Headers;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
-
-import java.util.List;
-import java.util.Map;
 
 public class URLShortener {
 

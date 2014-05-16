@@ -20,10 +20,8 @@ package com.dsh105.nexus.util;
 import com.dsh105.nexus.Nexus;
 import com.dsh105.nexus.exception.general.DateParseException;
 
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.TimeZone;
 
 public class TimeUtil {
@@ -53,17 +51,23 @@ public class TimeUtil {
      * Converts the given Integer into the specified time unit
      *
      * @param value the value to be converted
-     * @param unit the specified time unit
+     * @param unit  the specified time unit
      * @return converted value
      */
     private static long convert(int value, char unit) {
-        switch(unit) {
-            case 'y' : return (long) (value * 1000*60*60*24*7*364.25);
-            case 'w' : return value * 1000*60*60*24*7;
-            case 'd' : return value * 1000*60*60*24;
-            case 'h' : return value * 1000*60*60;
-            case 'm' : return value * 1000*60;
-            case 's' : return value * 1000;
+        switch (unit) {
+            case 'y':
+                return (long) (value * 1000 * 60 * 60 * 24 * 7 * 364.25);
+            case 'w':
+                return value * 1000 * 60 * 60 * 24 * 7;
+            case 'd':
+                return value * 1000 * 60 * 60 * 24;
+            case 'h':
+                return value * 1000 * 60 * 60;
+            case 'm':
+                return value * 1000 * 60;
+            case 's':
+                return value * 1000;
         }
         return 0;
     }

@@ -436,7 +436,7 @@ public class GitHub {
         GitHubHook hook = getHook(repo, "irc", userLogin);
         if (hook != null) {
             try {
-                Nexus.LOGGER.info("Requesting GitHub IRC notification settings for " + repo+ " on behalf of " + userLogin);
+                Nexus.LOGGER.info("Requesting GitHub IRC notification settings for " + repo + " on behalf of " + userLogin);
                 ArrayList<GitHubEvent> events = new ArrayList<>();
                 JSONArray eventsJsonArray = makeRequest(getHooksUrl(repo) + "/" + hook.getId(), userLogin, false, true).getBody().getObject().getJSONArray("events");
                 for (int i = 0; i < eventsJsonArray.length(); i++) {

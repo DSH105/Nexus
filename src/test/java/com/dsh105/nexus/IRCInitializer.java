@@ -17,7 +17,7 @@ public class IRCInitializer {
     private static Channel mockedChannel;
 
     public static void createIrcEnvironment() {
-         mockedChannel = mock(Channel.class);
+        mockedChannel = mock(Channel.class);
         when(mockedChannel.getName()).thenReturn("Nexus-test-channel");
         when(mockedChannel.getTopic()).thenReturn("McLover-channel");
 

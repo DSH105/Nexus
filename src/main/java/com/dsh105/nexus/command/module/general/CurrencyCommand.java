@@ -21,7 +21,7 @@ public class CurrencyCommand extends CommandModule {
         if (args.length != 3) {
             return false;
         }
-        
+
         String from = args[0];
         String to = args[1];
         String amountStr = args[2];

@@ -24,7 +24,6 @@ import com.dsh105.nexus.exception.github.GitHubUserNotFoundException;
 import com.dsh105.nexus.hook.github.GitHub;
 import com.dsh105.nexus.hook.github.GitHubUser;
 import com.dsh105.nexus.util.AuthUtil;
-import com.dsh105.nexus.util.StringUtil;
 import com.dsh105.nexus.util.shorten.URLShortener;
 import org.pircbotx.Colors;
 

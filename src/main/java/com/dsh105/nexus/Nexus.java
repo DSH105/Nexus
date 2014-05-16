@@ -139,7 +139,7 @@ public class Nexus extends PircBotX {
                 }
                 out.flush();
             }
-        } catch(IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         } finally {
             if (console != null) {
@@ -157,7 +157,7 @@ public class Nexus extends PircBotX {
             LOGGER.info("Shutting down Nexus...");
             INSTANCE.saveAll();
             LOGGER.info("Waiting for outgoing queue");
-            while (Nexus.getInstance().getOutgoingQueueSize() > 0);
+            while (Nexus.getInstance().getOutgoingQueueSize() > 0) ;
             INSTANCE.shutdown(true);
             INSTANCE = null;
             System.exit(0);

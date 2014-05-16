@@ -18,7 +18,6 @@
 package com.dsh105.nexus.command;
 
 import com.dsh105.nexus.Nexus;
-import com.sun.swing.internal.plaf.metal.resources.metal;
 import org.pircbotx.Channel;
 import org.pircbotx.Colors;
 import org.pircbotx.User;
