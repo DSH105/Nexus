@@ -57,7 +57,7 @@ public class GitHubOctocatCommand extends CommandModule {
             event.respondWithPing("{0} is an invalid ID!", String.valueOf(id));
         } else {
             System.out.println(oc.getPage());
-            event.respondWithPing(MESSAGE, String.valueOf(oc.getNumber()), oc.getName(), URLShortener.shorten("https://octodex.github.com" + oc.getPage()));
+            event.respondWithPing(MESSAGE, String.valueOf(oc.getNumber()), oc.getName(), URLShortener.shortenGit("https://octodex.github.com" + oc.getPage()));
         }
         return true;
     }

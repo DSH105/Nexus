@@ -72,7 +72,7 @@ public class GitHubRepo {
     protected GitHubUser repoOwner;
     protected GitHubUser[] collaborators;
     protected GitHubUser[] contributors;
-    protected String[] languages;
+    protected GitHubLanguage[] languages;
     protected String userLoginForAccessToken;
 
     public GitHubUser getRepoOwner() {
@@ -87,7 +87,7 @@ public class GitHubRepo {
         return contributors;
     }
 
-    public String[] getLanguages() {
+    public GitHubLanguage[] getLanguages() {
         return languages;
     }
 

@@ -90,7 +90,7 @@ public class GitHub {
     private ArrayList<GitHubIssue> issues = new ArrayList<>();
 
     public GitHub() {
-        new Timer(true).schedule(new RefreshTask(), 0, 300000);
+        new Timer(true).schedule(new RefreshTask(), 0, 90000);
     }
 
     public static GitHub getGitHub() {
@@ -334,19 +334,20 @@ public class GitHub {
         }
     }
 
-    protected String[] getLanguages(GitHubRepo repo, String userLogin) {
+    protected GitHubLanguage[] getLanguages(GitHubRepo repo, String userLogin) {
         return getLanguages(repo.getFullName(), userLogin);
     }
 
-    protected String[] getLanguages(String name, String userLogin) {
+    protected GitHubLanguage[] getLanguages(String name, String userLogin) {
         try {
             // Anything using this method should already have checked API key validity
-            Set<String> set = makeRequest(getLanguagesUrl(name), userLogin).getBody().getObject().keySet();
-            ArrayList<String> languages = new ArrayList<>();
+            JSONObject jsonResponse = makeRequest(getLanguagesUrl(name), userLogin).getBody().getObject();
+            Set<String> set = jsonResponse.keySet();
+            ArrayList<GitHubLanguage> languages = new ArrayList<>();
             for (String language : set) {
-                languages.add(language);
+                languages.add(new GitHubLanguage(language, jsonResponse.getInt(language)));
             }
-            return languages.toArray(new String[languages.size()]);
+            return languages.toArray(new GitHubLanguage[languages.size()]);
         } catch (UnirestException e) {
             if (e.getCause() instanceof FileNotFoundException) {
                 throw new GitHubNotFoundException("Failed to locate GitHub Repo: " + name, e);
