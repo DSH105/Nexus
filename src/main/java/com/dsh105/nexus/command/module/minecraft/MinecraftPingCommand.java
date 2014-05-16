@@ -58,14 +58,14 @@ public class MinecraftPingCommand extends CommandModule {
                 options.setPort(port);
                 options.setTimeout(timeout);
 
-                event.respondWithPing("Pinging {0}:{1} with a timeout of {2}ms...", hostname, String.valueOf(port), String.valueOf(timeout));
+                event.respond("Pinging {0}:{1} with a timeout of {2}ms...", hostname, String.valueOf(port), String.valueOf(timeout));
 
                 MinecraftPingReply pingReply = new MinecraftPing().getPing(options);
 
-                event.respondWithPing("{0}:{1} responded to the ping!", hostname, String.valueOf(port));
-                event.respondWithPing(Colors.BOLD + Colors.BLUE + "MOTD: " + Colors.NORMAL + "{0} " + Colors.BOLD + Colors.BLUE + "Players: " + Colors.NORMAL + "{1}/{2}", stripColor(pingReply.getDescription().trim().replaceAll("( )+", " ")), String.valueOf(pingReply.getPlayers().getOnline()), String.valueOf(pingReply.getPlayers().getMax()));
+                event.respond("{0}:{1} responded to the ping!", hostname, String.valueOf(port));
+                event.respond(Colors.BOLD + Colors.BLUE + "MOTD: " + Colors.NORMAL + "{0} " + Colors.BOLD + Colors.BLUE + "Players: " + Colors.NORMAL + "{1}/{2}", stripColor(pingReply.getDescription().trim().replaceAll("( )+", " ")), String.valueOf(pingReply.getPlayers().getOnline()), String.valueOf(pingReply.getPlayers().getMax()));
             } catch (Exception ex) {
-                event.respondWithPing(Colors.RED + "Error contacting {0}" + Colors.RED + ":{1}" + Colors.RED + "! Is it online?", hostname, String.valueOf(port));
+                event.errorWithPing(Colors.RED + "Error contacting {0}" + Colors.RED + ":{1}" + Colors.RED + "! Is it online?", hostname, String.valueOf(port));
             }
             return true;
         }
