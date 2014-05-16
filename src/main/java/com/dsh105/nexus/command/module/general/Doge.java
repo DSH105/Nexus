@@ -30,12 +30,12 @@ public class Doge extends CommandModule {
                         .field("a", "get_info")
                         .header("accept", "application/json")
                         .asJson();
-                                double dogeyer = jsonResponse.getBody().getObject().getJSONObject("data").getJSONObject("info").getDouble("doge_usd");
+                                double amtFromDogeApi = jsonResponse.getBody().getObject().getJSONObject("data").getJSONObject("info").getDouble("doge_usd");
                 double amtInUSDtoDoge = Double.parseDouble(event.getArgs()[0]);
-                amtInUSDtoDoge = amtInUSDtoDoge / dogeyer;
+                amtInUSDtoDoge = amtInUSDtoDoge / amtFromDogeApi;
 
                 double amtInDogetoUSD = Double.parseDouble(event.getArgs()[0]);
-                amtInDogetoUSD = amtInDogetoUSD * dogeyer;
+                amtInDogetoUSD = amtInDogetoUSD * amtFromDogeApi;
 
                 amtInDogetoUSD = (double) Math.round(amtInDogetoUSD * 100) / 100;
                 amtInUSDtoDoge = (double) Math.round(amtInUSDtoDoge * 100) / 100;
