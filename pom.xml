@@ -40,6 +40,12 @@
             <version>1.9</version>
             <scope>compile</scope>
         </dependency>
+        <!-- Thingo  -->
+        <dependency>
+            <groupId>com.mashape.unirest</groupId>
+            <artifactId>unirest-java</artifactId>
+            <version>1.3.11</version>
+        </dependency>
 
         <!-- SnakeYML -->
         <dependency>
