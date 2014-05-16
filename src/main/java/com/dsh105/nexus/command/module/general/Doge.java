@@ -41,8 +41,8 @@ public class Doge extends CommandModule {
                 amtInDogetoUSD = (double) Math.round(amtInDogetoUSD * 100) / 100;
                 amtInUSDtoDoge = (double) Math.round(amtInUSDtoDoge * 100) / 100;
 
-                event.respond(Colors.BOLD + "USD --> Doge: " + Colors.NORMAL + Colors.UNDERLINE + amtInUSDtoDoge);
-                event.respond(Colors.BOLD + "Doge --> USD: " + Colors.NORMAL + Colors.UNDERLINE + amtInDogetoUSD);
+                event.respond(Colors.BOLD + "USD → Doge: " + Colors.NORMAL + Colors.UNDERLINE + amtInUSDtoDoge);
+                event.respond(Colors.BOLD + "Doge → USD: " + Colors.NORMAL + Colors.UNDERLINE + amtInDogetoUSD);
 
 
             } catch (UnirestException e) {
