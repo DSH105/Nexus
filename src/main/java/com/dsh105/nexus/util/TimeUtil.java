@@ -67,9 +67,9 @@ public class TimeUtil {
     }
 
     public static String parseGitHubDate(String ghDate) {
-        String date = ghDate.split("T")[0];
+        String date = ghDate.substring(0, ghDate.length() - 1);
         try {
-            return Nexus.PRETTY_TIME.format(new SimpleDateFormat("yyyy-MM-dd").parse(date));
+            return Nexus.PRETTY_TIME.format(new SimpleDateFormat("yyyy-MM-ddTHH:MM:SS").parse(date));
         } catch (ParseException e) {
             throw new DateParseException("Failed to parse date: " + date, e);
         }
