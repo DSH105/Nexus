@@ -51,4 +51,16 @@ public class StringUtilTest {
         Assert.assertArrayEquals(new String[]{"arg", "1", "arg", "2"}, StringUtil.splitArgs(0, new String[]{"arg 1", "arg 2"}, " "));
     }
 
+    @Test
+    public void testValidSentenceList() {
+        final String[] animals = {"Cat", "fox", "zebra", "dog"};
+        Assert.assertEquals("Cat, fox, zebra and dog", StringUtil.buildSentenceList(animals));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testEmptySentenceList() {
+        final String[] animals = {};
+        StringUtil.buildSentenceList(animals);
+    }
+
 }

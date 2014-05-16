@@ -17,6 +17,8 @@
 
 package com.dsh105.nexus.util;
 
+import org.apache.commons.lang3.Validate;
+
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
@@ -82,6 +84,27 @@ public class StringUtil {
             str[i] = string[i];
         }
         return str;
+    }
+
+    /**
+     * Builds a sentence list from an array of strings.
+     * Example: {"one", "two", "three"} returns "one, two and three".
+     * @param words The string array to build into a list,
+     * @return String representing the list.
+     */
+    public static String buildSentenceList(String[] words) {
+        Validate.notEmpty(words);
+        if (words.length == 1) {
+            return words[0];
+        } else if (words.length == 2) {
+            return combineSplit(0, words, ", ");
+        } else {
+            // This is where the fun starts!
+            String[] initial = Arrays.copyOfRange(words, 0, words.length - 1);
+            String list = combineSplit(0, initial, ", ");
+            list += " and " + words[words.length - 1];
+            return list;
+        }
     }
 
     public static String combineSplit(int startIndex, String[] string, String separator) {
