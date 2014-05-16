@@ -34,7 +34,7 @@ public class Jenkins {
 
     public Jenkins() {
         this.JENKINS_URL = Nexus.getInstance().getConfig().getJenkinsUrl();
-        new Timer(true).schedule(new RefreshTask(), 0, 600000);
+        new Timer(true).schedule(new RefreshTask(), 0, 150000);
     }
 
     public static Jenkins getJenkins() {
