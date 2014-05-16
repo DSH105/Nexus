@@ -44,7 +44,10 @@ public class GitHubUserCommand extends CommandModule {
             event.respondWithPing("GitHub user ({0}) could not be found.", userLogin);
             return true;
         }
-
+        if (user.getLogin() == null) {
+            event.errorWithPing("GitHub user ({0}) could not be found");
+            return true;
+        }
         String nameInfo = user.getLogin() + Colors.NORMAL + (user.getName().isEmpty() ? "" : " (" + Colors.BOLD + user.getName() + Colors.NORMAL + ")");
         event.respond(Colors.BOLD + "GitHub User" + Colors.NORMAL + " - " + Colors.BOLD + Colors.BLUE + nameInfo + " - (" + URLShortener.shortenGit(user.getUrl()) + ")");
         event.respond("Company: {0} | Followers: {1} | Following: {2}", (user.getCompany() != null && !user.getCompany().isEmpty() ? user.getCompany() : "None!"), String.valueOf(user.getFollowers()), String.valueOf(user.getFollowing()));
