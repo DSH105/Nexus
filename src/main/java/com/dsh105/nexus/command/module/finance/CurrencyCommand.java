@@ -1,4 +1,4 @@
-package com.dsh105.nexus.command.module.general;
+package com.dsh105.nexus.command.module.finance;
 
 import com.dsh105.nexus.command.Command;
 import com.dsh105.nexus.command.CommandModule;
