@@ -23,7 +23,7 @@ public class GitHubStatusCommand extends CommandModule {
     private List<GitHubStatus> statusMessages = new ArrayList<>();
 
     private static String URL = "https://status.github.com/api/messages.json";
-    private static String MESSAGE = "GitHub Status: %s" + Colors.NORMAL + Colors.BLACK + Colors.BOLD + " (%s)";
+    private static String MESSAGE = "GitHub Status: %s" + Colors.NORMAL + Colors.BOLD + " (%s)";
 
     @Override
     public boolean onCommand(CommandPerformEvent event) {
