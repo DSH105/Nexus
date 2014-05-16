@@ -11,7 +11,8 @@ public class ExampleCommand {
             name = "test",
             description = "A test command"
     )
-    public void someCoolCommand(final CommandContext commandContext, final User user, final Channel channel) { // channel is null when it was a private message
+    public static void someCoolCommand(final CommandContext commandContext, final User user, final Channel channel) { // channel is null when it was a private message
         user.sendMessage("Test succeed!");
+        System.out.println("Succeed!");
     }
 }

@@ -114,7 +114,7 @@ public class CommandRegistrationService {
                 if (help.length() == 0) {
                     help = desc;
                 }
-                final String commandPrefix = Nexus.getInstance().getConfig().getCommandPrefix();
+                final String commandPrefix = Nexus.getInstance().getConfig().getCommandPrefix(); // Change this to "/" when testing
                 final CharSequence arguments = getArguments(cmd);
                 for (String alias : cmd.aliases()) {
                     final String helpMessage = commandPrefix + alias + " " + arguments + "\n\n" + help;
