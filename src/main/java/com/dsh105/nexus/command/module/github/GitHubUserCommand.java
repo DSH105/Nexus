@@ -45,7 +45,7 @@ public class GitHubUserCommand extends CommandModule {
             return true;
         }
         if (user.getLogin() == null) {
-            event.errorWithPing("GitHub user ({0}) could not be found");
+            event.errorWithPing("GitHub user ({0}) could not be found", userLogin);
             return true;
         }
         String nameInfo = user.getLogin() + Colors.NORMAL + (user.getName().isEmpty() ? "" : " (" + Colors.BOLD + user.getName() + Colors.NORMAL + ")");
