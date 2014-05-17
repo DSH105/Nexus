@@ -27,6 +27,7 @@ We're very early in development, but we have the features below in place:
   * Dogecoin/USD currency converter
   * Bukkit user profile info
   * Weather lookup command
+  * 7 day weather forecast
 * Some unit testing! We're still working on expanding coverage but the basics are in place.
 
 Development Builds
