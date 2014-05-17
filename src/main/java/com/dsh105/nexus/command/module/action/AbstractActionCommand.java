@@ -5,7 +5,6 @@ import com.dsh105.nexus.command.CommandModule;
 import com.dsh105.nexus.command.CommandPerformEvent;
 import com.dsh105.nexus.exception.general.InvalidInputException;
 import com.dsh105.nexus.util.StringUtil;
-import org.apache.commons.lang3.NotImplementedException;
 import org.apache.commons.lang3.Validate;
 
 import java.util.Arrays;
@@ -43,7 +42,6 @@ public abstract class AbstractActionCommand extends CommandModule {
         String sentenceList = StringUtil.buildSentenceList(args[0].split(","));
         String additional = " ";
         if (args.length > 1) {
-            System.out.print("> 1");
             additional += StringUtil.join(Arrays.copyOfRange(args, 1, args.length), " ");
         }
         return verb + "s " + sentenceList + additional;
