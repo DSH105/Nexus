@@ -41,7 +41,8 @@ public class Travis {
     public static String ACCOUNTS_API_URL = "/accounts";
 
     public static Travis getTravis() {
-        return Nexus.getInstance().getTravis();
+        //return Nexus.getInstance().getTravis();
+        return null;
     }
 
     public String getAccessToken(String userLogin) {
