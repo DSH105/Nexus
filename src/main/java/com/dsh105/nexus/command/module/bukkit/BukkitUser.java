@@ -77,7 +77,7 @@ public class BukkitUser extends CommandModule {
                 double postsr = posts;
                 double ratio = likesr / postsr;
                 double finalratio = (double) Math.round(ratio * 1000) / 1000;
-                SimpleDateFormat ft = new SimpleDateFormat("dd/MM/yy");
+                SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd");
                 event.respond(Colors.OLIVE + Colors.BOLD + "Bukkit User: " + Colors.NORMAL + Colors.BOLD + user + Colors.NORMAL + " | " + link);
                 event.respond("Messages: " + Colors.BOLD + posts + Colors.NORMAL + " | Likes: " + Colors.BOLD + likes + Colors.NORMAL + " | LtP: " + Colors.BOLD + finalratio + Colors.NORMAL + " | Followers: " + Colors.BOLD + followerAmount);
                 event.respond("Registered: " + Colors.UNDERLINE + p.format(new Date(timestamp)) + " (" + ft.format(timestamp) + ")");
