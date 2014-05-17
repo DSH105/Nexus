@@ -127,9 +127,9 @@ public class ResponseManager {
         if (r.nextInt(100) < trigger.getChance()) {
             String randomResponse = getRandomResponse(possibleResponses);
             if (channel == null) {
-                Nexus.getInstance().sendMessage(user, randomResponse);
+                user.send().ctcpCommand(randomResponse);
             } else {
-                Nexus.getInstance().sendMessage(channel, randomResponse);
+                channel.send().ctcpCommand(randomResponse);
             }
             return true;
         }

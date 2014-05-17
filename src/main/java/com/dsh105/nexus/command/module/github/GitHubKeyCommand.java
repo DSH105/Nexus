@@ -75,7 +75,7 @@ public class GitHubKeyCommand extends CommandModule {
                     try {
                         final String accessToken = response.getBody().getObject().getString("access_token");
                         final String nick = event.getSender().getNick();
-                        Nexus.getInstance().sendMessage(Nexus.getInstance().getUser("NickServ"), "info " + nick);
+                        Nexus.getInstance().sendIRC().ctcpCommand("NickServ", "info " + nick);
                         new Timer().schedule(new TimerTask() {
                             @Override
                             public void run() {

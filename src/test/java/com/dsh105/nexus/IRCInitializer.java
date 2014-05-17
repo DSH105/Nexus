@@ -23,7 +23,7 @@ public class IRCInitializer {
 
         mockedUser = mock(User.class);
         when(mockedUser.getNick()).thenReturn("Nexus-test");
-        when(mockedUser.getChannels()).thenReturn(new HashSet<Channel>(Arrays.asList(mockedChannel)));
+        when(mockedUser.getChannels()).thenReturn(new HashSet<>(Arrays.asList(mockedChannel)));
         when(mockedUser.getRealName()).thenReturn("McLover");
         when(mockedUser.getServer()).thenReturn("i.am.rich");
     }

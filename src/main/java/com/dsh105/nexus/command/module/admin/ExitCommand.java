@@ -30,9 +30,9 @@ public class ExitCommand extends CommandModule {
     @Override
     public boolean onCommand(CommandPerformEvent event) {
         if (event.isInPrivateMessage()) {
-            Nexus.getInstance().sendAction(event.getSender(), "glides off into the distance...");
+            Nexus.getInstance().sendIRC().action(event.getSender().getNick(), "glides off into the distance...");
         } else {
-            Nexus.getInstance().sendAction(event.getChannel(), "glides off into the distance...");
+            Nexus.getInstance().sendIRC().action(event.getChannel().getName(), "glides off into the distance...");
         }
         Nexus.endProcess();
         return true;
