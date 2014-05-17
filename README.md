@@ -74,3 +74,4 @@ Todo List
   * Currently per-user authentication with GitHub is implemented (see `ghkey` command). Maybe there's a nicer way to do this instead of having to post Nexus the link?
 * Plenty more commands
 * Travis integration ([Click for more information](http://docs.travis-ci.com/api/))
+* See #41 for a list of possible new commands
