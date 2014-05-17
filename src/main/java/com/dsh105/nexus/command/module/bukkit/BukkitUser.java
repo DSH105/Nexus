@@ -40,7 +40,6 @@ public class BukkitUser extends CommandModule {
             InputStream is = con.getInputStream();
             statsURL = con.getURL();
             is.close();
-            String link = URLShortener.shorten(statsURL.toString());
             String followerAmount;
             Document followers = Jsoup.connect(statsURL.toString()).get();
             Elements fol = followers.select("a.count");
@@ -57,6 +56,7 @@ public class BukkitUser extends CommandModule {
             } else if (doc.text().equals("This member limits who may view their full profile.")) {
                 event.errorWithPing("This user limits who may view their full profile");
             } else {
+                String link = URLShortener.shorten(statsURL.toString());
                 Element messages = doc.select("message_count").first();
                 String messagesS = messages.text();
                 posts = Integer.parseInt(messagesS);
