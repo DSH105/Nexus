@@ -44,12 +44,11 @@ public class OptionsConfig extends YamlConfig {
         this.options.put("nick", "Nexus");
         this.options.put("admin-channel", "");
         this.options.put("append-nicks", true);
-        this.options.put("jenkins-url", "change-me");
-        this.options.put("jenkins-token-jobName", "change-me");
+        this.options.put("jenkins-url", "");
         this.options.put("response-chance", "");
         this.options.put("user-agent", "Nexus");
         //this.options.put("trello-key", "");
-        this.options.put("random-org-key", "change-me");
+        this.options.put("random-org-key", "");
         if (this.getAdminChannel() != null && !this.getAdminChannel().isEmpty()) {
             channels.add(this.getAdminChannel());
         }
