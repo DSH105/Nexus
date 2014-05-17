@@ -22,6 +22,7 @@ import org.pircbotx.Colors;
 public enum Result {
 
     SUCCESS("blue", Colors.GREEN, Colors.UNDERLINE),
+    UNSTABLE("yellow", Colors.BROWN, Colors.UNDERLINE),
     FAILURE("red", Colors.RED, Colors.UNDERLINE),
     NOT_BUILT("notbuilt", Colors.LIGHT_GRAY, Colors.UNDERLINE),;
 
