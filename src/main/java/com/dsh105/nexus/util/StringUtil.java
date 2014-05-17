@@ -97,7 +97,7 @@ public class StringUtil {
         if (words.length == 1) {
             return words[0];
         } else if (words.length == 2) {
-            return combineSplit(0, words, ", ");
+            return combineSplit(0, words, " and ");
         } else {
             // This is where the fun starts!
             String[] initial = Arrays.copyOfRange(words, 0, words.length - 1);
