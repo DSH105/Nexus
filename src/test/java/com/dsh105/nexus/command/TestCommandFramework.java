@@ -7,7 +7,7 @@ public class TestCommandFramework {
 
     @Test
     public void testCommands() {
-        IRCInitializer.createIrcEnvironment();
+        //IRCInitializer.createIrcEnvironment();
 
         //Nexus nexus = mock(Nexus.class);
 
