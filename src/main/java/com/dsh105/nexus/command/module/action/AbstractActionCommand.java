@@ -13,17 +13,29 @@ import java.util.Arrays;
 public abstract class AbstractActionCommand extends CommandModule {
 
     private String verb;
+    private String defaultReceiver;
+
+    /**
+     * Sets the verb to use for the action command.
+     * @param verb The singular form of the verb. E.g. slap.
+     * @param defaultReceiver The default receiver of the action e.g. everybody
+     */
+    public void setVerb(String verb, String defaultReceiver) {
+        Validate.notNull(verb);
+        Validate.notNull(defaultReceiver);
+        this.verb = verb;
+        this.defaultReceiver = defaultReceiver;
+    }
 
     /**
      * Sets the verb to use for the action command.
      * @param verb The singular form of the verb. E.g. slap.
      */
     public void setVerb(String verb) {
-        Validate.notNull(verb);
-        this.verb = verb;
+        this.setVerb(verb, "everybody");
     }
 
-    public String getActionText(String[] args) {
+    public String getActionText(String... args) {
         Validate.notNull(args);
         if (args.length < 1) {
             throw new InvalidInputException("Must specify a target user to perform the action on.");
@@ -39,10 +51,11 @@ public abstract class AbstractActionCommand extends CommandModule {
 
     @Override
     public boolean onCommand(CommandPerformEvent event) {
+        String actionText = event.getArgs().length == 0 ? getActionText(defaultReceiver) : getActionText(event.getArgs());
         if (event.isInPrivateMessage()) {
-            Nexus.getInstance().sendIRC().action(event.getSender().getNick(), getActionText(event.getArgs()));
+            Nexus.getInstance().sendIRC().action(event.getSender().getNick(), actionText);
         } else {
-            Nexus.getInstance().sendIRC().action(event.getChannel().getName(), getActionText(event.getArgs()));
+            Nexus.getInstance().sendIRC().action(event.getChannel().getName(), actionText);
         }
         return true;
     }
