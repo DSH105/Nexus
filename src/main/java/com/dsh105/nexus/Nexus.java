@@ -120,7 +120,7 @@ public class Nexus extends PircBotX {
             root.setLevel(Level.INFO);
 
             FileHandler handler = new FileHandler("Nexus.log", true);
-            handler.setLevel(Level.ALL);
+            handler.setLevel(Level.INFO);
             handler.setFormatter(new ShortLoggerFormatter(true));
             root.addHandler(handler);
 
@@ -176,12 +176,6 @@ public class Nexus extends PircBotX {
         this.prepareConsoleReader();
         LOGGER.info("Done! Nexus is ready!");
 
-        if (!config.getStartupMessage().isEmpty()) {
-            Channel adminChannel = getChannel(config.getAdminChannel());
-            if (adminChannel != null) {
-                adminChannel.send().message(config.getStartupMessage());
-            }
-        }
         LOGGER.info("Attempting to connect to " + config.getServer() + " and join " + config.getChannels().size() + " channels.");
         try {
             this.startBot();
