@@ -1,5 +1,6 @@
 package com.dsh105.nexus.command.module.action;
 
+import com.dsh105.nexus.Nexus;
 import com.dsh105.nexus.command.CommandModule;
 import com.dsh105.nexus.command.CommandPerformEvent;
 import com.dsh105.nexus.exception.general.InvalidInputException;
@@ -38,7 +39,11 @@ public abstract class AbstractActionCommand extends CommandModule {
 
     @Override
     public boolean onCommand(CommandPerformEvent event) {
-        throw new NotImplementedException("Command not yet written");
+        if (event.isInPrivateMessage()) {
+            Nexus.getInstance().sendIRC().action(event.getSender().getNick(), getActionText(event.getArgs()));
+        } else {
+            Nexus.getInstance().sendIRC().action(event.getChannel().getName(), getActionText(event.getArgs()));
+        }
     }
 
 }
