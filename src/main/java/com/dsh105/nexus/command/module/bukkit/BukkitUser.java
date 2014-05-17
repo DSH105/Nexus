@@ -16,6 +16,7 @@ import org.pircbotx.Colors;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Command(command = "bu", aliases = {"bukkituser", "buser"}, needsChannel = false, help = "Bukkit user profile info",
@@ -76,9 +77,10 @@ public class BukkitUser extends CommandModule {
                 double postsr = posts;
                 double ratio = likesr / postsr;
                 double finalratio = (double) Math.round(ratio * 1000) / 1000;
+                SimpleDateFormat ft = new SimpleDateFormat("dd/MM/yy");
                 event.respond(Colors.OLIVE + Colors.BOLD + "Bukkit User: " + Colors.NORMAL + Colors.BOLD + user + Colors.NORMAL + " | " + link);
                 event.respond("Messages: " + Colors.BOLD + posts + Colors.NORMAL + " | Likes: " + Colors.BOLD + likes + Colors.NORMAL + " | LtP: " + Colors.BOLD + finalratio + Colors.NORMAL + " | Followers: " + Colors.BOLD + followerAmount);
-                event.respond("Registered: " + Colors.UNDERLINE + p.format(new Date(timestamp)));
+                event.respond("Registered: " + Colors.UNDERLINE + p.format(new Date(timestamp)) + " (" + ft.format(timestamp) + ")");
             }
 
         } catch (Exception e) {
