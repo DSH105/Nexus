@@ -53,9 +53,9 @@ public class BukkitUser extends CommandModule {
             }
             Document doc = Jsoup.connect(statsURL + "mini-stats.xml").get();
             if (doc.location().equalsIgnoreCase("http://forums.bukkit.org/members/?username=" + name + "mini-stats.xml")) {
-                event.respond("User not found :(");
+                event.errorWithPing("User not found :(");
             } else if (doc.text().equals("This member limits who may view their full profile.")) {
-                event.respond("This user limits who may view their full profile");
+                event.errorWithPing("This user limits who may view their full profile");
             } else {
                 Element messages = doc.select("message_count").first();
                 String messagesS = messages.text();
@@ -76,7 +76,7 @@ public class BukkitUser extends CommandModule {
                 double postsr = posts;
                 double ratio = likesr / postsr;
                 double finalratio = (double) Math.round(ratio * 1000) / 1000;
-                event.respond(Colors.OLIVE + Colors.BOLD + "Bukkit User: " + Colors.BLACK + user + " | " + link);
+                event.respond(Colors.OLIVE + Colors.BOLD + "Bukkit User: " + Colors.NORMAL + Colors.BOLD + user + Colors.NORMAL + " | " + link);
                 event.respond("Messages: " + Colors.BOLD + posts + Colors.NORMAL + " | Likes: " + Colors.BOLD + likes + Colors.NORMAL + " | LtP: " + Colors.BOLD + finalratio + Colors.NORMAL + " | Followers: " + Colors.BOLD + followerAmount);
                 event.respond("Registered: " + Colors.UNDERLINE + p.format(new Date(timestamp)));
             }
