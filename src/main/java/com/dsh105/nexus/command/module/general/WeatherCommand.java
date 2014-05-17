@@ -72,7 +72,7 @@ public class WeatherCommand extends CommandModule {
                     }
                     description = description.substring(0, 1).toUpperCase() + description.substring(1);
                     event.respond("Weather in " + Colors.BOLD + location + ":");
-                    event.respond("Temp: " + Colors.BOLD + colour +  temp + Colors.NORMAL + " - " + "Humidity: " + Colors.BOLD + humidity + Colors.NORMAL + " - " + "Wind speed: " + Colors.BOLD + windspeed + Colors.NORMAL + " - " + "Description: " + Colors.BOLD + description);
+                    event.respond("Temp: " + Colors.BOLD + colour +  temp  + "°C" + Colors.NORMAL + " - " + "Humidity: " + Colors.BOLD + humidity + Colors.NORMAL + " - " + "Wind speed: " + Colors.BOLD + windspeed + Colors.NORMAL + " - " + "Description: " + Colors.BOLD + description);
 
                     return true;
                 }
