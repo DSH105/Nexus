@@ -25,8 +25,9 @@ We're very early in development, but we have the features below in place:
     * Currently hardcoded to our CI server. We hope to make this configurable.
   * Temperature converter
   * Dogecoin/USD currency converter
+  * Bukkit user profile info
+  * Weather lookup command
 * Some unit testing! We're still working on expanding coverage but the basics are in place.
-
 
 Development Builds
 ==================
