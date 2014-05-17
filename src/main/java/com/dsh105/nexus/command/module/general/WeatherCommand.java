@@ -21,7 +21,7 @@ public class WeatherCommand extends CommandModule {
         return k;
     }
 
-    public static final String WeatherURL = "http://api.openweathermap.org/data/2.5/weather?q=";
+    public static final String WEATHER_URL = "http://api.openweathermap.org/data/2.5/weather?q=";
 
     @Override
     public boolean onCommand(CommandPerformEvent event) {
@@ -33,7 +33,7 @@ public class WeatherCommand extends CommandModule {
                 b.append(event.getArgs()[i]);
             }
             try {
-                HttpResponse<JsonNode> jsonResponse = Unirest.get(WeatherURL + b.toString())
+                HttpResponse<JsonNode> jsonResponse = Unirest.get(WEATHER_URL + b.toString())
                         .header("accept", "application/json")
                         .asJson();
                 boolean working;
