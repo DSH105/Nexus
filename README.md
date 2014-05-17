@@ -23,7 +23,10 @@ We're very early in development, but we have the features below in place:
   * Channel statistics
   * Jenkins build info
     * Currently hardcoded to our CI server. We hope to make this configurable.
+  * Temperature converter
+  * Dogecoin/USD currency converter
 * Some unit testing! We're still working on expanding coverage but the basics are in place.
+
 
 Development Builds
 ==================
