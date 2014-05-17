@@ -44,6 +44,7 @@ public abstract class AbstractActionCommand extends CommandModule {
         } else {
             Nexus.getInstance().sendIRC().action(event.getChannel().getName(), getActionText(event.getArgs()));
         }
+        return true;
     }
 
 }
