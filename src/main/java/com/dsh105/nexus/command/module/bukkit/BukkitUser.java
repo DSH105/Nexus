@@ -53,9 +53,9 @@ public class BukkitUser extends CommandModule {
             }
             Document doc = Jsoup.connect(statsURL + "mini-stats.xml").get();
             if (doc.location().equalsIgnoreCase("http://forums.bukkit.org/members/?username=" + name + "mini-stats.xml")) {
-                event.respond("User not found :(");
+                event.errorWithPing("User not found :(");
             } else if (doc.text().equals("This member limits who may view their full profile.")) {
-                event.respond("This user limits who may view their full profile");
+                event.errorWithPing("This user limits who may view their full profile");
             } else {
                 Element messages = doc.select("message_count").first();
                 String messagesS = messages.text();
