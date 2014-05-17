@@ -1,8 +1,10 @@
 package com.dsh105.nexus.command.module.general;
+
 import com.dsh105.nexus.command.Command;
 import com.dsh105.nexus.command.CommandModule;
 import com.dsh105.nexus.command.CommandPerformEvent;
 import org.pircbotx.Colors;
+
 @Command(command = "temp", needsChannel = false, help = "Temperature converter",
         extendedHelp = {"{b}{p}{c}{/b} <temp>[F/C] - Converts the entered temperature to either celsius or fahrenheit"})
 public class TempCommand extends CommandModule {
@@ -12,12 +14,14 @@ public class TempCommand extends CommandModule {
         c = c + 32;
         return c;
     }
+
     public static double fToC(double c) {
         c = c - 32;
         c = c * 5;
         c = c / 9;
         return c;
     }
+
     @Override
     public boolean onCommand(CommandPerformEvent event) {
         if (event.getArgs().length < 1) {
