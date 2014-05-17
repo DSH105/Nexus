@@ -3,11 +3,14 @@ package com.dsh105.nexus.command.module.bukkit;
 import com.dsh105.nexus.command.Command;
 import com.dsh105.nexus.command.CommandModule;
 import com.dsh105.nexus.command.CommandPerformEvent;
+import com.dsh105.nexus.exception.bukkit.BukkitUserException;
+import com.dsh105.nexus.exception.currency.DogeCoinException;
 import com.dsh105.nexus.util.shorten.URLShortener;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.ocpsoft.prettytime.PrettyTime;
 import org.pircbotx.Colors;
 
 import java.io.InputStream;
@@ -66,6 +69,8 @@ public class BukkitUser extends CommandModule {
                 String user = usern.text();
                 timestamp = Integer.parseInt(date);
                 timestamp = timestamp * 1000;
+                PrettyTime p = new PrettyTime();
+                p.format(new Date(timestamp));
                 Date d = new Date(timestamp);
                 double likesr = likes;
                 double postsr = posts;
@@ -73,11 +78,11 @@ public class BukkitUser extends CommandModule {
                 double finalratio = (double) Math.round(ratio * 1000) / 1000;
                 event.respond(Colors.OLIVE + Colors.BOLD + "Bukkit User: " + Colors.BLACK + user + " | " + link);
                 event.respond("Messages: " + Colors.BOLD + posts + Colors.NORMAL + " | Likes: " + Colors.BOLD + likes + Colors.NORMAL + " | LtP: " + Colors.BOLD + finalratio + Colors.NORMAL + " | Followers: " + Colors.BOLD + followerAmount);
-                event.respond("Registered on " + Colors.UNDERLINE + d);
+                event.respond("Registered: " + Colors.UNDERLINE + p.format(new Date(timestamp)));
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new BukkitUserException("An error occurred while trying to retrieve the information", e);
         }
         return true;
     }
