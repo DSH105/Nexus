@@ -176,6 +176,12 @@ public class Nexus extends PircBotX {
         this.prepareConsoleReader();
         LOGGER.info("Done! Nexus is ready!");
 
+        if (!config.getStartupMessage().isEmpty()) {
+            Channel adminChannel = getChannel(config.getAdminChannel());
+            if (adminChannel != null) {
+                adminChannel.send().message(config.getStartupMessage());
+            }
+        }
         LOGGER.info("Attempting to connect to " + config.getServer() + " and join " + config.getChannels().size() + " channels.");
         try {
             this.startBot();
