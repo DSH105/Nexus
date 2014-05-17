@@ -49,6 +49,7 @@ public class OptionsConfig extends YamlConfig {
         this.options.put("response-chance", "");
         this.options.put("user-agent", "Nexus");
         //this.options.put("trello-key", "");
+        this.options.put("random-org-key", "change-me");
         if (this.getAdminChannel() != null && !this.getAdminChannel().isEmpty()) {
             channels.add(this.getAdminChannel());
         }
@@ -153,5 +154,9 @@ public class OptionsConfig extends YamlConfig {
 
     public String getTrelloApiKey() {
         return get("trello-key", "");
+    }
+
+    public String getRandomOrgApiKey() {
+        return get("random-org-key", "");
     }
 }
