@@ -28,6 +28,11 @@ We're very early in development, but we have the features below in place:
   * Bukkit user profile info
   * Weather lookup command
   * 7 day weather forecast
+  * Actions
+    * Punch
+    * Slap
+    * Whip
+    * And more..
 * Some unit testing! We're still working on expanding coverage but the basics are in place.
 
 Development Builds
