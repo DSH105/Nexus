@@ -1,0 +1,89 @@
+package com.dsh105.nexus.command.module.bukkit;
+
+import com.dsh105.nexus.command.Command;
+import com.dsh105.nexus.command.CommandModule;
+import com.dsh105.nexus.command.CommandPerformEvent;
+import com.dsh105.nexus.exception.bukkit.BukkitUserException;
+import com.dsh105.nexus.exception.currency.DogeCoinException;
+import com.dsh105.nexus.util.shorten.URLShortener;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+import org.ocpsoft.prettytime.PrettyTime;
+import org.pircbotx.Colors;
+
+import java.io.InputStream;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.Date;
+
+@Command(command = "bu", aliases = {"bukkituser", "buser"}, needsChannel = false, help = "Bukkit user profile info",
+        extendedHelp = {"{b}{p}{c}{/b} <user> - Shows a Bukkit user's profile information"})
+
+public class BukkitUser extends CommandModule {
+    @Override
+    public boolean onCommand(CommandPerformEvent event) {
+        String name;
+        if (event.getArgs().length == 0) {
+            name = event.getSender().getNick();
+        } else {
+            name = event.getArgs()[0];
+        }
+        int posts;
+        int likes;
+        long timestamp; //Example -> in ms
+        try {
+            URL statsURL;
+            URLConnection con = new URL("http://forums.bukkit.org/members/?username=" + name).openConnection();
+            con.connect();
+            InputStream is = con.getInputStream();
+            statsURL = con.getURL();
+            is.close();
+            String link = URLShortener.shorten(statsURL.toString());
+            String followerAmount;
+            Document followers = Jsoup.connect(statsURL.toString()).get();
+            Elements fol = followers.select("a.count");
+            if (!fol.isEmpty()) {
+                String folFrag = fol.last().toString();
+                Document folz = Jsoup.parseBodyFragment(folFrag);
+                followerAmount = folz.text();
+            } else {
+                followerAmount = "0";
+            }
+            Document doc = Jsoup.connect(statsURL + "mini-stats.xml").get();
+            if (doc.location().equalsIgnoreCase("http://forums.bukkit.org/members/?username=" + name + "mini-stats.xml")) {
+                event.respond("User not found :(");
+            } else if (doc.text().equals("This member limits who may view their full profile.")) {
+                event.respond("This user limits who may view their full profile");
+            } else {
+                Element messages = doc.select("message_count").first();
+                String messagesS = messages.text();
+                posts = Integer.parseInt(messagesS);
+                Element likecount = doc.select("like_count").first();
+                String likesS = likecount.text();
+                likes = Integer.parseInt(likesS);
+                Element register = doc.select("register_date").first();
+                String date = register.text();
+                Element usern = doc.select("username").first();
+                String user = usern.text();
+                timestamp = Integer.parseInt(date);
+                timestamp = timestamp * 1000;
+                PrettyTime p = new PrettyTime();
+                p.format(new Date(timestamp));
+                Date d = new Date(timestamp);
+                double likesr = likes;
+                double postsr = posts;
+                double ratio = likesr / postsr;
+                double finalratio = (double) Math.round(ratio * 1000) / 1000;
+                event.respond(Colors.OLIVE + Colors.BOLD + "Bukkit User: " + Colors.BLACK + user + " | " + link);
+                event.respond("Messages: " + Colors.BOLD + posts + Colors.NORMAL + " | Likes: " + Colors.BOLD + likes + Colors.NORMAL + " | LtP: " + Colors.BOLD + finalratio + Colors.NORMAL + " | Followers: " + Colors.BOLD + followerAmount);
+                event.respond("Registered: " + Colors.UNDERLINE + p.format(new Date(timestamp)));
+            }
+
+        } catch (Exception e) {
+            throw new BukkitUserException("An error occurred while trying to retrieve the information", e);
+        }
+        return true;
+    }
+}
