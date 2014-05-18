@@ -36,7 +36,7 @@ import org.pircbotx.Colors;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 
-@Command(command = "repo", aliases = {"githubrepository", "repository", "ghrepo"}, needsChannel = false, help = "Management of GitHub repositories.",
+@Command(command = "repo", aliases = {"githubrepository", "repository", "ghrepo"}, needsChannel = false, helpGroups = "github", help = "Management of GitHub repositories.",
         extendedHelp = {
                 "The repo command contains various commands to manage GitHub repositories.",
                 "{b}{p}{c} <name>{/b} - retrieves repository information for the given repo. Uses the sender's nick as the GitHub login",

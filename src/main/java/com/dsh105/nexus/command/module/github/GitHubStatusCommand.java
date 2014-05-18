@@ -16,6 +16,7 @@ import java.util.List;
 @Command(command = "status",
         aliases = {"githubstatus", "gstatus", "ghstatus"},
         needsChannel = false,
+        helpGroups = "github",
         help = "View the Status of GitHub's services.",
         extendedHelp = "{b}{p}{c}{/b} - View the Status of GitHub's services.")
 public class GitHubStatusCommand extends CommandModule {

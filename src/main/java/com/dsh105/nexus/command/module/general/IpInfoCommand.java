@@ -14,7 +14,10 @@ import org.pircbotx.Colors;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
-@Command(command = "ipinfo", aliases = {"ip"}, needsChannel = false, help = "Looks up IP information.",
+@Command(command = "ipinfo",
+        aliases = {"ip"},
+        needsChannel = false,
+        help = "Looks up IP information.",
         extendedHelp = {"{b}{p}{c}{/b} <ip> - Gives approximate location, country & ISP information."})
 public class IpInfoCommand extends CommandModule {
 

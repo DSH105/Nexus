@@ -13,8 +13,8 @@ import org.pircbotx.Colors;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-@Command(command = "forecast", aliases = {"wf", "fc"}, needsChannel = false, help = "Get a location's weather forecast",
-        extendedHelp = {"{b}{p}{c}{/b} <location> - Allows you to get the weather forecast of a location"})
+
+@Command(command = "forecast", aliases = {"wf", "fc"}, needsChannel = false, help = "Get a location's weather forecast", extendedHelp = {"{b}{p}{c}{/b} <location> - Allows you to get the weather forecast of a location"})
 
 public class WeatherForecastCommand extends CommandModule {
     public static double kToC(double k) {

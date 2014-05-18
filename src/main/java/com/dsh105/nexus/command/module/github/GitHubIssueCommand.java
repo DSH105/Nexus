@@ -23,7 +23,7 @@ import com.dsh105.nexus.command.CommandModule;
 import com.dsh105.nexus.command.CommandPerformEvent;
 import com.dsh105.nexus.util.StringUtil;
 
-@Command(command = "issue", aliases = {"githubissue", "ghi"}, needsChannel = false, help = "Retrieve issue information for a GitHub repository", extendedHelp = "This command is simply an alias of {p}{b}repo <name> issue <number>{/b}")
+@Command(command = "issue", helpGroups = "github", aliases = {"githubissue", "ghi"}, needsChannel = false, help = "Retrieve issue information for a GitHub repository", extendedHelp = "This command is simply an alias of {p}{b}repo <name> issue <number>{/b}")
 public class GitHubIssueCommand extends CommandModule {
 
     @Override

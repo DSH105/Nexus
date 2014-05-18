@@ -35,7 +35,7 @@ import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
 
-@Command(command = "ghkey", aliases = {"ghk", "githubkey"}, needsChannel = false, help = "Authenticate with GitHub through Nexus to allow the use of various GitHub commands requiring an API key.",
+@Command(command = "ghkey", helpGroups = "github", aliases = {"ghk", "githubkey"}, needsChannel = false, help = "Authenticate with GitHub through Nexus to allow the use of various GitHub commands requiring an API key.",
         extendedHelp = {"{b}{p}{c}{/b} - Provides instructions on how to set this up."})
 public class GitHubKeyCommand extends CommandModule {
 

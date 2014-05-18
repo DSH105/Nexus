@@ -23,7 +23,7 @@ import com.dsh105.nexus.command.CommandModule;
 import com.dsh105.nexus.command.CommandPerformEvent;
 import com.dsh105.nexus.util.StringUtil;
 
-@Command(command = "merge", aliases = {"githubmerge", "ghmerge", "ghm"}, needsChannel = false, help = "Merge a pull request", extendedHelp = "This command is simply an alias of {p}{b}repo <name> issue <number>{/b}")
+@Command(command = "merge", helpGroups = "github", aliases = {"githubmerge", "ghmerge", "ghm"}, needsChannel = false, help = "Merge a pull request", extendedHelp = "This command is simply an alias of {p}{b}repo <name> issue <number>{/b}")
 public class GitHubMergePullRequestCommand extends CommandModule {
 
     @Override

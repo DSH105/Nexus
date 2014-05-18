@@ -19,7 +19,10 @@ package com.dsh105.nexus.command.module.action;
 
 import com.dsh105.nexus.command.Command;
 
-@Command(command = "hug", needsChannel = false, help = "Hugs a user",
+@Command(command = "hug",
+        needsChannel = false,
+        helpGroups = "action",
+        help = "Hugs a user",
         extendedHelp = {"{b}{p}{c}{/b} <user> - Hug someone!"})
 public class HugCommand extends AbstractActionCommand {
     public HugCommand() {

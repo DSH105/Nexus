@@ -28,7 +28,10 @@ import com.dsh105.nexus.hook.jenkins.JenkinsJob;
 import org.pircbotx.Channel;
 import org.pircbotx.User;
 
-@Command(command = "build", needsChannel = false, help = "Start building a Jenkins job on the stored CI",
+@Command(command = "build",
+        needsChannel = false,
+        helpGroups = "admin",
+        help = "Start building a Jenkins job on the stored CI. Only Nexus admins may use this command",
         extendedHelp = {
                 "Begins the build process for a job on the configured Jenkins server",
                 "{b}{p}{c} <job_name>{/b} - attempts to begin the build process for this job.",

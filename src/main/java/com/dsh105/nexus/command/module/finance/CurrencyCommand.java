@@ -8,7 +8,10 @@ import com.dsh105.nexus.util.StringUtil;
 import com.dsh105.nexus.util.currency.CurrencyConverter;
 import com.dsh105.nexus.util.currency.RateExchangeLookup;
 
-@Command(command = "currency", aliases = {"cur"}, needsChannel = false, help = "Converts between two currencies.",
+@Command(command = "currency",
+        aliases = {"cur"},
+        needsChannel = false,
+        help = "Converts between two currencies.",
         extendedHelp = {
                 "This command allows conversion between two currencies. A list of currency codes is available at http://www.xe.com/currency/",
                 "{b}{p}{c}{/b} <from> <to> <amount> - where 'from' and 'to' are valid currency codes.",

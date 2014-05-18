@@ -93,13 +93,13 @@ public class CommandPerformEvent {
 
     public void respond(String mainColor, String message, boolean appendNick, boolean forcePrivateMessage, String... highlights) {
         StringBuffer buffer = new StringBuffer();
-        Matcher matcher = Pattern.compile("(\\{.+?\\})").matcher(message);
-        int index = 0;
+        Matcher matcher = Pattern.compile("(\\{([0-9]+?)\\})").matcher(message);
         while (matcher.find()) {
+            int index = Integer.parseInt(matcher.group(2));
             if (index >= highlights.length) {
                 break;
             }
-            String replacement = highlights[index++];
+            String replacement = highlights[index];
             matcher.appendReplacement(buffer, Colors.BOLD + replacement + Colors.NORMAL + mainColor);
         }
         matcher.appendTail(buffer);

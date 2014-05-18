@@ -19,7 +19,10 @@ import java.net.URLConnection;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-@Command(command = "bu", aliases = {"bukkituser", "buser"}, needsChannel = false, help = "Bukkit user profile info",
+@Command(command = "bu",
+        aliases = {"bukkituser", "buser"},
+        needsChannel = false,
+        help = "Bukkit user profile info",
         extendedHelp = {"{b}{p}{c}{/b} <user> - Shows a Bukkit user's profile information"})
 
 public class BukkitUser extends CommandModule {

@@ -33,4 +33,6 @@ public @interface Command {
     public String[] extendedHelp();
 
     public String help();
+
+    public String[] helpGroups() default "all";
 }

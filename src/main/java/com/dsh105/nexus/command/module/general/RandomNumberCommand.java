@@ -11,7 +11,9 @@ import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 
-@Command(command = "rand", aliases = {"random", "randomnumber"}, needsChannel = false,
+@Command(command = "rand",
+        aliases = {"random", "randomnumber"},
+        needsChannel = false,
         help = "Generate a random number from Random.org",
         extendedHelp =
                 {"{b}{p}{c}{/b} <max> - Chooses a number from 1 to <max>.",
