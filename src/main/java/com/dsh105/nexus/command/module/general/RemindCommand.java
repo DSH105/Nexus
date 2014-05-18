@@ -183,7 +183,7 @@ public class RemindCommand extends CommandModule {
         @Override
         public void run() {
             if (channel != null) {
-                Nexus.getInstance().sendIRC().ctcpCommand(channel.getName(), "I have a reminder for you, " + userToRemind + "! \"" + Colors.BOLD + reminder + Colors.NORMAL + "\"" + (from.equals(userToRemind) ? "" : " (from " + StringUtil.removePing(from) + ")"));
+                Nexus.getInstance().sendIRC().action(channel.getName(), "I have a reminder for you, " + userToRemind + "! \"" + Colors.BOLD + reminder + Colors.NORMAL + "\"" + (from.equals(userToRemind) ? "" : " (from " + StringUtil.removePing(from) + ")"));
             }
             this.cancel(true);
         }
