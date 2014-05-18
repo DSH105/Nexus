@@ -133,13 +133,18 @@ public class CommandManager {
             }
         } catch (Exception e) {
             if (e instanceof GitHubAPIKeyInvalidException) {
-                event.respondWithPing(Colors.RED + e.getMessage() + " Use {0} to authenticate with GitHub through Nexus.", Nexus.getInstance().getConfig().getCommandPrefix() + "ghk");
+                event.errorWithPing(e.getMessage() + " Use {0} to authenticate with GitHub through Nexus.", Nexus.getInstance().getConfig().getCommandPrefix() + "ghk");
             } else if (e instanceof DateParseException) {
-                event.respondWithPing(Colors.RED + e.getMessage());
+                event.errorWithPing(e.getMessage());
             } else if (e instanceof GitHubRateLimitExceededException) {
-                event.respondWithPing(Colors.RED + "Rate limit for this GitHub API Key exceeded. Further requests cannot be executed on the behalf of this user.");
+                event.errorWithPing("Rate limit for this GitHub API Key exceeded. Further requests cannot be executed on the behalf of this user.");
             } else {
-                event.respondWithPing(Colors.RED + "Houston, we have a problem! Here is a conveniently provided stacktrace: " + GitHub.getGitHub().createGist(e));
+                if (Nexus.getInstance().getGitHubConfig().getNexusGitHubApiKey().isEmpty()) {
+                    e.printStackTrace();
+                    event.errorWithPing("An error was encountered, but my Gist API key is invalid! The stacktrace has been posted to the console.");
+                    return true;
+                }
+                event.errorWithPing("Houston, we have a problem! Here is a conveniently provided stacktrace: " + GitHub.getGitHub().createGist(e));
             }
             return true;
         }

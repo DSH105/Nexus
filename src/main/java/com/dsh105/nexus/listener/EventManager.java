@@ -44,17 +44,13 @@ public class EventManager extends ListenerAdapter<Nexus> {
     @Override
     public void onInvite(InviteEvent<Nexus> event) throws Exception {
         Nexus.LOGGER.info("Received invite to " + event.getChannel() + " from " + event.getUser());
-        User user = Nexus.getInstance().getUser(event.getUser());
-        Channel channel = Nexus.getInstance().getChannel(event.getChannel());
-        if (user != null && channel != null) {
-            if (Nexus.getInstance().isAdmin(user)) {
-                Nexus.getInstance().joinChannel(event.getChannel());
-                Nexus.getInstance().sendMessage(channel, event.getUser() + " wanted me in here.");
-                Nexus.LOGGER.info("Channel invite accepted");
-            } else {
-                Nexus.getInstance().sendMessage(user, "You are not allowed to invite me.");
-                Nexus.LOGGER.info("Channel invite denied");
-            }
+        if (Nexus.getInstance().isAdmin(event.getUser())) {
+            event.getBot().sendIRC().joinChannel(event.getChannel());
+            event.getBot().send(event.getChannel(), event.getUser() + " wanted me in here.");
+            Nexus.LOGGER.info("Channel invite accepted");
+        } else {
+            event.getBot().send(event.getUser(), "You are not allowed to invite me.");
+            Nexus.LOGGER.info("Channel invite denied");
         }
     }
 
@@ -91,6 +87,12 @@ public class EventManager extends ListenerAdapter<Nexus> {
     @Override
     public void onConnect(ConnectEvent<Nexus> event) throws Exception {
         Nexus.LOGGER.info("Connected to IRC");
+        if (!event.getBot().getConfig().getStartupMessage().isEmpty()) {
+            Channel adminChannel = event.getBot().getChannel(event.getBot().getConfig().getAdminChannel());
+            if (adminChannel != null) {
+                adminChannel.send().message(event.getBot().getConfig().getStartupMessage());
+            }
+        }
     }
 
     @Override
@@ -101,14 +103,14 @@ public class EventManager extends ListenerAdapter<Nexus> {
     @Override
     public void onKick(KickEvent<Nexus> event) throws Exception {
         if (event.getRecipient().getNick().equalsIgnoreCase(Nexus.getInstance().getNick())) {
-            Nexus.LOGGER.info("Kicked from " + event.getChannel() + " by " + event.getSource());
+            Nexus.LOGGER.info("Kicked from " + event.getChannel() + " by " + event.getUser().getNick());
         }
     }
 
     @Override
     public void onVoice(VoiceEvent<Nexus> event) throws Exception {
         if (event.getRecipient().getNick().equalsIgnoreCase(Nexus.getInstance().getNick())) {
-            Nexus.LOGGER.info("Voice " + (event.hasVoice() ? " given to " : " removed from ") + event.getRecipient().getNick() + " by " + event.getSource().getNick() + "in " + event.getChannel());
+            Nexus.LOGGER.info("Voice " + (event.hasVoice() ? " given to " : " removed from ") + event.getRecipient().getNick() + " by " + event.getUser().getNick() + "in " + event.getChannel());
         }
     }
 }

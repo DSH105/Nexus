@@ -39,16 +39,17 @@ public class OptionsConfig extends YamlConfig {
         this.options.put("server", "irc.esper.net");
         this.options.put("port", 5555);
         this.options.put("server-password", "");
+        this.options.put("startup-message", "Hi, I'm back!");
         this.options.put("nickserv-password", "");
         this.options.put("command-prefix", "\\");
         this.options.put("nick", "Nexus");
         this.options.put("admin-channel", "");
         this.options.put("append-nicks", true);
-        this.options.put("jenkins-url", "change-me");
-        this.options.put("jenkins-token-jobName", "change-me");
+        this.options.put("jenkins-url", "");
         this.options.put("response-chance", "");
         this.options.put("user-agent", "Nexus");
         //this.options.put("trello-key", "");
+        this.options.put("random-org-key", "");
         if (this.getAdminChannel() != null && !this.getAdminChannel().isEmpty()) {
             channels.add(this.getAdminChannel());
         }
@@ -73,6 +74,10 @@ public class OptionsConfig extends YamlConfig {
         this.set("channels", channels);
         this.set("admins", admins);
         super.save();
+    }
+
+    public String getStartupMessage() {
+        return get("startup-message", "Hi, I'm back!");
     }
 
     public String getServer() {
@@ -153,5 +158,9 @@ public class OptionsConfig extends YamlConfig {
 
     public String getTrelloApiKey() {
         return get("trello-key", "");
+    }
+
+    public String getRandomOrgApiKey() {
+        return get("random-org-key", "");
     }
 }

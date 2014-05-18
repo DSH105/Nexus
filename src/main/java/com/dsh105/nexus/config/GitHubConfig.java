@@ -27,12 +27,11 @@ public class GitHubConfig extends YamlConfig {
 
     @Override
     public void setDefaults() {
-        this.options.put("github-key-Nexus", "change-me");
-        this.options.put("github-repo-repoName", "change-to-author");
-        this.options.put("github-oauth-client-id", "change-me");
-        this.options.put("github-oauth-client-secret", "change-me");
-        this.options.put("github-oauth-scope", "change-me");
-        this.options.put("github-oauth-state", "change-me");
+        this.options.put("github-key-Nexus", "");
+        this.options.put("github-oauth-client-id", "");
+        this.options.put("github-oauth-client-secret", "");
+        this.options.put("github-oauth-scope", "");
+        this.options.put("github-oauth-state", "");
         this.options.put("gist-account-name", "");
         this.options.put("gist-account-password", "");
     }

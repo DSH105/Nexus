@@ -29,6 +29,12 @@ We're very early in development, but we have the features below in place:
   * Weather lookup command
   * 7 day weather forecast
   * Insult command
+=======
+  * Actions
+    * Punch
+    * Slap
+    * Whip
+    * And more..
 * Some unit testing! We're still working on expanding coverage but the basics are in place.
 
 Development Builds
@@ -80,3 +86,4 @@ Todo List
   * Currently per-user authentication with GitHub is implemented (see `ghkey` command). Maybe there's a nicer way to do this instead of having to post Nexus the link?
 * Plenty more commands
 * Travis integration ([Click for more information](http://docs.travis-ci.com/api/))
+* See #41 for a list of possible new commands

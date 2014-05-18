@@ -65,21 +65,21 @@ public class CommandManager {
         try {
             this.registrationService.execute(command, args, sender, channel);
         } catch (CommandPermissionsException e) {
-            sender.sendMessage(this.NO_PERMISSION);
+            sender.send().message(this.NO_PERMISSION);
         } catch (MissingNestedCommandException e) {
-            sender.sendMessage(Colors.RED + e.getUsage());
+            sender.send().message(Colors.RED + e.getUsage());
         } catch (CommandUsageException e) {
-            sender.sendMessage(Colors.RED + e.getMessage());
-            sender.sendMessage(Colors.RED + e.getUsage());
+            sender.send().message(Colors.RED + e.getMessage());
+            sender.send().message(Colors.RED + e.getUsage());
         } catch (WrappedCommandException e) {
             if (e.getCause() instanceof NumberFormatException) {
-                sender.sendMessage(this.NUMBER_EXCEPTION);
+                sender.send().message(this.NUMBER_EXCEPTION);
             } else {
-                sender.sendMessage(this.ERROR_OCCURRED);
+                sender.send().message(this.ERROR_OCCURRED);
                 e.printStackTrace();
             }
         } catch (CommandException e) {
-            sender.sendMessage(Colors.RED + e.getMessage());
+            sender.send().message(Colors.RED + e.getMessage());
         }
     }
 }
