@@ -65,7 +65,7 @@ public class HelpCommand extends CommandModule {
             }
             ArrayList<CommandModule> modules = entry.getValue();
             if (!modules.isEmpty()) {
-                event.respond(format(event, null, "Use {b}{p}help " + entry.getKey() + "{/b} to view {0} more commands"), true, modules.size() + "");
+                event.respond(format(event, null, "Use {b}{p}help " + entry.getKey() + "{/b} to view {0} more command" + (modules.size() > 1 ? "s" : "")), true, modules.size() + "");
             }
         }
         return true;
