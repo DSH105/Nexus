@@ -24,18 +24,15 @@ import com.dsh105.nexus.exception.github.GitHubRateLimitExceededException;
 import com.dsh105.nexus.hook.github.GitHub;
 import com.dsh105.nexus.util.StringUtil;
 import org.pircbotx.Channel;
-import org.pircbotx.Colors;
 import org.pircbotx.User;
 import org.reflections.Reflections;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Set;
+import java.util.*;
 
 public class CommandManager {
 
     private ArrayList<CommandModule> modules = new ArrayList<>();
+    HashMap<String, ArrayList<CommandModule>> groupToModules = new HashMap<>();
 
     public void registerDefaults() {
         Reflections reflections = new Reflections("com.dsh105.nexus.command.module");
@@ -48,6 +45,21 @@ public class CommandManager {
             }
         }
 
+    }
+
+    public void buildGroupMap() {
+        for (CommandModule module : Nexus.getInstance().getCommandManager().getRegisteredCommands()) {
+            for (String group : module.getCommandInfo().helpGroups()) {
+                if (!group.equalsIgnoreCase("all")) {
+                    ArrayList<CommandModule> existing = groupToModules.get(group);
+                    if (existing == null) {
+                        existing = new ArrayList<>();
+                    }
+                    existing.add(module);
+                    groupToModules.put(group, existing);
+                }
+            }
+        }
     }
 
     public void register(CommandModule module) {
@@ -98,6 +110,10 @@ public class CommandManager {
 
     public Collection<CommandModule> getRegisteredCommands() {
         return modules;
+    }
+
+    public HashMap<String, ArrayList<CommandModule>> getGroupsMap() {
+        return new HashMap<>(groupToModules);
     }
 
     public boolean onCommand(Channel channel, User sender, String content) {

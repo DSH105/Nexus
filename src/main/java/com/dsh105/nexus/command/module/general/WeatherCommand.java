@@ -12,7 +12,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.pircbotx.Colors;
 
-@Command(command = "weather", aliases = {"wea", "sun"}, needsChannel = false, help = "Get a location's weather",
+@Command(command = "weather",
+        aliases = {"wea", "sun"},
+        needsChannel = false,
+        help = "Get a location's weather",
         extendedHelp = {"{b}{p}{c}{/b} <location> - Allows you to get the weather of a location"})
 
 public class WeatherCommand extends CommandModule {

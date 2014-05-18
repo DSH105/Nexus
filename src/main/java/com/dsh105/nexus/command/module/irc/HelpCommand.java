@@ -24,6 +24,8 @@ import com.dsh105.nexus.command.CommandPerformEvent;
 import com.dsh105.nexus.util.StringUtil;
 import org.pircbotx.Colors;
 
+import java.util.*;
+
 @Command(command = "help", needsChannel = false, help = "Show this help information", extendedHelp = "Use {p}{c} <command> for more information on a specific command.")
 public class HelpCommand extends CommandModule {
 
@@ -50,12 +52,26 @@ public class HelpCommand extends CommandModule {
         }
         for (CommandModule module : Nexus.getInstance().getCommandManager().getRegisteredCommands()) {
             String aliases = (module.getCommandInfo().aliases().length <= 0 ? "" : " (Aliases: " + Colors.BOLD + StringUtil.combineSplit(0, module.getCommandInfo().aliases(), ", ") + Colors.NORMAL + ")");
+            List<String> groups = Arrays.asList(module.getCommandInfo().helpGroups());
+            if (!groups.contains("all")) {
+                continue;
+            }
             event.respond(format(event, module, "{b}{p}{c}{/b} - " + module.getCommandInfo().help()) + aliases, true);
+        }
+
+        for (Map.Entry<String, ArrayList<CommandModule>> entry : Nexus.getInstance().getCommandManager().getGroupsMap().entrySet()) {
+            if (entry.getKey().equalsIgnoreCase("all")) {
+                continue;
+            }
+            ArrayList<CommandModule> modules = entry.getValue();
+            if (!modules.isEmpty()) {
+                event.respond(format(event, null, "Use {b}{p}help " + entry.getKey() + "{/b} to view {0} more commands"), true, modules.size() + "");
+            }
         }
         return true;
     }
 
     private String format(CommandPerformEvent event, CommandModule module, String s) {
-        return s.replace("{c}", module.getCommand()).replace("{p}", event.getCommandPrefix()).replace("{b}", Colors.BOLD).replace("{/b}", Colors.NORMAL);
+        return s.replace("{c}", module == null ? "" : module.getCommand()).replace("{p}", event.getCommandPrefix()).replace("{b}", Colors.BOLD).replace("{/b}", Colors.NORMAL);
     }
 }

@@ -155,6 +155,7 @@ public class Nexus extends PircBotX {
         LOGGER.info("Registering commands");
         commandManager = new CommandManager();
         commandManager.registerDefaults();
+        commandManager.buildGroupMap();
 
         LOGGER.info("Preparing response manager");
         responseManager = new ResponseManager();
@@ -227,7 +228,7 @@ public class Nexus extends PircBotX {
     }
 
     public void send(String target, String message) {
-        Nexus.getInstance().sendRaw().rawLineNow("PRIVMSG " + target + " :" + message);
+        Nexus.getInstance().sendRaw().rawLine("PRIVMSG " + target + " :" + message);
     }
 
     public String appendNick(String nick, String message) {

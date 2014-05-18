@@ -6,7 +6,9 @@ import com.dsh105.nexus.command.CommandPerformEvent;
 
 import java.util.UUID;
 
-@Command(command = "uuid", needsChannel = false, help = "Validate a UUID.",
+@Command(command = "uuid",
+        needsChannel = false,
+        help = "Validate a UUID.",
         extendedHelp = {"{b}{p}{c}{/b} <input> - Tests if input is a valid UUID."})
 public class UUIDCommand extends CommandModule {
 

@@ -28,7 +28,10 @@ import com.dsh105.nexus.hook.jenkins.Result;
 import com.dsh105.nexus.util.StringUtil;
 import org.pircbotx.Colors;
 
-@Command(command = "ci", aliases = "jenkins", needsChannel = false, help = "Fetch information on a Jenkins job.",
+@Command(command = "ci",
+        aliases = "jenkins",
+        needsChannel = false,
+        help = "Fetch information on a Jenkins job.",
         extendedHelp = {
                 "The CI allows you to connect to a set (unchangeable) Jenkins server to retrieve build information for certain jobs.",
                 "{b}{p}{c} <job_name>{/b} - fetches information on a certain jenkins job and presents to the user"})

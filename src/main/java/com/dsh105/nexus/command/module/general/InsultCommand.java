@@ -8,7 +8,9 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
-@Command(command = "insult", aliases = {}, needsChannel = false, help = "Insult generator - [CAUTION] Insults may be NSFW",
+@Command(command = "insult",
+        needsChannel = false,
+        help = "Insult generator - [CAUTION] Insults may be NSFW",
         extendedHelp = {"{b}{p}{c}{/b} - Prints an insult - [CAUTION] Insults may be NSFW"})
 
 public class InsultCommand extends CommandModule {

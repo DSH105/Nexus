@@ -30,7 +30,9 @@ import org.yaml.snakeyaml.Yaml;
 import java.io.*;
 import java.util.*;
 
-@Command(command = "remind", help = "Schedule a reminder",
+@Command(command = "remind",
+        needsChannel = false,
+        help = "Schedule a reminder",
         extendedHelp = {
                 "Schedules a reminder to be executed after the specified time period.",
                 "Valid time periods are: {b}s{/b} (seconds), {b}m{/b} (minutes), {b}h{/b} (hours), {b}d{/b} (days), {b}w{/b} (weeks)",
@@ -70,7 +72,7 @@ public class RemindCommand extends CommandModule {
                 return true;
             }
             String reminderMessage = StringUtil.combineSplit(forOtherUser ? 2 : 1, event.getArgs(), " ");
-            Reminder reminder = new Reminder(event.getChannel(), userToRemind, event.getSender().getNick(), reminderMessage);
+            Reminder reminder = new Reminder(event.isInPrivateMessage() ? "" : event.getChannel().getName(), userToRemind, event.getSender().getNick(), reminderMessage);
             new Timer(true).schedule(reminder, timePeriod);
             reminders.add(reminder);
             event.respondWithPing("Reminder scheduled for {0}", event.getArgs()[forOtherUser ? 1 : 0]);
@@ -98,7 +100,7 @@ public class RemindCommand extends CommandModule {
                 file.createNewFile();
 
                 HashMap<String, Object> valueMap = new HashMap<>();
-                valueMap.put("channel", r.channel.getName());
+                valueMap.put("channel", r.channelName);
                 valueMap.put("user", r.userToRemind);
                 valueMap.put("from", r.from);
                 valueMap.put("reminder", r.reminder);
@@ -130,7 +132,7 @@ public class RemindCommand extends CommandModule {
                     Map<String, Object> data = (Map<String, Object>) yaml.load(input);
                     if (data != null && !data.isEmpty()) {
                         try {
-                            Reminder reminder = new Reminder(Nexus.getInstance().getChannel((String) data.get("channel")), (String) data.get("user"), (String) data.get("from"), (String) data.get("reminder"));
+                            Reminder reminder = new Reminder((String) data.get("channel"), (String) data.get("user"), (String) data.get("from"), (String) data.get("reminder"));
                             long executionTime = (Long) data.get("execution_time");
                             Date current = new Date();
                             Date execution = new Date(executionTime);
@@ -168,13 +170,13 @@ public class RemindCommand extends CommandModule {
 
     public class Reminder extends TimerTask {
 
-        private Channel channel;
+        private String channelName;
         private String userToRemind;
         private String from;
         private String reminder;
 
-        public Reminder(Channel channel, String userToRemind, String from, String reminder) {
-            this.channel = channel;
+        public Reminder(String channel, String userToRemind, String from, String reminder) {
+            this.channelName = channelName;
             this.userToRemind = userToRemind;
             this.from = from == null ? userToRemind : from;
             this.reminder = reminder;
@@ -182,9 +184,7 @@ public class RemindCommand extends CommandModule {
 
         @Override
         public void run() {
-            if (channel != null) {
-                Nexus.getInstance().sendIRC().action(channel.getName(), "I have a reminder for you, " + userToRemind + "! \"" + Colors.BOLD + reminder + Colors.NORMAL + "\"" + (from.equals(userToRemind) ? "" : " (from " + StringUtil.removePing(from) + ")"));
-            }
+            Nexus.getInstance().sendIRC().action(channelName.isEmpty() ? userToRemind : channelName, "I have a reminder for you, " + userToRemind + "! \"" + Colors.BOLD + reminder + Colors.NORMAL + "\"" + (from.equals(userToRemind) ? "" : " (from " + StringUtil.removePing(from) + ")"));
             this.cancel(true);
         }
 

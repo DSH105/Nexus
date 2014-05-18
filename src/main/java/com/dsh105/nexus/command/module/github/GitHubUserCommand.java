@@ -27,7 +27,7 @@ import com.dsh105.nexus.util.AuthUtil;
 import com.dsh105.nexus.util.shorten.URLShortener;
 import org.pircbotx.Colors;
 
-@Command(command = "ghuser", aliases = {"ghu", "githubuser"}, needsChannel = false, help = "Retrieves information on a GitHub user",
+@Command(command = "ghuser", aliases = {"ghu", "githubuser"}, needsChannel = false, helpGroups = "github",  help = "Retrieves information on a GitHub user",
         extendedHelp = {"{b}{p}{c}{/b} <user_name> - Provides information on a GitHub user."})
 public class GitHubUserCommand extends CommandModule {
 

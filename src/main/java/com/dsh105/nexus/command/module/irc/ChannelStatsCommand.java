@@ -5,7 +5,9 @@ import com.dsh105.nexus.command.CommandModule;
 import com.dsh105.nexus.command.CommandPerformEvent;
 import org.pircbotx.Channel;
 
-@Command(command = "chanstats", needsChannel = true, help = "Gives stats on the current channel.",
+@Command(command = "chanstats",
+        needsChannel = true,
+        help = "Gives stats on the current channel.",
         extendedHelp = {"{b}{p}{c}{/b} - Gives the number of users connected plus some useful metrics on voiced/opped users."})
 public class ChannelStatsCommand extends CommandModule {
     @Override

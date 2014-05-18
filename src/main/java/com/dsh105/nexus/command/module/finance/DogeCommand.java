@@ -11,7 +11,9 @@ import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import org.pircbotx.Colors;
 
-@Command(command = "doge", needsChannel = false, help = "Dogecoin currency converter",
+@Command(command = "doge",
+        needsChannel = false,
+        help = "Dogecoin currency converter",
         extendedHelp = {"{b}{p}{c}{/b} <value> - Converts the entered value to either dogecoin or usd."})
 public class DogeCommand extends CommandModule {
 

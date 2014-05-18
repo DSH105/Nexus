@@ -22,10 +22,12 @@ import com.dsh105.nexus.command.Command;
 import com.dsh105.nexus.command.CommandModule;
 import com.dsh105.nexus.command.CommandPerformEvent;
 import com.dsh105.nexus.util.StringUtil;
-import org.pircbotx.Channel;
-import org.pircbotx.User;
 
-@Command(command = "talk", needsChannel = false, help = "Make Nexus talk", extendedHelp = "Use {b}{p}{c}{/b} <chan> <msg>. Only admins may use this command.")
+@Command(command = "talk",
+        needsChannel = false,
+        helpGroups = "action",
+        help = "Make Nexus talk",
+        extendedHelp = "Use {b}{p}{c}{/b} <chan> <msg>. Only admins may use this command.")
 public class TalkCommand extends CommandModule {
 
     @Override

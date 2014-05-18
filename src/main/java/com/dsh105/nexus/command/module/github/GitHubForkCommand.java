@@ -22,7 +22,7 @@ import com.dsh105.nexus.command.Command;
 import com.dsh105.nexus.command.CommandModule;
 import com.dsh105.nexus.command.CommandPerformEvent;
 
-@Command(command = "fork", aliases = {"githubfork", "ghf"}, needsChannel = false, help = "Fork a GitHub repository. Requires a GitHub API key (see {b}{p}ghkey{/b})", extendedHelp = "This command is simply an alias of {b}{p}repo <name> fork{/b}")
+@Command(command = "fork", helpGroups = "github", aliases = {"githubfork", "ghf"}, needsChannel = false, help = "Fork a GitHub repository. Requires a GitHub API key (see {b}{p}ghkey{/b})", extendedHelp = "This command is simply an alias of {b}{p}repo <name> fork{/b}")
 public class GitHubForkCommand extends CommandModule {
     @Override
     public boolean onCommand(CommandPerformEvent event) {
