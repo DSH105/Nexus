@@ -11,6 +11,7 @@ import java.util.Arrays;
 
 public abstract class AbstractActionCommand extends CommandModule {
 
+    private boolean override;
     private String verb;
     private String defaultReceiver;
 
@@ -34,6 +35,14 @@ public abstract class AbstractActionCommand extends CommandModule {
         this.setVerb(verb, "everybody");
     }
 
+    public boolean isOverriden() {
+        return override;
+    }
+
+    public void setOverride(boolean override) {
+        this.override = override;
+    }
+
     public String getActionText(String... args) {
         Validate.notNull(args);
         if (args.length < 1) {
@@ -44,7 +53,7 @@ public abstract class AbstractActionCommand extends CommandModule {
         if (args.length > 1) {
             additional += StringUtil.join(Arrays.copyOfRange(args, 1, args.length), " ");
         }
-        return verb + "s " + sentenceList + additional;
+        return verb + (isOverriden() ? " " : "s ") + sentenceList + additional;
     }
 
     @Override
