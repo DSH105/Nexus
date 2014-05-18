@@ -33,6 +33,7 @@ We're very early in development, but we have the features below in place:
     * Slap
     * Whip
     * And more..
+  * Insult command
 * Some unit testing! We're still working on expanding coverage but the basics are in place.
 
 Development Builds
