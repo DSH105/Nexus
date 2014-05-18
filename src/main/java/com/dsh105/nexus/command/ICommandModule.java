@@ -26,9 +26,5 @@ public interface ICommandModule {
 
     public abstract boolean onCommand(CommandPerformEvent event);
 
-    public boolean hasPermission(Channel channel, User sender);
-
-    public boolean hasPermission(User sender);
-
     public Command getCommandInfo();
 }

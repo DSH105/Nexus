@@ -33,18 +33,11 @@ public abstract class CommandModule implements ICommandModule {
         if (Nexus.getInstance().isAdmin(sender)) {
             return true;
         }
-        if (channel == null) {
-            return hasPermission(sender);
-        }
-        return hasPermission(channel, sender);
+        return !adminOnly();
     }
 
-    public boolean hasPermission(Channel channel, User sender) {
-        return hasPermission(sender);
-    }
-
-    public boolean hasPermission(User sender) {
-        return true;
+    public boolean adminOnly() {
+        return false;
     }
 
     public Command getCommandInfo() {
