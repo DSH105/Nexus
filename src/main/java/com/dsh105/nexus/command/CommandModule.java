@@ -35,7 +35,7 @@ public abstract class CommandModule implements ICommandModule {
             return true;
         }
         if (adminOnly()) {
-            Nexus.getInstance().send(sender.getNick(), Colors.RED + "You are not allowed to do that.");
+            Nexus.getInstance().send(sender.getNick(), Colors.RED + "I'm sorry, Dave. I'm afraid I can't do that.");
             return false;
         }
         return true;
