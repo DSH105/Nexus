@@ -6,6 +6,7 @@ import com.dsh105.nexus.command.Command;
         extendedHelp = {"{b}{p}{c}{/b} <user> - glare at someone!"})
 public class GlareCommand extends AbstractActionCommand {
     public GlareCommand() {
-        this.setVerb("glare");
+        this.setVerb("glares at");
+        this.setOverride(true);
     }
 }
