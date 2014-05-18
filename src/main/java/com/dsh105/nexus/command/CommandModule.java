@@ -19,6 +19,7 @@ package com.dsh105.nexus.command;
 
 import com.dsh105.nexus.Nexus;
 import org.pircbotx.Channel;
+import org.pircbotx.Colors;
 import org.pircbotx.User;
 
 public abstract class CommandModule implements ICommandModule {
@@ -33,7 +34,11 @@ public abstract class CommandModule implements ICommandModule {
         if (Nexus.getInstance().isAdmin(sender)) {
             return true;
         }
-        return !adminOnly();
+        if (adminOnly()) {
+            Nexus.getInstance().send(sender.getNick(), Colors.RED + "You are not allowed to do that.");
+            return false;
+        }
+        return true;
     }
 
     public boolean adminOnly() {
