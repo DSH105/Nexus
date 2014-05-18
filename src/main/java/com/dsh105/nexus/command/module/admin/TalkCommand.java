@@ -21,6 +21,7 @@ import com.dsh105.nexus.Nexus;
 import com.dsh105.nexus.command.Command;
 import com.dsh105.nexus.command.CommandModule;
 import com.dsh105.nexus.command.CommandPerformEvent;
+import com.dsh105.nexus.util.StringUtil;
 import org.pircbotx.Channel;
 import org.pircbotx.User;
 
@@ -29,19 +30,19 @@ public class TalkCommand extends CommandModule {
 
     @Override
     public boolean onCommand(CommandPerformEvent event) {
-        StringBuilder b = new StringBuilder();
-        for (int i = 1; i < event.getArgs().length; i++) {
-            if (i != 1)
-                b.append(" ");
-            b.append(event.getArgs()[i]);
+        if (event.getArgs().length < 2){
+         return false;
+        }else{
+            String message = StringUtil.combineSplit(1, event.getArgs(), " ");
+            Nexus.getInstance().sendMessage(event.getArgs()[0], message);
+            return true;
         }
-        Nexus.getInstance().sendMessage(event.getArgs()[0], b.toString());
-        return true;
     }
 
     @Override
     public boolean hasPermission(Channel channel, User sender) {
         return false;
+
     }
 
     @Override
