@@ -39,12 +39,7 @@ public class ExitCommand extends CommandModule {
     }
 
     @Override
-    public boolean hasPermission(Channel channel, User sender) {
-        return false;
-    }
-
-    @Override
-    public boolean hasPermission(User sender) {
-        return false;
+    public boolean adminOnly() {
+        return true;
     }
 }

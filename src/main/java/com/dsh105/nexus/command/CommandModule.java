@@ -19,6 +19,7 @@ package com.dsh105.nexus.command;
 
 import com.dsh105.nexus.Nexus;
 import org.pircbotx.Channel;
+import org.pircbotx.Colors;
 import org.pircbotx.User;
 
 public abstract class CommandModule implements ICommandModule {
@@ -33,18 +34,15 @@ public abstract class CommandModule implements ICommandModule {
         if (Nexus.getInstance().isAdmin(sender)) {
             return true;
         }
-        if (channel == null) {
-            return hasPermission(sender);
+        if (adminOnly()) {
+            Nexus.getInstance().send(sender.getNick(), Colors.RED + "I'm sorry, Dave. I'm afraid I can't do that.");
+            return false;
         }
-        return hasPermission(channel, sender);
-    }
-
-    public boolean hasPermission(Channel channel, User sender) {
-        return hasPermission(sender);
-    }
-
-    public boolean hasPermission(User sender) {
         return true;
+    }
+
+    public boolean adminOnly() {
+        return false;
     }
 
     public Command getCommandInfo() {

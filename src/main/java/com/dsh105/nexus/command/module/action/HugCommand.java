@@ -15,16 +15,14 @@
  * along with Nexus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.dsh105.nexus.command;
+package com.dsh105.nexus.command.module.action;
 
-import org.pircbotx.Channel;
-import org.pircbotx.User;
+import com.dsh105.nexus.command.Command;
 
-public interface ICommandModule {
-
-    public String getCommand();
-
-    public abstract boolean onCommand(CommandPerformEvent event);
-
-    public Command getCommandInfo();
+@Command(command = "hug", needsChannel = false, help = "Hugs a user",
+        extendedHelp = {"{b}{p}{c}{/b} <user> - Hug someone!"})
+public class HugCommand extends AbstractActionCommand {
+    public HugCommand() {
+        this.setVerb("hug");
+    }
 }
