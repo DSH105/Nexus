@@ -6,6 +6,6 @@ import com.dsh105.nexus.command.Command;
         extendedHelp = {"{b}{p}{c}{/b} <user> - kiss someone!"})
 public class KissCommand extends AbstractActionCommand {
     public KissCommand() {
-        this.setVerb("kiss");
+        this.setVerb("kisse");
     }
 }
