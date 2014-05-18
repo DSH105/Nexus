@@ -41,6 +41,6 @@ public class TalkCommand extends CommandModule {
 
     @Override
     public boolean adminOnly() {
-        return super.adminOnly();
+        return true;
     }
 }
