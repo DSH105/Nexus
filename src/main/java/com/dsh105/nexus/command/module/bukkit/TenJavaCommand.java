@@ -4,22 +4,16 @@ import com.dsh105.nexus.command.Command;
 import com.dsh105.nexus.command.CommandModule;
 import com.dsh105.nexus.command.CommandPerformEvent;
 import com.dsh105.nexus.exception.bukkit.TenJavaDataLookupException;
-import com.dsh105.nexus.exception.general.TimeDataLookupException;
-import com.dsh105.nexus.util.StringUtil;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
-import org.json.JSONArray;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 import org.ocpsoft.prettytime.PrettyTime;
 import org.pircbotx.Colors;
 
 import java.util.Date;
 
-@Command(command = "tenjava", aliases = {"tj"}, needsChannel = false, help = "Get tenjava points",
-        extendedHelp = {"{b}{p}{c}{/b} - View tenjava donated points"})
+@Command(command = "tenjava", aliases = {"tj", "ten.java"}, needsChannel = false, help = "Get points donated to ten.java",
+        extendedHelp = {"{b}{p}{c}{/b} - View the amount of points donated to ten.java"})
 
 public class TenJavaCommand extends CommandModule {
 
@@ -27,7 +21,6 @@ public class TenJavaCommand extends CommandModule {
 
     @Override
     public boolean onCommand(CommandPerformEvent event) {
-
             try {
                 HttpResponse<JsonNode> jsonResponse = Unirest.get(TEN_JAVA_URL)
                         .header("accept", "application/json")
@@ -37,10 +30,7 @@ public class TenJavaCommand extends CommandModule {
                 PrettyTime pt = new PrettyTime();
                 time = time * 1000;
 
-                event.respond("Current points donated: " + Colors.BOLD + points + " ($" + points * 0.05 + " USD)"+ Colors.NORMAL + ". Last updated: " + Colors.BOLD + pt.format(new Date(time)));
-
-
-
+                event.respondWithPing("Current points donated to ten.java: {0} (${1} USD)" + Colors.NORMAL + ". Last updated: {2}", String.valueOf(points), String.valueOf(points * 0.05), pt.format(new Date(time)));
             } catch (Exception e) {
                 throw new TenJavaDataLookupException("An error occurred in the lookup process", e);
             }
