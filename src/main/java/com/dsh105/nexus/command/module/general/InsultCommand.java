@@ -25,6 +25,7 @@ public class InsultCommand extends CommandModule {
             if (event.getArgs().length < 1) {
                 event.respond(finalInsult);
             }else {
+
                 event.respond(event.getArgs()[0] + ": " + finalInsult);
             }
         } catch (Exception e) {

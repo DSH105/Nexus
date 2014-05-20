@@ -18,7 +18,7 @@ import org.pircbotx.Colors;
 
 import java.util.Date;
 
-@Command(command = "tenjava", aliases = {"tj", "ten.java"}, needsChannel = false, help = "Get ten.java points",
+@Command(command = "tenjava", aliases = {"tj", "ten.java"}, needsChannel = false, help = "Lists ten.java points",
         extendedHelp = {"{b}{p}{c}{/b} - View ten.java donated points"})
 
 public class TenJavaCommand extends CommandModule {
