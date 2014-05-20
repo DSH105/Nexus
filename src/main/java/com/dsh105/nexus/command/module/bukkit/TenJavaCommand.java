@@ -13,7 +13,10 @@ import org.json.JSONArray;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.ocpsoft.prettytime.PrettyTime;
 import org.pircbotx.Colors;
+
+import java.util.Date;
 
 @Command(command = "tenjava", aliases = {"tj"}, needsChannel = false, help = "Get tenjava points",
         extendedHelp = {"{b}{p}{c}{/b} - View tenjava donated points"})
@@ -30,7 +33,11 @@ public class TenJavaCommand extends CommandModule {
                         .header("accept", "application/json")
                         .asJson();
                 int points = jsonResponse.getBody().getObject().getInt("points");
-                event.respond("Current points donated: " + Colors.BOLD + points);
+                long time = jsonResponse.getBody().getObject().getLong("last_update");
+                PrettyTime pt = new PrettyTime();
+                time = time * 1000;
+
+                event.respond("Current points donated: " + Colors.BOLD + points + Colors.NORMAL + ". Last updated: " + Colors.BOLD + pt.format(new Date(time)));
 
 
 
