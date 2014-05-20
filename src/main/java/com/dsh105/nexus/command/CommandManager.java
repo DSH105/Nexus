@@ -24,6 +24,7 @@ import com.dsh105.nexus.exception.github.GitHubRateLimitExceededException;
 import com.dsh105.nexus.hook.github.GitHub;
 import com.dsh105.nexus.util.StringUtil;
 import org.pircbotx.Channel;
+import org.pircbotx.Colors;
 import org.pircbotx.User;
 import org.reflections.Reflections;
 
@@ -117,7 +118,7 @@ public class CommandManager {
     }
 
     public boolean onCommand(Channel channel, User sender, String content) {
-        String[] split = content.substring(content.contains("\\") ? Nexus.getInstance().getConfig().getCommandPrefix().length() : 0).replaceAll("\\s+", " ").split(" ");
+        String[] split = Colors.removeFormattingAndColors(content).substring(content.contains("\\") ? Nexus.getInstance().getConfig().getCommandPrefix().length() : 0).replaceAll("\\s+", " ").split(" ");
         return onCommand(channel, sender, split[0].toLowerCase(), StringUtil.splitArgs(1, split, " "));
     }
 
