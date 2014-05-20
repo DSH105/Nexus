@@ -175,7 +175,7 @@ public class RemindCommand extends CommandModule {
         private String from;
         private String reminder;
 
-        public Reminder(String channel, String userToRemind, String from, String reminder) {
+        public Reminder(String channelName, String userToRemind, String from, String reminder) {
             this.channelName = channelName;
             this.userToRemind = userToRemind;
             this.from = from == null ? userToRemind : from;
