@@ -25,7 +25,7 @@ public class InsultCommand extends CommandModule {
             if (event.getArgs().length < 1) {
                 event.respond(finalInsult);
             }else {
-                String toInsult = event.getArgs()[0].equalsIgnoreCase("Nexus") ? event.getSender().getNick() : event.getArgs()[0];
+                String toInsult = event.getArgs()[0].toLowerCase().contains("nexus") ? event.getSender().getNick() : event.getArgs()[0];
                 event.respond(toInsult + ": " + finalInsult);
             }
         } catch (Exception e) {
