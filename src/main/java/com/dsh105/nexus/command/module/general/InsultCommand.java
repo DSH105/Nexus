@@ -25,7 +25,8 @@ public class InsultCommand extends CommandModule {
             if (event.getArgs().length < 1) {
                 event.respond(finalInsult);
             }else {
-                event.respond(event.getArgs()[0] + ": " + finalInsult);
+                String toInsult = event.getArgs()[0].equalsIgnoreCase("Nexus") ? event.getSender().getNick() : event.getArgs()[0];
+                event.respond(toInsult + ": " + finalInsult);
             }
         } catch (Exception e) {
             throw new InsultLookupException("An error occurred while trying to retrieve the information", e);
