@@ -281,7 +281,7 @@ public class GitHub {
     public void mergePullRequest(GitHubPullRequest pullRequest, String userLogin) {
         Nexus.LOGGER.info("Attempting to merge pull request (" + pullRequest.getRepo().getFullName() + " #" + pullRequest.getNumber() + ") on behalf of " + userLogin);
         try {
-            HttpResponse<JsonNode> response = Unirest.put(pullRequest.getApiUrl() + "/merge").header("Authorization", "token " + getAccessToken(userLogin, true)).asJson();
+            HttpResponse<JsonNode> response = Unirest.put(pullRequest.getApiUrl() + "/merge").header("Authorization", "token " + getAccessToken(userLogin, true)).body("{\"commit_message\":\"" + pullRequest.getTitle() + "\"}").asJson();
             JSONObject responseObject = response.getBody().getObject();
             String message = responseObject.getString("message");
             boolean mergeStatus = false;
