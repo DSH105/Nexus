@@ -217,7 +217,8 @@ public class GitHub {
 
     protected GitHubUser getReporterOf(GitHubIssue issue, String userLogin) {
         try {
-            HttpResponse<JsonNode> response = makeRequest(getIssuesUrl(issue.getRepo().getFullName(), issue.getNumber()), userLogin);
+            String issueUrl = issue instanceof GitHubPullRequest ? getPullsUrl(issue.getRepo().getFullName(), issue.getNumber()) : getIssuesUrl(issue.getRepo().getFullName(), issue.getNumber());
+            HttpResponse<JsonNode> response = makeRequest(issueUrl, userLogin);
             return getUser(response.getBody().getObject().getJSONObject("user").getString("login"), userLogin);
         } catch (UnirestException e) {
             if (e.getCause() instanceof FileNotFoundException) {
