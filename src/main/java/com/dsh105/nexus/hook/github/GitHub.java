@@ -250,10 +250,11 @@ public class GitHub {
             } catch (JSONException e) {
             }
             try {
-                if (checkForPullRequest) {
-                    issue = Nexus.JSON.read(makeRequest(getPullsUrl(repo.getFullName(), id), userLogin).getRawBody(), GitHubPullRequest.class);
-                } else {
+                if (!checkForPullRequest) {
                     issue = Nexus.JSON.read(input, GitHubIssue.class);
+                }
+                if (issue == null || issue.getNumber() <= 0) {
+                    issue = Nexus.JSON.read(makeRequest(getPullsUrl(repo.getFullName(), id), userLogin).getRawBody(), GitHubPullRequest.class);
                 }
             } catch (JSONException e) {
             }
