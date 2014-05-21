@@ -37,7 +37,7 @@ public class TenJavaCommand extends CommandModule {
                 PrettyTime pt = new PrettyTime();
                 time = time * 1000;
 
-                event.respond("Current points donated: " + Colors.BOLD + points + " ($" + points * 0.05 + " USD)"+ Colors.NORMAL + ". Last updated: " + Colors.BOLD + pt.format(new Date(time)));
+                event.respond("Current points donated: " + Colors.BOLD + points + " ($" + points * 0.05 + " USD)"+ Colors.NORMAL + ". Last updated: " + Colors.BOLD + pt.format(new Date(time)) + Colors.BOLD + " http://tenjava.com/points");
 
 
 
