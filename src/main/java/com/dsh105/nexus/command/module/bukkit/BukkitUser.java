@@ -4,7 +4,6 @@ import com.dsh105.nexus.command.Command;
 import com.dsh105.nexus.command.CommandModule;
 import com.dsh105.nexus.command.CommandPerformEvent;
 import com.dsh105.nexus.exception.bukkit.BukkitUserException;
-import com.dsh105.nexus.exception.currency.DogeCoinException;
 import com.dsh105.nexus.util.shorten.URLShortener;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -24,7 +23,6 @@ import java.util.Date;
         needsChannel = false,
         help = "Bukkit user profile info",
         extendedHelp = {"{b}{p}{c}{/b} <user> - Shows a Bukkit user's profile information"})
-
 public class BukkitUser extends CommandModule {
     @Override
     public boolean onCommand(CommandPerformEvent event) {

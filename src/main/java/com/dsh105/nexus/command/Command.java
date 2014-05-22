@@ -35,4 +35,6 @@ public @interface Command {
     public String help();
 
     public String[] helpGroups() default "all";
+
+    public boolean disabled() default false;
 }
