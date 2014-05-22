@@ -460,25 +460,27 @@ public class GitHub {
 
         @Override
         public void run() {
-            Nexus.LOGGER.info("Updating GitHub repo storage...");
             HashMap<String, GitHubRepo> fullNameToRepoMapCopy = new HashMap<>(repositories);
             ArrayList<GitHubIssue> issuesCopy = new ArrayList<>(issues);
-            for (Map.Entry<String, GitHubRepo> entry : fullNameToRepoMapCopy.entrySet()) {
-                long expiration = expirationDates.get(entry.getValue());
-                if (expiration > 0) {
-                    repositories.remove(entry.getKey());
-                    expirationDates.remove(entry.getValue());
-                    // Only keep them in memory for a certain period of time
-                    if (new Date().before(new Date(expiration))) {
-                        GitHubRepo repo = getRepo(entry.getKey(), entry.getValue().userLoginForAccessToken);
-                        cache(repo);
+            if (!fullNameToRepoMapCopy.isEmpty() || !issuesCopy.isEmpty()) {
+                Nexus.LOGGER.info("Updating GitHub repo storage...");
+                for (Map.Entry<String, GitHubRepo> entry : fullNameToRepoMapCopy.entrySet()) {
+                    long expiration = expirationDates.get(entry.getValue());
+                    if (expiration > 0) {
+                        repositories.remove(entry.getKey());
+                        expirationDates.remove(entry.getValue());
+                        // Only keep them in memory for a certain period of time
+                        if (new Date().before(new Date(expiration))) {
+                            GitHubRepo repo = getRepo(entry.getKey(), entry.getValue().userLoginForAccessToken);
+                            cache(repo);
+                        }
                     }
                 }
-            }
 
-            for (GitHubIssue issue : issuesCopy) {
-                issues.remove(issue);
-                cache(getIssue(issue.getRepo(), issue.getNumber(), issue.repo.userLoginForAccessToken));
+                for (GitHubIssue issue : issuesCopy) {
+                    issues.remove(issue);
+                    cache(getIssue(issue.getRepo(), issue.getNumber(), issue.repo.userLoginForAccessToken));
+                }
             }
         }
     }
