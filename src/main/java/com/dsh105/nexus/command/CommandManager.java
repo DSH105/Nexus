@@ -39,6 +39,10 @@ public class CommandManager {
         Reflections reflections = new Reflections("com.dsh105.nexus.command.module");
         Set<Class<? extends CommandModule>> cmds = reflections.getSubTypesOf(CommandModule.class);
         for (Class<? extends CommandModule> cmd : cmds) {
+            if (getClass().getAnnotation(Command.class) == null) {
+                Nexus.LOGGER.severe("Skipped command (Missing @Command annotation): " + cmd.getCanonicalName());
+                continue;
+            }
             try {
                 this.register(cmd.newInstance());
             } catch (Exception e) {
@@ -139,7 +143,7 @@ public class CommandManager {
                     return true;
                 }
                 if (!module.onCommand(event)) {
-                    event.errorWithPing("Use " + Nexus.getInstance().getConfig().getCommandPrefix() + "{0} for help.", Nexus.getInstance().getConfig().getCommandPrefix() + "help " + event.getCommand());
+                    event.errorWithPing("Use " + Nexus.getInstance().getConfig().getCommandPrefix() + "{0} for help (" + module.getCommandInfo().help() + ").", Nexus.getInstance().getConfig().getCommandPrefix() + "help " + event.getCommand());
                     return true;
                     /*Suggestion suggestion = new Suggestion(event.getArgs()[1], module.getCommandInfo().subCommands());
                     if (suggestion.getSuggestions() != null && suggestion.getSuggestions().length() > 0) {
