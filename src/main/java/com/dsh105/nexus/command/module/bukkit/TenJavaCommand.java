@@ -16,6 +16,7 @@ import org.jsoup.nodes.Element;
 import org.ocpsoft.prettytime.PrettyTime;
 import org.pircbotx.Colors;
 
+import java.text.DecimalFormat;
 import java.util.Date;
 
 @Command(command = "tenjava", aliases = {"tj"}, needsChannel = false, help = "Get tenjava points",
@@ -24,6 +25,7 @@ import java.util.Date;
 public class TenJavaCommand extends CommandModule {
 
     public static final String TEN_JAVA_URL = "http://tenjava.com/assets/data.json";
+    private final DecimalFormat df = new DecimalFormat("0.00");
 
     @Override
     public boolean onCommand(CommandPerformEvent event) {
@@ -37,7 +39,7 @@ public class TenJavaCommand extends CommandModule {
                 PrettyTime pt = new PrettyTime();
                 time = time * 1000;
 
-                event.respond("Current points donated: " + Colors.BOLD + points + " ($" + points * 0.05 + " USD)"+ Colors.NORMAL + ". Last updated: " + Colors.BOLD + pt.format(new Date(time)) + Colors.BOLD + " http://tenjava.com/points");
+                event.respond("Current points donated: " + Colors.BOLD + points + " ($" + df.format(points * 0.05) + " USD)"+ Colors.NORMAL + ". Last updated: " + Colors.BOLD + pt.format(new Date(time)) + Colors.BOLD + " http://tenjava.com/points");
 
 
 
