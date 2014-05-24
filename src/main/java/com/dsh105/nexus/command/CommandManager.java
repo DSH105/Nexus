@@ -73,6 +73,10 @@ public class CommandManager {
             Nexus.LOGGER.warning("Failed to register command: " + module.getClass().getSimpleName() + ". Missing @Command annotation!");
             return;
         }
+        if (module.getCommandInfo().disabled()) {
+            Nexus.LOGGER.warning("Command " + module.getClass().getSimpleName() + " is disabled!");
+            return;
+        }
         this.modules.add(module);
     }
 
