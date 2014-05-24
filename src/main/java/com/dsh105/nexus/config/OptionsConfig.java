@@ -50,6 +50,7 @@ public class OptionsConfig extends YamlConfig {
         this.options.put("user-agent", "Nexus");
         //this.options.put("trello-key", "");
         this.options.put("random-org-key", "");
+        this.options.put("wolfram-key", "");
         if (this.getAdminChannel() != null && !this.getAdminChannel().isEmpty()) {
             channels.add(this.getAdminChannel());
         }
@@ -162,5 +163,9 @@ public class OptionsConfig extends YamlConfig {
 
     public String getRandomOrgApiKey() {
         return get("random-org-key", "");
+    }
+
+    public String getWolframAlphaKey() {
+        return get("wolfram-key", "");
     }
 }
