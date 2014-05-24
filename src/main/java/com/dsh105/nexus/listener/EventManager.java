@@ -20,6 +20,7 @@ package com.dsh105.nexus.listener;
 import com.dsh105.nexus.Nexus;
 import com.dsh105.nexus.util.StringUtil;
 import org.pircbotx.Channel;
+import org.pircbotx.Colors;
 import org.pircbotx.User;
 import org.pircbotx.hooks.ListenerAdapter;
 import org.pircbotx.hooks.events.*;
@@ -68,7 +69,9 @@ public class EventManager extends ListenerAdapter<Nexus> {
     public void onPrivateMessage(PrivateMessageEvent<Nexus> event) throws Exception {
         Nexus.LOGGER.info("Received PM from " + event.getUser().getNick() + ": " + event.getMessage());
         if (!Nexus.getInstance().getCommandManager().onCommand(null, event.getUser(), event.getMessage())) {
-            Nexus.getInstance().getResponseManager().trigger(null, event.getUser(), event.getMessage());
+            if (!Nexus.getInstance().getResponseManager().trigger(null, event.getUser(), event.getMessage())) {
+                event.respond(Colors.RED + "Use " + Colors.BOLD + Nexus.getInstance().getConfig().getCommandPrefix() + "help " + Colors.BOLD + " for a command list");
+            }
         }
     }
 
