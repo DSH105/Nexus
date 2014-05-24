@@ -153,29 +153,32 @@ public class CommandManager {
         try {
             CommandModule module = this.getModuleFor(event.getCommand());
 
-            if (!event.isInPrivateMessage() && !Arrays.asList(module.getCommandInfo().helpGroups()).contains("admin")) {
-                if (Nexus.getInstance().getChannelConfiguration().getChannel(event.getChannel().getName()).isDisabled(module.getCommand())) {
-                    return true;
+            if (module != null) {
+                if (!event.isInPrivateMessage() && !Arrays.asList(module.getCommandInfo().helpGroups()).contains("admin")) {
+                    if (Nexus.getInstance().getChannelConfiguration().getChannel(event.getChannel().getName()).isDisabled(module.getCommand())) {
+                        return true;
+                    }
                 }
-            }
-
-            if (module != null && module.checkPerm(event.getChannel(), event.getSender())) {
-                if (module.getCommandInfo().needsChannel() && event.isInPrivateMessage()) {
-                    event.respond("You cannot perform {0} here.", event.getCommandPrefix() + module.getCommand() + " " + StringUtil.combineSplit(0, event.getArgs(), " "));
-                    return true;
-                }
-                if (!module.onCommand(event)) {
-                    event.errorWithPing("Use " + Nexus.getInstance().getConfig().getCommandPrefix() + "{0} for help (" + module.getCommandInfo().help() + ").", Nexus.getInstance().getConfig().getCommandPrefix() + "help " + event.getCommand());
-                    return true;
+                
+                if (module.checkPerm(event.getChannel(), event.getSender())) {
+                    if (module.getCommandInfo().needsChannel() && event.isInPrivateMessage()) {
+                        event.respond("You cannot perform {0} here.", event.getCommandPrefix() + module.getCommand() + " " + StringUtil.combineSplit(0, event.getArgs(), " "));
+                        return true;
+                    }
+                    if (!module.onCommand(event)) {
+                        event.errorWithPing("Use " + Nexus.getInstance().getConfig().getCommandPrefix() + "{0} for help (" + module.getCommandInfo().help() + ").", Nexus.getInstance().getConfig().getCommandPrefix() + "help " + event.getCommand());
+                        return true;
                     /*Suggestion suggestion = new Suggestion(event.getArgs()[1], module.getCommandInfo().subCommands());
                     if (suggestion.getSuggestions() != null && suggestion.getSuggestions().length() > 0) {
                         event.respondWithPing("Sub command not found. Did you mean: " + Colors.BOLD + suggestion.getSuggestions());
                         return true;
                     }*/
-                } else {
-                    return true;
+                    } else {
+                        return true;
+                    }
                 }
             }
+
         } catch (Exception e) {
             if (e instanceof GitHubAPIKeyInvalidException) {
                 event.errorWithPing(e.getMessage() + " Use {0} to authenticate with GitHub through Nexus.", Nexus.getInstance().getConfig().getCommandPrefix() + "ghk");
