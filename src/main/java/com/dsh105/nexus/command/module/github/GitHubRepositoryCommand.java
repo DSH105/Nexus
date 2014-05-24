@@ -277,6 +277,7 @@ public class GitHubRepositoryCommand extends CommandModule {
                     event.errorWithPing("The GitHub repository {0} could not be found! :(", repoName + "/" + owner);
                     return true;
                 }
+                event.respondWithPing("That repository is private. Please check your private messages for repository information.");
                 sendPm = true;
             }
             ArrayList<String> activeCollaborators = new ArrayList<>();
