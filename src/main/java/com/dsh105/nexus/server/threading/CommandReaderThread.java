@@ -28,7 +28,7 @@ public class CommandReaderThread extends Thread {
                 String line;
                 PrintWriter out = new PrintWriter(System.out);
 
-                while ((line = reader.readLine()) != null) {
+                while (this.nexusServer.isRunning() && (line = reader.readLine()) != null) {
                     if (this.nexusServer != null) {
                         this.nexusServer.handleConsoleCommand(line);
                     }

@@ -2,6 +2,7 @@ package com.dsh105.nexus.server;
 
 import com.dsh105.nexus.server.debug.Debugger;
 import com.dsh105.nexus.server.threading.CommandReaderThread;
+import com.dsh105.nexus.server.threading.ServerThread;
 import com.dsh105.nexus.server.threading.SleepForeverThread;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -13,7 +14,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Properties;
 
-public class NexusServer {
+public class NexusServer implements Runnable {
 
     /**
      * The Logger
@@ -45,12 +46,44 @@ public class NexusServer {
      */
     private boolean running = true;
 
+    private boolean isInterrupted = false;
+
     public NexusServer() {
         new SleepForeverThread();
     }
 
-    public void start() {
+    public void startServerThread() {
+        new ServerThread(this).start();
+    }
+
+    @Override
+    public void run() {
+        try {
+            if (this.start()) {
+                while (this.running) {
+                    this.createWebServer();
+                }
+            }
+        } catch (Throwable throwable) {
+            this.logger.error("Encountered an unexpected error", throwable);
+        } finally {
+            try {
+                this.stop();
+                this.isInterrupted = true;
+            } catch (Throwable throwable1) {
+                logger.error("Exception stopping the server", throwable1);
+            } finally {
+                System.exit(0);
+            }
+        }
+    }
+
+    protected boolean start() {
         long startTime = System.currentTimeMillis();
+
+        CommandReaderThread commandReaderThread = new CommandReaderThread(this);
+        commandReaderThread.setDaemon(true);
+        commandReaderThread.start();
 
         // The properties
         try {
@@ -89,13 +122,9 @@ public class NexusServer {
         this.logger.info("Starting NexusServer...");
         this.logger.info("Debug mode is " + (this.debugging ? "enabled" : "disabled"));
 
-        createWebServer();
-
         this.logger.info("Done (" + (System.currentTimeMillis() - startTime) + "ms)! For help, type \"help\" or \"?\"");
 
-        CommandReaderThread commandReaderThread = new CommandReaderThread(this);
-        //commandReaderThread.setDaemon(true);
-        commandReaderThread.start();
+        return true;
     }
 
     protected void createWebServer() {
@@ -110,10 +139,14 @@ public class NexusServer {
             this.webServer.start();
             this.logger.info("Started the server on port: " + port);
 
-            //this.webServer.join();
+            this.webServer.join();
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void stop() {
+        this.running = false;
     }
 
     public void shutdownSafe() {
@@ -131,6 +164,10 @@ public class NexusServer {
 
     public boolean isRunning() {
         return this.running;
+    }
+
+    public boolean isInterrupted() {
+        return this.isInterrupted;
     }
 
     public void handleConsoleCommand(final String command) {
