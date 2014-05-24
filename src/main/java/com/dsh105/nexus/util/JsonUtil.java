@@ -28,42 +28,50 @@ import java.net.URLConnection;
 
 public class JsonUtil {
 
-    public Gson gson = new Gson();
-    public JsonParser parser = new JsonParser();
+    private static Gson GSON = new Gson();
+    private static JsonParser PARSER = new JsonParser();
 
-    public <T> T read(HttpRequest request, Class<T> type) throws UnirestException {
+    public static <T> T read(HttpRequest request, Class<T> type) throws UnirestException {
         return read(request.asJson().getRawBody(), type);
     }
 
-    public <T> T read(HttpRequest request, String section, Class<T> type) throws UnirestException {
+    public static <T> T read(HttpRequest request, String section, Class<T> type) throws UnirestException {
         return read(request.asJson().getRawBody(), section, type);
     }
 
-    public <T> T read(InputStream input, Class<T> type) {
+    public static <T> T read(InputStream input, Class<T> type) {
         return read(new BufferedReader(new InputStreamReader(input)), type);
     }
 
-    public <T> T read(InputStream input, String section, Class<T> type) {
+    public static <T> T read(InputStream input, String section, Class<T> type) {
         return read(new BufferedReader(new InputStreamReader(input)), section, type);
     }
 
-    public <T> T read(URLConnection con, Class<T> type) throws IOException {
+    public static <T> T read(URLConnection con, Class<T> type) throws IOException {
         return read(con.getInputStream(), type);
     }
 
-    public <T> T read(URLConnection con, String section, Class<T> type) throws IOException {
+    public static <T> T read(URLConnection con, String section, Class<T> type) throws IOException {
         return read(con.getInputStream(), section, type);
     }
 
-    public <T> T read(Reader reader, String section, Class<T> type) {
-        return read(parser.parse(reader).getAsJsonObject().get(section), type);
+    public static <T> T read(Reader reader, String section, Class<T> type) {
+        return read(PARSER.parse(reader).getAsJsonObject().get(section), type);
     }
 
-    public <T> T read(Reader reader, Class<T> type) {
-        return gson.fromJson(reader, type);
+    public static <T> T read(Reader reader, Class<T> type) {
+        return GSON.fromJson(reader, type);
     }
 
-    public <T> T read(JsonElement reader, Class<T> type) {
-        return gson.fromJson(reader, type);
+    public static <T> T read(JsonElement reader, Class<T> type) {
+        return GSON.fromJson(reader, type);
+    }
+
+    public static Gson getGson() {
+        return GSON;
+    }
+
+    public static JsonParser getParser() {
+        return PARSER;
     }
 }

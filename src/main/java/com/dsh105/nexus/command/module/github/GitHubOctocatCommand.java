@@ -6,6 +6,7 @@ import com.dsh105.nexus.command.CommandModule;
 import com.dsh105.nexus.command.CommandPerformEvent;
 import com.dsh105.nexus.exception.general.GenericUrlConnectionException;
 import com.dsh105.nexus.hook.github.Octocat;
+import com.dsh105.nexus.util.JsonUtil;
 import com.dsh105.nexus.util.StringUtil;
 import com.dsh105.nexus.util.shorten.URLShortener;
 import com.mashape.unirest.http.Unirest;
@@ -65,7 +66,7 @@ public class GitHubOctocatCommand extends CommandModule {
     private void load() throws UnirestException {
         octocats.clear();
 
-        for (Octocat cat : Nexus.JSON.read(Unirest.get(URL), Octocat[].class)) {
+        for (Octocat cat : JsonUtil.read(Unirest.get(URL), Octocat[].class)) {
             octocats.put(cat.getNumber(), cat);
         }
     }

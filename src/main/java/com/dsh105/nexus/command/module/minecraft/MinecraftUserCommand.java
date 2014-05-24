@@ -5,6 +5,7 @@ import com.dsh105.nexus.command.Command;
 import com.dsh105.nexus.command.CommandModule;
 import com.dsh105.nexus.command.CommandPerformEvent;
 import com.dsh105.nexus.exception.general.GenericUrlConnectionException;
+import com.dsh105.nexus.util.JsonUtil;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
@@ -56,7 +57,7 @@ public class MinecraftUserCommand extends CommandModule {
 
     private UserProfile[] getProfiles(String username) throws UnirestException {
         HttpResponse<JsonNode> response = Unirest.post("https://api.mojang.com/profiles/page/1").header("content-type", "application/json").body("[{\"name\":\"" + username + "\", \"agent\":\"Minecraft\"}]").asJson();
-        return Nexus.JSON.read(response.getRawBody(), "profiles", UserProfile[].class);
+        return JsonUtil.read(response.getRawBody(), "profiles", UserProfile[].class);
     }
 
     private class UserProfile {

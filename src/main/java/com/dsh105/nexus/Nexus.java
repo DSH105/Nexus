@@ -44,7 +44,6 @@ public class Nexus extends PircBotX {
 
     private static Nexus INSTANCE;
     public static Logger LOGGER = Logger.getLogger(Nexus.class.getName());
-    public static JsonUtil JSON = new JsonUtil();
     public static PrettyTime PRETTY_TIME = new PrettyTime();
     public static String CONFIG_FILE_NAME = "options.yml";
     private OptionsConfig config;

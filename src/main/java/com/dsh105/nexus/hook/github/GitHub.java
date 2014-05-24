@@ -21,6 +21,7 @@ import com.dsh105.nexus.Nexus;
 import com.dsh105.nexus.exception.github.*;
 import com.dsh105.nexus.hook.github.gist.Gist;
 import com.dsh105.nexus.hook.github.gist.GistFile;
+import com.dsh105.nexus.util.JsonUtil;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
@@ -123,7 +124,7 @@ public class GitHub {
 
     private GitHubRateLimit getApiRateLimit(String accessToken) {
         try {
-            return Nexus.JSON.read(Unirest.get(RATE_LIMIT_API_URL + (accessToken.startsWith("?access_token=") ? accessToken : (accessToken.isEmpty() ? "" : "?access_token=" + accessToken))), "rate", GitHubRateLimit.class);
+            return JsonUtil.read(Unirest.get(RATE_LIMIT_API_URL + (accessToken.startsWith("?access_token=") ? accessToken : (accessToken.isEmpty() ? "" : "?access_token=" + accessToken))), "rate", GitHubRateLimit.class);
         } catch (UnirestException e) {
             throw new GitHubException("Failed to connect to GitHub API!", e);
         }
@@ -168,7 +169,7 @@ public class GitHub {
         try {
             HttpResponse<JsonNode> response = makeRequest(getRepoApiUrl(name), userLogin);
             InputStream input = response.getRawBody();
-            GitHubRepo repo = Nexus.JSON.read(input, GitHubRepo.class);
+            GitHubRepo repo = JsonUtil.read(input, GitHubRepo.class);
             if (repo == null || repo.getUrl() == null) {
                 throw new GitHubNotFoundException("Failed to locate GitHub Repo: " + name);
             }
@@ -206,7 +207,7 @@ public class GitHub {
     public GitHubUser getUser(String ghUserLogin, String userLogin) {
         Nexus.LOGGER.info("Requesting GitHub user (" + ghUserLogin + ") on behalf of " + userLogin);
         try {
-            return Nexus.JSON.read(makeRequest(getUserUrl(ghUserLogin), userLogin).getRawBody(), GitHubUser.class);
+            return JsonUtil.read(makeRequest(getUserUrl(ghUserLogin), userLogin).getRawBody(), GitHubUser.class);
         } catch (UnirestException e) {
             if (e.getCause() instanceof FileNotFoundException) {
                 throw new GitHubUserNotFoundException("Failed to locate GitHub User: " + ghUserLogin, e);
@@ -252,10 +253,10 @@ public class GitHub {
             }
             try {
                 if (!checkForPullRequest) {
-                    issue = Nexus.JSON.read(input, GitHubIssue.class);
+                    issue = JsonUtil.read(input, GitHubIssue.class);
                 }
                 if (issue == null || issue.getNumber() <= 0) {
-                    issue = Nexus.JSON.read(makeRequest(getPullsUrl(repo.getFullName(), id), userLogin).getRawBody(), GitHubPullRequest.class);
+                    issue = JsonUtil.read(makeRequest(getPullsUrl(repo.getFullName(), id), userLogin).getRawBody(), GitHubPullRequest.class);
                 }
             } catch (JSONException e) {
             }
@@ -308,7 +309,7 @@ public class GitHub {
 
     protected GitHubUser[] getCollaborators(String name, String userLogin) {
         try {
-            return Nexus.JSON.read(makeRequest(getCollaboratorsUrl(name), userLogin, true).getRawBody(), GitHubUser[].class);
+            return JsonUtil.read(makeRequest(getCollaboratorsUrl(name), userLogin, true).getRawBody(), GitHubUser[].class);
         } catch (UnirestException e) {
             if (e.getCause() instanceof FileNotFoundException) {
                 throw new GitHubNotFoundException("Failed to locate GitHub Repo: " + name, e);
@@ -324,7 +325,7 @@ public class GitHub {
     protected GitHubUser[] getContributors(String name, String userLogin) {
         try {
             // Anything using this method should already have checked API key validity
-            return Nexus.JSON.read(makeRequest(getContributorsUrl(name), userLogin, true).getRawBody(), GitHubUser[].class);
+            return JsonUtil.read(makeRequest(getContributorsUrl(name), userLogin, true).getRawBody(), GitHubUser[].class);
         } catch (UnirestException e) {
             if (e.getCause() instanceof FileNotFoundException) {
                 throw new GitHubNotFoundException("Failed to locate GitHub Repo: " + name, e);
@@ -365,7 +366,7 @@ public class GitHub {
     public GitHubHook[] getHooks(String name, String userLogin) {
         Nexus.LOGGER.info("Requesting GitHub hooks for " + name + " on behalf of " + userLogin);
         try {
-            return Nexus.JSON.read(makeRequest(getHooksUrl(name), userLogin, false, true).getRawBody(), GitHubHook[].class);
+            return JsonUtil.read(makeRequest(getHooksUrl(name), userLogin, false, true).getRawBody(), GitHubHook[].class);
         } catch (UnirestException e) {
             if (e.getCause() instanceof FileNotFoundException) {
                 throw new GitHubNotFoundException("Failed to locate GitHub Repo: " + name, e);

@@ -6,6 +6,7 @@ import com.dsh105.nexus.command.CommandModule;
 import com.dsh105.nexus.command.CommandPerformEvent;
 import com.dsh105.nexus.exception.general.GenericUrlConnectionException;
 import com.dsh105.nexus.hook.github.GitHubStatus;
+import com.dsh105.nexus.util.JsonUtil;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import org.pircbotx.Colors;
@@ -43,7 +44,7 @@ public class GitHubStatusCommand extends CommandModule {
     private void load() throws UnirestException {
         statusMessages.clear();
 
-        for (GitHubStatus statusMessage : Nexus.JSON.read(Unirest.get(URL), GitHubStatus[].class)) {
+        for (GitHubStatus statusMessage : JsonUtil.read(Unirest.get(URL), GitHubStatus[].class)) {
             statusMessages.add(statusMessage);
         }
     }

@@ -19,6 +19,7 @@ package com.dsh105.nexus.util.shorten;
 
 import com.dsh105.nexus.Nexus;
 import com.dsh105.nexus.exception.general.GenericUrlConnectionException;
+import com.dsh105.nexus.util.JsonUtil;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
@@ -32,7 +33,7 @@ public class URLShortener {
             HttpResponse<JsonNode> response = Unirest.post("https://www.googleapis.com/urlshortener/v1/url")
                     .header("content-type", "application/json")
                     .body("{\"longUrl\": \"" + longUrl + "\"}").asJson();
-            return Nexus.JSON.read(response.getRawBody(), ShortUrl.class).getId();
+            return JsonUtil.read(response.getRawBody(), ShortUrl.class).getId();
         } catch (UnirestException e) {
             throw new GenericUrlConnectionException("Failed to shorten URL: " + longUrl, e);
         }
