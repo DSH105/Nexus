@@ -1,5 +1,6 @@
 package com.dsh105.nexus.server;
 
+import com.dsh105.nexus.server.debug.Debugger;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.jetty.server.Server;
@@ -48,7 +49,9 @@ public class NexusServer {
             e.printStackTrace();
         }
 
-        debugging = this.serverProperties.getProperty("debug").equalsIgnoreCase("true");
+        debugging = this.serverProperties.getProperty("debug.enabled").equalsIgnoreCase("true");
+        int debugLevel = Integer.parseInt(this.serverProperties.getProperty("debug.level"));
+        Debugger.getInstance().setEnabled(debugging);
 
         this.logger.info("Starting NexusServer");
         this.logger.info("Debug mode is " + (this.debugging ? "enabled" : "disabled"));
@@ -57,6 +60,14 @@ public class NexusServer {
     }
 
     protected void createWebServer() {
+        int port = Integer.parseInt(this.serverProperties.getProperty("port"));
+        String webApp = this.serverProperties.getProperty("webapp.path");
+        String webAppContextPath = this.serverProperties.getProperty("webapp.context");
+
+        Debugger.getInstance().log(1, "Loading webapp from {0} at url {1}", webApp, webAppContextPath);
+
+        this.webServer = new Server(port);
+
 
     }
 }
