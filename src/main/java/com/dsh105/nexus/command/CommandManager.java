@@ -28,6 +28,7 @@ import org.pircbotx.Colors;
 import org.pircbotx.User;
 import org.reflections.Reflections;
 
+import java.lang.annotation.Annotation;
 import java.util.*;
 
 public class CommandManager {
@@ -40,6 +41,10 @@ public class CommandManager {
         Set<Class<? extends CommandModule>> cmds = reflections.getSubTypesOf(CommandModule.class);
         for (Class<? extends CommandModule> cmd : cmds) {
             try {
+                if (cmd.getAnnotation(Exclude.class) != null) {
+                    // skip excluded commands
+                    continue;
+                }
                 this.register(cmd.newInstance());
             } catch (Exception e) {
                 e.printStackTrace();

@@ -3,12 +3,14 @@ package com.dsh105.nexus.command.module.action;
 import com.dsh105.nexus.Nexus;
 import com.dsh105.nexus.command.CommandModule;
 import com.dsh105.nexus.command.CommandPerformEvent;
+import com.dsh105.nexus.command.Exclude;
 import com.dsh105.nexus.exception.general.InvalidInputException;
 import com.dsh105.nexus.util.StringUtil;
 import org.apache.commons.lang3.Validate;
 
 import java.util.Arrays;
 
+@Exclude
 public abstract class AbstractActionCommand extends CommandModule {
 
     private boolean override;
