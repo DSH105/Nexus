@@ -34,6 +34,16 @@ public class HelpCommand extends CommandModule {
         if (event.getArgs().length == 1) {
             CommandModule module = Nexus.getInstance().getCommandManager().matchModule(event.getArgs()[0]);
             if (module == null) {
+                ArrayList<CommandModule> groupMatch = Nexus.getInstance().getCommandManager().matchGroup(event.getArgs()[0]);
+                if (groupMatch != null && !groupMatch.isEmpty()) {
+                    if (!event.isInPrivateMessage()) {
+                        event.respondWithPing("Check your private messages for help information.");
+                    }
+                    for (CommandModule groupModule : groupMatch) {
+                        event.respond(getHelpInfoFor(event, groupModule), true);
+                    }
+                    return true;
+                }
                 event.errorWithPing("Could not match {0} to a command.", event.getArgs()[0]);
                 return true;
             }
@@ -47,16 +57,17 @@ public class HelpCommand extends CommandModule {
             }
             return true;
         }
+
+
         if (!event.isInPrivateMessage()) {
             event.respondWithPing("Check your private messages for help information.");
         }
         for (CommandModule module : Nexus.getInstance().getCommandManager().getRegisteredCommands()) {
-            String aliases = (module.getCommandInfo().aliases().length <= 0 ? "" : " (Aliases: " + Colors.BOLD + StringUtil.combineSplit(0, module.getCommandInfo().aliases(), ", ") + Colors.NORMAL + ")");
             List<String> groups = Arrays.asList(module.getCommandInfo().helpGroups());
             if (!groups.contains("all")) {
                 continue;
             }
-            event.respond(format(event, module, "{b}{p}{c}{/b} - " + module.getCommandInfo().help()) + aliases, true);
+            event.respond(getHelpInfoFor(event, module), true);
         }
 
         for (Map.Entry<String, ArrayList<CommandModule>> entry : Nexus.getInstance().getCommandManager().getGroupsMap().entrySet()) {
@@ -73,5 +84,10 @@ public class HelpCommand extends CommandModule {
 
     private String format(CommandPerformEvent event, CommandModule module, String s) {
         return s.replace("{c}", module == null ? "" : module.getCommand()).replace("{p}", event.getCommandPrefix()).replace("{b}", Colors.BOLD).replace("{/b}", Colors.NORMAL);
+    }
+
+    private String getHelpInfoFor(CommandPerformEvent event, CommandModule module) {
+        String aliases = (module.getCommandInfo().aliases().length <= 0 ? "" : " (Aliases: " + Colors.BOLD + StringUtil.combineSplit(0, module.getCommandInfo().aliases(), ", ") + Colors.NORMAL + ")");
+        return format(event, module, "{b}{p}{c}{/b} - " + module.getCommandInfo().help()) + aliases;
     }
 }

@@ -114,6 +114,20 @@ public class CommandManager {
         return possibleMatch;
     }
 
+    public ArrayList<CommandModule> matchGroup(String commandArguments) {
+        ArrayList<CommandModule> possibleMatch = null;
+        for (Map.Entry<String, ArrayList<CommandModule>> entry : Nexus.getInstance().getCommandManager().getGroupsMap().entrySet()) {
+            if (entry.getKey().equalsIgnoreCase(commandArguments)) {
+                return entry.getValue();
+            }
+
+            if (entry.getKey().startsWith(commandArguments)) {
+                possibleMatch = entry.getValue();
+            }
+        }
+        return possibleMatch;
+    }
+
     public Collection<CommandModule> getRegisteredCommands() {
         return modules;
     }

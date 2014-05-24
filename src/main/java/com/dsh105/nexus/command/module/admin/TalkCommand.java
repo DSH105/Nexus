@@ -25,7 +25,7 @@ import com.dsh105.nexus.util.StringUtil;
 
 @Command(command = "talk",
         needsChannel = false,
-        helpGroups = "action",
+        helpGroups = "admin",
         help = "Make Nexus talk",
         extendedHelp = "Use {b}{p}{c}{/b} <chan> <msg>. Only admins may use this command.")
 public class TalkCommand extends CommandModule {
