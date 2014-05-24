@@ -271,11 +271,13 @@ public class GitHubRepositoryCommand extends CommandModule {
         }
         if (repo != null) {
             boolean sendPm = false;
-            if (!(event.isInPrivateMessage() && repo.getRepoOwner().getLogin().equals(event.getSender().getNick()))) {
-                if (repo.isPrivate()) {
-                    event.respondWithPing("That repository is private. Please check your private messages for repository information.");
-                    sendPm = true;
+            if (repo.isPrivate()) {
+                if (!repo.getRepoOwner().getLogin().equals(event.getSender().getNick())) {
+                    // Pretend it's not even there... >:)
+                    event.errorWithPing("The GitHub repository {0} could not be found! :(", repoName + "/" + owner);
+                    return true;
                 }
+                sendPm = true;
             }
             ArrayList<String> activeCollaborators = new ArrayList<>();
             ArrayList<String> contributors = new ArrayList<>();
