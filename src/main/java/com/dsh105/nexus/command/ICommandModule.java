@@ -17,9 +17,6 @@
 
 package com.dsh105.nexus.command;
 
-import org.pircbotx.Channel;
-import org.pircbotx.User;
-
 public interface ICommandModule {
 
     public String getCommand();

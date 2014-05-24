@@ -23,7 +23,6 @@ import com.dsh105.nexus.command.CommandModule;
 import com.dsh105.nexus.command.CommandPerformEvent;
 import com.dsh105.nexus.util.StringUtil;
 import com.dsh105.nexus.util.TimeUtil;
-import org.pircbotx.Channel;
 import org.pircbotx.Colors;
 import org.yaml.snakeyaml.Yaml;
 
@@ -40,7 +39,8 @@ import java.util.*;
                 "--------",
                 "Command syntax:",
                 "{b}{p}{c} <time_period> <reminder>{/b} - schedules a reminder with the given message. The {b}<reminder>{/b} message can be more than one word.",
-                "{b}{p}{c} <user_to_remind> <time_period> <reminder>{/b} - schedules a reminder with the given message for a user. The {b}<reminder>{/b} message can be more than one word."})
+                "{b}{p}{c} <user_to_remind> <time_period> <reminder>{/b} - schedules a reminder with the given message for a user. The {b}<reminder>{/b} message can be more than one word."
+        })
 public class RemindCommand extends CommandModule {
 
     private ArrayList<Reminder> reminders = new ArrayList<>();

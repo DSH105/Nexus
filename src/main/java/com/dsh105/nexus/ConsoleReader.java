@@ -24,8 +24,8 @@ import java.io.PrintWriter;
 
 public class ConsoleReader extends Thread {
 
-    private boolean running = true;
     protected jline.console.ConsoleReader reader;
+    private boolean running = true;
 
     public boolean isRunning() {
         return running;

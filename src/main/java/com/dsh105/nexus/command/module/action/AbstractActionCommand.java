@@ -19,7 +19,8 @@ public abstract class AbstractActionCommand extends CommandModule {
 
     /**
      * Sets the verb to use for the action command.
-     * @param verb The singular form of the verb. E.g. slap.
+     *
+     * @param verb            The singular form of the verb. E.g. slap.
      * @param defaultReceiver The default receiver of the action e.g. everybody
      */
     public void setVerb(String verb, String defaultReceiver) {
@@ -31,6 +32,7 @@ public abstract class AbstractActionCommand extends CommandModule {
 
     /**
      * Sets the verb to use for the action command.
+     *
      * @param verb The singular form of the verb. E.g. slap.
      */
     public void setVerb(String verb) {

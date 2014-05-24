@@ -36,7 +36,11 @@ import org.pircbotx.Colors;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 
-@Command(command = "repo", aliases = {"githubrepository", "repository", "ghrepo"}, needsChannel = false, helpGroups = "github", help = "Management of GitHub repositories.",
+@Command(command = "repo",
+        aliases = {"githubrepository", "repository", "ghrepo"},
+        needsChannel = false,
+        helpGroups = "github",
+        help = "Management of GitHub repositories.",
         extendedHelp = {
                 "The repo command contains various commands to manage GitHub repositories.",
                 "{b}{p}{c} <name>{/b} - retrieves repository information for the given repo. Uses the sender's nick as the GitHub login",
@@ -46,7 +50,8 @@ import java.util.regex.Pattern;
                 "{b}{p}{c} <...> fork{/b} - Fork a repository. Requires a GitHub API key (see {b}{p}ghkey{/b})",
                 "{b}{p}{c} <...> set <option> <args>{/b} - Sets the value of the given event option for a repository.",
                 "{b}{p}{c} <...> get <option>{/b} - Retrieves information on the given event option for a repository.",
-                "Valid options are: irc"})
+                "Valid options are: irc"
+        })
 public class GitHubRepositoryCommand extends CommandModule {
 
     @Override

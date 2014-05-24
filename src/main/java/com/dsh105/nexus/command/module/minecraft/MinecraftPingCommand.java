@@ -17,7 +17,8 @@ import java.util.regex.Pattern;
         help = "Ping the specified Minecraft server.",
         extendedHelp = {"{b}{p}{c}{/b} <Hostname> - Ping the Hostname.",
                 "{b}{p}{c}{/b} <Hostname> <Port> - Ping the Hostname on the port.",
-                "{b}{p}{c}{/b} <Hostname> <Port> <Timeout> - Ping the Hostname on the port with the chosen timeout."})
+                "{b}{p}{c}{/b} <Hostname> <Port> <Timeout> - Ping the Hostname on the port with the chosen timeout."
+        })
 public class MinecraftPingCommand extends CommandModule {
 
     private static final char COLOR_CHAR = '\u00A7';

@@ -19,7 +19,6 @@ package com.dsh105.nexus.config;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 
 public class ChannelConfig extends YamlConfig {

@@ -50,10 +50,6 @@ public enum GitHubEvent {
         this.jsonName = jsonName;
     }
 
-    public String getJsonName() {
-        return jsonName;
-    }
-
     public static GitHubEvent getByJsonName(String name) {
         for (GitHubEvent event : GitHubEvent.values()) {
             if (event.getJsonName().equalsIgnoreCase(name)) {
@@ -61,5 +57,9 @@ public enum GitHubEvent {
             }
         }
         return null;
+    }
+
+    public String getJsonName() {
+        return jsonName;
     }
 }

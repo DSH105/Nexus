@@ -18,7 +18,9 @@ import java.net.URLEncoder;
         aliases = {"ip"},
         needsChannel = false,
         help = "Looks up IP information.",
-        extendedHelp = {"{b}{p}{c}{/b} <ip> - Gives approximate location, country & ISP information."})
+        extendedHelp = {
+                "{b}{p}{c}{/b} <ip> - Gives approximate location, country & ISP information."
+        })
 public class IpInfoCommand extends CommandModule {
 
     public static final String API_URL = "http://www.telize.com/geoip/";

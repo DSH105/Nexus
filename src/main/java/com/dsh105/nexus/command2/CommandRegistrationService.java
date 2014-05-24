@@ -82,8 +82,9 @@ public class CommandRegistrationService {
         }
 
         for (Method method : clazz.getMethods()) {
-            if (!method.isAnnotationPresent(Command.class))
+            if (!method.isAnnotationPresent(Command.class)) {
                 continue;
+            }
 
             Command cmd = method.getAnnotation(Command.class);
 

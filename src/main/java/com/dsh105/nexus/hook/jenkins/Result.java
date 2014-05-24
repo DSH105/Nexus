@@ -34,6 +34,15 @@ public enum Result {
         this.colours = colours;
     }
 
+    public static Result getByIdent(String ident) {
+        for (Result r : Result.values()) {
+            if (r.getIdent().equals(ident)) {
+                return r;
+            }
+        }
+        return null;
+    }
+
     public String format(String toFormat) {
         StringBuilder builder = new StringBuilder();
         for (String s : getColours()) {
@@ -48,14 +57,5 @@ public enum Result {
 
     public String getIdent() {
         return ident;
-    }
-
-    public static Result getByIdent(String ident) {
-        for (Result r : Result.values()) {
-            if (r.getIdent().equals(ident)) {
-                return r;
-            }
-        }
-        return null;
     }
 }

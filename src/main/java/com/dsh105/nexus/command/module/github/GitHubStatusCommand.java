@@ -1,6 +1,5 @@
 package com.dsh105.nexus.command.module.github;
 
-import com.dsh105.nexus.Nexus;
 import com.dsh105.nexus.command.Command;
 import com.dsh105.nexus.command.CommandModule;
 import com.dsh105.nexus.command.CommandPerformEvent;
@@ -19,13 +18,14 @@ import java.util.List;
         needsChannel = false,
         helpGroups = "github",
         help = "View the Status of GitHub's services.",
-        extendedHelp = "{b}{p}{c}{/b} - View the Status of GitHub's services.")
+        extendedHelp = {
+                "{b}{p}{c}{/b} - View the Status of GitHub's services."
+        })
 public class GitHubStatusCommand extends CommandModule {
-
-    private List<GitHubStatus> statusMessages = new ArrayList<>();
 
     private static String URL = "https://status.github.com/api/messages.json";
     private static String MESSAGE = "GitHub Status: %s" + Colors.NORMAL + Colors.BOLD + " (%s)";
+    private List<GitHubStatus> statusMessages = new ArrayList<>();
 
     @Override
     public boolean onCommand(CommandPerformEvent event) {

@@ -19,9 +19,7 @@ package com.dsh105.nexus.listener;
 
 import com.dsh105.nexus.Nexus;
 import com.dsh105.nexus.util.StringUtil;
-import org.pircbotx.Channel;
 import org.pircbotx.Colors;
-import org.pircbotx.User;
 import org.pircbotx.hooks.ListenerAdapter;
 import org.pircbotx.hooks.events.*;
 

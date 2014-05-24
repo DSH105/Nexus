@@ -27,14 +27,16 @@ import com.dsh105.nexus.util.StringUtil;
         needsChannel = false,
         helpGroups = "admin",
         help = "Make Nexus talk",
-        extendedHelp = "Use {b}{p}{c}{/b} <chan> <msg>. Only admins may use this command.")
+        extendedHelp = {
+                "Use {b}{p}{c}{/b} <chan> <msg>. Only admins may use this command."
+        })
 public class TalkCommand extends CommandModule {
 
     @Override
     public boolean onCommand(CommandPerformEvent event) {
-        if (event.getArgs().length < 2){
-         return false;
-        }else{
+        if (event.getArgs().length < 2) {
+            return false;
+        } else {
             String message = StringUtil.combineSplit(1, event.getArgs(), " ");
             Nexus.getInstance().send(event.getArgs()[0], message);
             return true;

@@ -9,7 +9,9 @@ import java.util.UUID;
 @Command(command = "uuid",
         needsChannel = false,
         help = "Validate a UUID.",
-        extendedHelp = {"{b}{p}{c}{/b} <input> - Tests if input is a valid UUID."})
+        extendedHelp = {
+                "{b}{p}{c}{/b} <input> - Tests if input is a valid UUID."
+        })
 public class UUIDCommand extends CommandModule {
 
     @Override

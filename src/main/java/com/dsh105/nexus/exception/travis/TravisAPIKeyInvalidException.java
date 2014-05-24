@@ -17,8 +17,6 @@
 
 package com.dsh105.nexus.exception.travis;
 
-import com.dsh105.nexus.exception.github.GitHubException;
-
 public class TravisAPIKeyInvalidException extends TravisException {
 
     public TravisAPIKeyInvalidException(String s) {

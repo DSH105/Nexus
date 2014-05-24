@@ -8,7 +8,9 @@ import org.pircbotx.Channel;
 @Command(command = "chanstats",
         needsChannel = true,
         help = "Gives stats on the current channel.",
-        extendedHelp = {"{b}{p}{c}{/b} - Gives the number of users connected plus some useful metrics on voiced/opped users."})
+        extendedHelp = {
+                "{b}{p}{c}{/b} - Gives the number of users connected plus some useful metrics on voiced/opped users."
+        })
 public class ChannelStatsCommand extends CommandModule {
     @Override
     public boolean onCommand(CommandPerformEvent event) {

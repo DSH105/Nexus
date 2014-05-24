@@ -17,7 +17,6 @@
 
 package com.dsh105.nexus.hook.jenkins;
 
-import com.dsh105.nexus.Nexus;
 import com.dsh105.nexus.exception.jenkins.JenkinsJobException;
 import com.dsh105.nexus.exception.jenkins.JenkinsJobNotFoundException;
 import com.dsh105.nexus.util.JsonUtil;

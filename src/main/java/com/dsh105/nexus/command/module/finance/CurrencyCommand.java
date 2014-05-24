@@ -15,7 +15,8 @@ import com.dsh105.nexus.util.currency.RateExchangeLookup;
         extendedHelp = {
                 "This command allows conversion between two currencies. A list of currency codes is available at http://www.xe.com/currency/",
                 "{b}{p}{c}{/b} <from> <to> <amount> - where 'from' and 'to' are valid currency codes.",
-                "Data is provided with no guarantees whatsoever."})
+                "Data is provided with no guarantees whatsoever."
+        })
 public class CurrencyCommand extends CommandModule {
 
     @Override

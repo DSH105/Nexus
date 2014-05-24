@@ -40,7 +40,9 @@ import java.util.List;
         aliases = {"wolfram", "wolframalpha"},
         needsChannel = false,
         help = "Query WolframAlpha.",
-        extendedHelp = {"{b}{p}{c}{/b} <query> - Request information from WolframAlpha."})
+        extendedHelp = {
+                "{b}{p}{c}{/b} <query> - Request information from WolframAlpha."
+        })
 public class WolframAlphaCommand extends CommandModule {
 
     /*

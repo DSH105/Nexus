@@ -32,6 +32,15 @@ public enum IssueState {
         this.colours = colours;
     }
 
+    public static IssueState getByIdent(String ident) {
+        for (IssueState s : IssueState.values()) {
+            if (s.getIdent().equals(ident)) {
+                return s;
+            }
+        }
+        return null;
+    }
+
     public String format(String toFormat) {
         StringBuilder builder = new StringBuilder();
         for (String s : getColours()) {
@@ -46,14 +55,5 @@ public enum IssueState {
 
     public String getIdent() {
         return ident;
-    }
-
-    public static IssueState getByIdent(String ident) {
-        for (IssueState s : IssueState.values()) {
-            if (s.getIdent().equals(ident)) {
-                return s;
-            }
-        }
-        return null;
     }
 }

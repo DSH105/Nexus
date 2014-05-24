@@ -28,13 +28,12 @@ import org.pircbotx.Colors;
 import org.pircbotx.User;
 import org.reflections.Reflections;
 
-import java.lang.annotation.Annotation;
 import java.util.*;
 
 public class CommandManager {
 
-    private ArrayList<CommandModule> modules = new ArrayList<>();
     HashMap<String, ArrayList<CommandModule>> groupToModules = new HashMap<>();
+    private ArrayList<CommandModule> modules = new ArrayList<>();
 
     public void registerDefaults() {
         Reflections reflections = new Reflections("com.dsh105.nexus.command.module");
@@ -172,7 +171,9 @@ public class CommandManager {
                         event.respondWithPing("Sub command not found. Did you mean: " + Colors.BOLD + suggestion.getSuggestions());
                         return true;
                     }*/
-                } else return true;
+                } else {
+                    return true;
+                }
             }
         } catch (Exception e) {
             if (e instanceof GitHubAPIKeyInvalidException) {

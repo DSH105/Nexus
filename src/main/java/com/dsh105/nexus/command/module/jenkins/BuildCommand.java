@@ -25,8 +25,6 @@ import com.dsh105.nexus.exception.jenkins.JenkinsException;
 import com.dsh105.nexus.exception.jenkins.JenkinsJobNotFoundException;
 import com.dsh105.nexus.hook.jenkins.Jenkins;
 import com.dsh105.nexus.hook.jenkins.JenkinsJob;
-import org.pircbotx.Channel;
-import org.pircbotx.User;
 
 @Command(command = "build",
         needsChannel = false,
@@ -37,7 +35,8 @@ import org.pircbotx.User;
                 "{b}{p}{c} <job_name>{/b} - attempts to begin the build process for this job.",
                 "{b}{p}{c} <job_name> token <build_token>{/b} - sets the build token for this job. Build tokens are used to access the Jenkins API and request builds",
                 "Only certain jobs will work, as Nexus can only access certain job keys",
-                "Only Nexus admins may use this command."})
+                "Only Nexus admins may use this command."
+        })
 public class BuildCommand extends CommandModule {
 
     @Override

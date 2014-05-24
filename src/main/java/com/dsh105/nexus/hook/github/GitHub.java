@@ -49,6 +49,13 @@ public class GitHub {
     public static String COLLABORATORS = "/collaborators";
     public static String LANGUAGES = "/languages";
     public static String FORKS = "/forks";
+    private HashMap<String, GitHubRepo> repositories = new HashMap<>();
+    private HashMap<GitHubRepo, Long> expirationDates = new HashMap<>();
+    private ArrayList<GitHubIssue> issues = new ArrayList<>();
+
+    public GitHub() {
+        new Timer(true).schedule(new RefreshTask(), 0, 90000);
+    }
 
     public static String getRepoApiUrl(String repoName) {
         return REPO_API_URL.replace("{name}", repoName);
@@ -84,14 +91,6 @@ public class GitHub {
 
     public static String getUserUrl(String userLogin) {
         return USER_API_URL.replace("{name}", userLogin);
-    }
-
-    private HashMap<String, GitHubRepo> repositories = new HashMap<>();
-    private HashMap<GitHubRepo, Long> expirationDates = new HashMap<>();
-    private ArrayList<GitHubIssue> issues = new ArrayList<>();
-
-    public GitHub() {
-        new Timer(true).schedule(new RefreshTask(), 0, 90000);
     }
 
     public static GitHub getGitHub() {
@@ -457,6 +456,17 @@ public class GitHub {
         }
     }
 
+    private void cache(GitHubRepo repo) {
+        Calendar c = Calendar.getInstance();
+        c.add(Calendar.MINUTE, 15);
+        repositories.put(repo.getFullName(), repo);
+        expirationDates.put(repo, c.getTimeInMillis());
+    }
+
+    private void cache(GitHubIssue issue) {
+        issues.add(issue);
+    }
+
     public class RefreshTask extends TimerTask {
 
         @Override
@@ -484,16 +494,5 @@ public class GitHub {
                 }
             }
         }
-    }
-
-    private void cache(GitHubRepo repo) {
-        Calendar c = Calendar.getInstance();
-        c.add(Calendar.MINUTE, 15);
-        repositories.put(repo.getFullName(), repo);
-        expirationDates.put(repo, c.getTimeInMillis());
-    }
-
-    private void cache(GitHubIssue issue) {
-        issues.add(issue);
     }
 }

@@ -22,53 +22,39 @@ import com.google.gson.annotations.SerializedName;
 
 public class GitHubRepo {
 
-    @SerializedName("name")
-    private String name;
-
-    @SerializedName("full_name")
-    private String fullName;
-
-    @SerializedName("html_url")
-    private String url;
-
-    @SerializedName("description")
-    private String description;
-
-    @SerializedName("homepage")
-    private String homepage;
-
-    @SerializedName("has_wiki")
-    private boolean hasWiki;
-
-    @SerializedName("forks_count")
-    private int forks;
-
-    @SerializedName("open_issues_count")
-    private int openIssues;
-
-    @SerializedName("watchers_count")
-    private int watchers;
-
-    @SerializedName("stargazers_count")
-    private int stargazers;
-
-    @SerializedName("created_at")
-    private String createdAt;
-
-    @SerializedName("updated_at")
-    private String updatedAt;
-
-    @SerializedName("pushed_at")
-    private String pushedAt;
-
     @SerializedName("private")
     protected boolean isPrivate;
-
     protected GitHubUser repoOwner;
     protected GitHubUser[] collaborators;
     protected GitHubUser[] contributors;
     protected GitHubLanguage[] languages;
     protected String userLoginForAccessToken;
+    @SerializedName("name")
+    private String name;
+    @SerializedName("full_name")
+    private String fullName;
+    @SerializedName("html_url")
+    private String url;
+    @SerializedName("description")
+    private String description;
+    @SerializedName("homepage")
+    private String homepage;
+    @SerializedName("has_wiki")
+    private boolean hasWiki;
+    @SerializedName("forks_count")
+    private int forks;
+    @SerializedName("open_issues_count")
+    private int openIssues;
+    @SerializedName("watchers_count")
+    private int watchers;
+    @SerializedName("stargazers_count")
+    private int stargazers;
+    @SerializedName("created_at")
+    private String createdAt;
+    @SerializedName("updated_at")
+    private String updatedAt;
+    @SerializedName("pushed_at")
+    private String pushedAt;
 
     public GitHubUser getRepoOwner() {
         return repoOwner;
