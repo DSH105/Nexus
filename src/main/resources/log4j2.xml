@@ -12,5 +12,11 @@
             </Policies>
         </RollingRandomAccessFile>
     </Appenders>
+    <Loggers>
+        <Root level="info">
+            <AppenderRef ref="WINDOWS_COMPAT"/>
+            <AppenderRef ref="File"/>
+        </Root>
+    </Loggers>
 </Configuration>
 

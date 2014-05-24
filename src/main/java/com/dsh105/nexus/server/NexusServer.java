@@ -106,7 +106,14 @@ public class NexusServer {
         Debugger.getInstance().log(1, "Loading webapp from {0} at url {1}", webApp, webAppContextPath);
 
         this.webServer = new Server(port);
+        try {
+            this.webServer.start();
+            this.logger.info("Started the server on port: " + port);
 
+            //this.webServer.join();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void shutdownSafe() {
