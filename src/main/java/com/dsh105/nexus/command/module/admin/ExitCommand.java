@@ -26,7 +26,9 @@ import com.dsh105.nexus.command.CommandPerformEvent;
         needsChannel = false,
         helpGroups = "admin",
         help = "Exit and shutdown Nexus",
-        extendedHelp = "Use {b}{p}{c}{/b} to shutdown the bot. Only admins may use this command.")
+        extendedHelp = {
+                "Use {b}{p}{c}{/b} to shutdown the bot. Only admins may use this command."
+        })
 public class ExitCommand extends CommandModule {
 
     @Override

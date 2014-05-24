@@ -89,6 +89,7 @@ public class StringUtil {
     /**
      * Builds a sentence list from an array of strings.
      * Example: {"one", "two", "three"} returns "one, two and three".
+     *
      * @param words The string array to build into a list,
      * @return String representing the list.
      */

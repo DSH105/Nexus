@@ -1,6 +1,5 @@
 package com.dsh105.nexus.command.module.github;
 
-import com.dsh105.nexus.Nexus;
 import com.dsh105.nexus.command.Command;
 import com.dsh105.nexus.command.CommandModule;
 import com.dsh105.nexus.command.CommandPerformEvent;
@@ -21,14 +20,15 @@ import java.util.Random;
         needsChannel = false,
         helpGroups = "github",
         help = "Give information on a random or specified Octocat.",
-        extendedHelp = {"{b}{p}{c}{/b} - Display a random Octocat.", "{b}{p}{c}{/b} <id> - Display a specified Octocat."})
+        extendedHelp = {
+                "{b}{p}{c}{/b} - Display a random Octocat.", "{b}{p}{c}{/b} <id> - Display a specified Octocat."
+        })
 public class GitHubOctocatCommand extends CommandModule {
-
-    // Integer = GitHub ID of Octocat
-    private HashMap<Integer, Octocat> octocats = new HashMap<>();
 
     private static String URL = "https://octodexapi.herokuapp.com/";
     private static String MESSAGE = "Octocat " + Colors.BOLD + "#{0}" + Colors.NORMAL + " - \"" + Colors.BOLD + Colors.BLUE + "{1}" + Colors.NORMAL + "\" - " + "(" + "{2}" + ")";
+    // Integer = GitHub ID of Octocat
+    private HashMap<Integer, Octocat> octocats = new HashMap<>();
 
     @Override
     public boolean onCommand(CommandPerformEvent event) {

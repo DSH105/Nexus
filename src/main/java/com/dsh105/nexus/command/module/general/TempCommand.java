@@ -8,7 +8,9 @@ import org.pircbotx.Colors;
 @Command(command = "temp",
         needsChannel = false,
         help = "Temperature converter",
-        extendedHelp = {"{b}{p}{c}{/b} <temp>[F/C] - Converts the entered temperature to either celsius or fahrenheit"})
+        extendedHelp = {
+                "{b}{p}{c}{/b} <temp>[F/C] - Converts the entered temperature to either celsius or fahrenheit"
+        })
 public class TempCommand extends CommandModule {
     public static double cTof(double c) {
         c = c * 9;

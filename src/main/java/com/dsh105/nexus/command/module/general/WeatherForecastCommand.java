@@ -14,23 +14,29 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 
-@Command(command = "forecast", aliases = {"wf", "fc"}, needsChannel = false, help = "Get a location's weather forecast", extendedHelp = {"{b}{p}{c}{/b} <location> - Allows you to get the weather forecast of a location"})
-
+@Command(command = "forecast",
+        aliases = {"wf", "fc"},
+        needsChannel = false,
+        help = "Get a location's weather forecast",
+        extendedHelp = {
+                "{b}{p}{c}{/b} <location> - Allows you to get the weather forecast of a location"
+        })
 public class WeatherForecastCommand extends CommandModule {
+    public static final String WEATHER_URL = "http://api.openweathermap.org/data/2.5/forecast/daily?mode=json&q=";
+
     public static double kToC(double k) {
         k = k - 273.15;
         return k;
     }
-
-    public static final String WEATHER_URL = "http://api.openweathermap.org/data/2.5/forecast/daily?mode=json&q=";
 
     @Override
     public boolean onCommand(CommandPerformEvent event) {
         if (event.getArgs().length >= 1) {
             StringBuilder b = new StringBuilder();
             for (int i = 0; i < event.getArgs().length; i++) {
-                if (i != 0)
+                if (i != 0) {
                     b.append(" ");
+                }
                 b.append(event.getArgs()[i]);
             }
             try {

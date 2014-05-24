@@ -26,12 +26,10 @@ import org.pircbotx.User;
 
 public class CommandManager {
 
+    protected CommandRegistrationService registrationService;
     private String NO_PERMISSION = Colors.RED + "Error: You don't have permission";
     private String ERROR_OCCURRED = Colors.RED + "An unknown error occurred. See the console for more info.";
     private String NUMBER_EXCEPTION = Colors.RED + "Number expected, string received instead.";
-
-    protected CommandRegistrationService registrationService;
-
     private PermissionHandler permissionHandler;
 
     public CommandManager() {

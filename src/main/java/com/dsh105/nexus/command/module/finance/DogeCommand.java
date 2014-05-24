@@ -14,7 +14,9 @@ import org.pircbotx.Colors;
 @Command(command = "doge",
         needsChannel = false,
         help = "Dogecoin currency converter",
-        extendedHelp = {"{b}{p}{c}{/b} <value> - Converts the entered value to either dogecoin or usd."})
+        extendedHelp = {
+                "{b}{p}{c}{/b} <value> - Converts the entered value to either dogecoin or usd."
+        })
 public class DogeCommand extends CommandModule {
 
     public static final String DOGE_API_BASE_URL = "https://www.dogeapi.com/wow/v2/";

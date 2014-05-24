@@ -29,9 +29,9 @@ import java.util.*;
 
 public class Jenkins {
 
+    protected String JENKINS_URL;
     private HashSet<JenkinsJob> jobs = new HashSet<>();
     private HashMap<String, JenkinsJobEntry> jobEntries = new HashMap<>();
-    protected String JENKINS_URL;
 
     public Jenkins() {
         this.JENKINS_URL = Nexus.getInstance().getConfig().getJenkinsUrl();

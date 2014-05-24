@@ -15,11 +15,12 @@ import com.mashape.unirest.http.exceptions.UnirestException;
         aliases = {"random", "randomnumber"},
         needsChannel = false,
         help = "Generate a random number from Random.org",
-        extendedHelp =
-                {"{b}{p}{c}{/b} <max> - Chooses a number from 1 to <max>.",
-                 "{b}{p}{c}{/b} <min> <max> - Chooses a number from <min> to <max>",
-                 "{b}{p}{c}{/b} dice - Rolls the dice! (Chooses a number from 1 to 6)",
-                 "{b}{p}{c}{/b} coin - Flip a coin"})
+        extendedHelp = {
+                "{b}{p}{c}{/b} <max> - Chooses a number from 1 to <max>.",
+                "{b}{p}{c}{/b} <min> <max> - Chooses a number from <min> to <max>",
+                "{b}{p}{c}{/b} dice - Rolls the dice! (Chooses a number from 1 to 6)",
+                "{b}{p}{c}{/b} coin - Flip a coin"
+        })
 public class RandomNumberCommand extends CommandModule {
 
     public static final String API_URL = "https://api.random.org/json-rpc/1/invoke";

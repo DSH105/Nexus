@@ -22,38 +22,28 @@ import com.google.gson.annotations.SerializedName;
 
 public class GitHubIssue {
 
-    @SerializedName("url")
-    private String apiUrl;
-
-    @SerializedName("html_url")
-    private String url;
-
-    @SerializedName("number")
-    private int number;
-
-    @SerializedName("title")
-    private String title;
-
-    @SerializedName("body")
-    private String body;
-
-    @SerializedName("state")
-    private String state;
-
-    @SerializedName("comments")
-    private int comments;
-
-    @SerializedName("created_at")
-    private String createdAt;
-
-    @SerializedName("updated_at")
-    private String updatedAt;
-
-    @SerializedName("closed_at")
-    private String closedAt;
-
     protected GitHubRepo repo;
     protected GitHubUser reportedBy;
+    @SerializedName("url")
+    private String apiUrl;
+    @SerializedName("html_url")
+    private String url;
+    @SerializedName("number")
+    private int number;
+    @SerializedName("title")
+    private String title;
+    @SerializedName("body")
+    private String body;
+    @SerializedName("state")
+    private String state;
+    @SerializedName("comments")
+    private int comments;
+    @SerializedName("created_at")
+    private String createdAt;
+    @SerializedName("updated_at")
+    private String updatedAt;
+    @SerializedName("closed_at")
+    private String closedAt;
 
     public GitHubRepo getRepo() {
         return repo;

@@ -18,22 +18,12 @@
 package com.dsh105.nexus.hook.travis;
 
 import com.dsh105.nexus.Nexus;
-import com.dsh105.nexus.exception.github.*;
 import com.dsh105.nexus.exception.travis.TravisAPIKeyInvalidException;
-import com.dsh105.nexus.hook.github.*;
-import com.dsh105.nexus.hook.github.gist.Gist;
-import com.dsh105.nexus.hook.github.gist.GistFile;
+import com.dsh105.nexus.hook.github.GitHub;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
-import com.mashape.unirest.http.async.Callback;
 import com.mashape.unirest.http.exceptions.UnirestException;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.*;
-import java.util.*;
 
 public class Travis {
 

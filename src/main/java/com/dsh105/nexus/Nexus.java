@@ -19,12 +19,14 @@ package com.dsh105.nexus;
 
 import com.dsh105.nexus.command.CommandManager;
 import com.dsh105.nexus.command.module.general.RemindCommand;
-import com.dsh105.nexus.config.*;
+import com.dsh105.nexus.config.ChannelConfiguration;
+import com.dsh105.nexus.config.GitHubConfig;
+import com.dsh105.nexus.config.NicksConfig;
+import com.dsh105.nexus.config.OptionsConfig;
 import com.dsh105.nexus.hook.github.GitHub;
 import com.dsh105.nexus.hook.jenkins.Jenkins;
 import com.dsh105.nexus.listener.EventManager;
 import com.dsh105.nexus.response.ResponseManager;
-import com.dsh105.nexus.util.JsonUtil;
 import com.dsh105.nexus.util.ShortLoggerFormatter;
 import com.mashape.unirest.http.Unirest;
 import org.ocpsoft.prettytime.PrettyTime;
@@ -36,20 +38,16 @@ import org.pircbotx.exception.IrcException;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.util.HashMap;
 import java.util.logging.*;
 
 public class Nexus extends PircBotX {
 
-    private static Nexus INSTANCE;
-
     public static Logger LOGGER = Logger.getLogger(Nexus.class.getName());
     public static PrettyTime PRETTY_TIME = new PrettyTime();
-
-    private ConsoleReader consoleReader;
-
-    private ChannelConfiguration channelConfiguration;
     public static String CONFIG_FILE_NAME = "options.yml";
+    private static Nexus INSTANCE;
+    private ConsoleReader consoleReader;
+    private ChannelConfiguration channelConfiguration;
     private OptionsConfig config;
     private GitHubConfig githubConfig;
     private NicksConfig nicksConfig;
@@ -59,6 +57,17 @@ public class Nexus extends PircBotX {
 
     private Jenkins jenkins;
     private GitHub github;
+
+    public Nexus(Configuration<Nexus> configuration) {
+        super(configuration);
+        INSTANCE = this;
+        Runtime.getRuntime().addShutdownHook(new Thread() {
+            @Override
+            public void run() {
+                endProcess();
+            }
+        });
+    }
 
     public static void main(String[] args) throws Exception {
         System.out.println("Starting up Nexus, please wait...");
@@ -109,15 +118,34 @@ public class Nexus extends PircBotX {
         }
     }
 
-    public Nexus(Configuration<Nexus> configuration) {
-        super(configuration);
-        INSTANCE = this;
-        Runtime.getRuntime().addShutdownHook(new Thread() {
-            @Override
-            public void run() {
-                endProcess();
+    public static void endProcess() {
+        if (INSTANCE != null) {
+            LOGGER.info("Shutting down Nexus...");
+            INSTANCE.saveAll();
+            try {
+                Unirest.shutdown();
+            } catch (IOException e) {
+                LOGGER.severe("Failed to shutdown Unirest");
+                e.printStackTrace();
             }
-        });
+            LOGGER.info("Waiting for outgoing queue");
+            while (INSTANCE.sendRaw().getOutgoingQueueSize() > 0) {
+                ;
+            }
+            INSTANCE.shutdown(true);
+            try {
+                INSTANCE.consoleReader.reader.getTerminal().restore();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            INSTANCE.consoleReader.setRunning(false);
+            INSTANCE = null;
+            System.exit(-1);
+        }
+    }
+
+    public static Nexus getInstance() {
+        return INSTANCE;
     }
 
     private void registerLogger() {
@@ -196,30 +224,6 @@ public class Nexus extends PircBotX {
         consoleReader.start();
     }
 
-    public static void endProcess() {
-        if (INSTANCE != null) {
-            LOGGER.info("Shutting down Nexus...");
-            INSTANCE.saveAll();
-            try {
-                Unirest.shutdown();
-            } catch (IOException e) {
-                LOGGER.severe("Failed to shutdown Unirest");
-                e.printStackTrace();
-            }
-            LOGGER.info("Waiting for outgoing queue");
-            while (INSTANCE.sendRaw().getOutgoingQueueSize() > 0);
-            INSTANCE.shutdown(true);
-            try {
-                INSTANCE.consoleReader.reader.getTerminal().restore();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            INSTANCE.consoleReader.setRunning(false);
-            INSTANCE = null;
-            System.exit(-1);
-        }
-    }
-
     public void saveAll() {
         LOGGER.info("Saving config files");
         this.getConfig().save();
@@ -263,10 +267,6 @@ public class Nexus extends PircBotX {
             }
         }
         return null;
-    }
-
-    public static Nexus getInstance() {
-        return INSTANCE;
     }
 
     public OptionsConfig getConfig() {

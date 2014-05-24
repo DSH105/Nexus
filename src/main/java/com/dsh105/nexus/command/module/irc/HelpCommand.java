@@ -24,9 +24,17 @@ import com.dsh105.nexus.command.CommandPerformEvent;
 import com.dsh105.nexus.util.StringUtil;
 import org.pircbotx.Colors;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
-@Command(command = "help", needsChannel = false, help = "Show this help information", extendedHelp = "Use {p}{c} <command> for more information on a specific command.")
+@Command(command = "help",
+        needsChannel = false,
+        help = "Show this help information",
+        extendedHelp = {
+                "Use {p}{c} <command> for more information on a specific command."
+        })
 public class HelpCommand extends CommandModule {
 
     @Override

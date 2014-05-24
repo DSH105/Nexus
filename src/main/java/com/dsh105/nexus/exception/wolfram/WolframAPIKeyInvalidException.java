@@ -17,8 +17,6 @@
 
 package com.dsh105.nexus.exception.wolfram;
 
-import com.dsh105.nexus.exception.github.GitHubException;
-
 public class WolframAPIKeyInvalidException extends RuntimeException {
 
     public WolframAPIKeyInvalidException(String s) {

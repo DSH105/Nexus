@@ -9,6 +9,6 @@ public class TestActionCommand {
     @Test
     public void testActionMessage() {
         MockActionCommand cmd = new MockActionCommand();
-        Assert.assertEquals("mocks DSH105, JOPHESTUS and stuntguy3000 for failing", cmd.getActionText(new String[]{"DSH105,JOPHESTUS,stuntguy3000", "for", "failing"}));
+        Assert.assertEquals("mocks DSH105, JOPHESTUS and stuntguy3000 for failing", cmd.getActionText(new String[] {"DSH105,JOPHESTUS,stuntguy3000", "for", "failing"}));
     }
 }

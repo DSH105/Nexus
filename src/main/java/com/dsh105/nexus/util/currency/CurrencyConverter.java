@@ -12,14 +12,14 @@ public class CurrencyConverter {
         this.lookup = lookupInterface;
     }
 
-    public double convertAmount(double amount, String from, String to) throws CurrencyException {
-        return this.lookup.getExchangeRate(from, to) * amount;
-    }
-
     public static double roundToPennies(double amount) {
         BigDecimal bd = new BigDecimal(amount);
         BigDecimal rounded = bd.setScale(2, BigDecimal.ROUND_HALF_UP);
         return rounded.doubleValue();
+    }
+
+    public double convertAmount(double amount, String from, String to) throws CurrencyException {
+        return this.lookup.getExchangeRate(from, to) * amount;
     }
 
 }

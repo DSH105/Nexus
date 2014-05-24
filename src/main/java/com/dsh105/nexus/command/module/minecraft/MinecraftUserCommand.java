@@ -1,6 +1,5 @@
 package com.dsh105.nexus.command.module.minecraft;
 
-import com.dsh105.nexus.Nexus;
 import com.dsh105.nexus.command.Command;
 import com.dsh105.nexus.command.CommandModule;
 import com.dsh105.nexus.command.CommandPerformEvent;
@@ -17,7 +16,9 @@ import org.pircbotx.Colors;
         aliases = {"minecraftuser"},
         needsChannel = false,
         help = "View information about a specific Minecraft username.",
-        extendedHelp = {"{b}{p}{c}{/b} <usernane>- View information about the Minecraft username."})
+        extendedHelp = {
+                "{b}{p}{c}{/b} <usernane>- View information about the Minecraft username."
+        })
 public class MinecraftUserCommand extends CommandModule {
 
     @Override
