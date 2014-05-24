@@ -193,7 +193,6 @@ public class Nexus extends PircBotX {
     public static void endProcess() {
         if (INSTANCE != null) {
             LOGGER.info("Shutting down Nexus...");
-            INSTANCE.consoleReader.setRunning(false);
             INSTANCE.saveAll();
             try {
                 Unirest.shutdown();
@@ -204,6 +203,12 @@ public class Nexus extends PircBotX {
             LOGGER.info("Waiting for outgoing queue");
             while (INSTANCE.sendRaw().getOutgoingQueueSize() > 0);
             INSTANCE.shutdown(true);
+            try {
+                INSTANCE.consoleReader.reader.getTerminal().restore();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            INSTANCE.consoleReader.setRunning(false);
             INSTANCE = null;
             System.exit(-1);
         }

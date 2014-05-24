@@ -17,7 +17,6 @@
 
 package com.dsh105.nexus;
 
-import com.dsh105.nexus.Nexus;
 import jline.console.completer.FileNameCompleter;
 
 import java.io.IOException;
@@ -26,6 +25,7 @@ import java.io.PrintWriter;
 public class ConsoleReader extends Thread {
 
     private boolean running = true;
+    protected jline.console.ConsoleReader reader;
 
     public boolean isRunning() {
         return running;
@@ -38,15 +38,14 @@ public class ConsoleReader extends Thread {
     @Override
     public void run() {
         while (running) {
-            jline.console.ConsoleReader console = null;
             try {
-                console = new jline.console.ConsoleReader();
-                console.addCompleter(new FileNameCompleter());
-                console.setPrompt("> ");
+                reader = new jline.console.ConsoleReader();
+                reader.addCompleter(new FileNameCompleter());
+                reader.setPrompt("> ");
                 String line;
                 PrintWriter out = new PrintWriter(System.out);
 
-                while ((line = console.readLine("")) != null) {
+                while ((line = reader.readLine("")) != null) {
                     if (Nexus.getInstance() != null) {
                         if (line.equalsIgnoreCase("EXIT") || line.equalsIgnoreCase("END") || line.equalsIgnoreCase("STOP") || line.equalsIgnoreCase("QUIT")) {
                             Nexus.getInstance().endProcess();
@@ -66,9 +65,9 @@ public class ConsoleReader extends Thread {
             } catch (IOException e) {
                 e.printStackTrace();
             } finally {
-                if (console != null) {
+                if (reader != null) {
                     try {
-                        console.getTerminal().restore();
+                        reader.getTerminal().restore();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
