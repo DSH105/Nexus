@@ -1,4 +1,4 @@
-/**
+/*
  * This file is part of Nexus.
  *
  * Nexus is free software: you can redistribute it and/or modify

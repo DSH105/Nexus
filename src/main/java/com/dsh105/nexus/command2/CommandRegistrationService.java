@@ -1,6 +1,5 @@
-/**
- * This file is part of Nexus. In case stuff doesn't work,
- * Just be patient while we try to fix it: http://puu.sh/8N7Dy.gif
+/*
+ * This file is part of Nexus.
  *
  * Nexus is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -34,6 +33,11 @@ import java.lang.reflect.Modifier;
 import java.util.*;
 
 public class CommandRegistrationService {
+
+    /*
+     * A message from CaptainBern:
+     * Just be patient while we try to fix it: http://puu.sh/8N7Dy.gif
+     */
 
     protected CommandManager commandManager;
 
