@@ -71,7 +71,9 @@ public class ChannelConfig extends YamlConfig {
         if (enabled) {
             this.disabledCommands.remove(command);
         } else {
-            this.disabledCommands.add(command);
+            if (!this.disabledCommands.contains(command)) {
+                this.disabledCommands.add(command);
+            }
         }
         this.save();
     }

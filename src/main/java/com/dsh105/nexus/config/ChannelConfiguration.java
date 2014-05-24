@@ -28,6 +28,9 @@ public class ChannelConfiguration {
 
     public ChannelConfiguration() {
         File channelsFolder = new File("channels");
+        if (!channelsFolder.exists()) {
+            channelsFolder.mkdirs();
+        }
         for (File file : channelsFolder.listFiles()) {
             int extIndex = file.getName().lastIndexOf(".");
             String extension = "";

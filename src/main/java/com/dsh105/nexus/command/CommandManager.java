@@ -153,7 +153,7 @@ public class CommandManager {
         try {
             CommandModule module = this.getModuleFor(event.getCommand());
 
-            if (!event.isInPrivateMessage()) {
+            if (!event.isInPrivateMessage() && !Arrays.asList(module.getCommandInfo().helpGroups()).contains("admin")) {
                 if (Nexus.getInstance().getChannelConfiguration().getChannel(event.getChannel().getName()).isDisabled(module.getCommand())) {
                     return true;
                 }
