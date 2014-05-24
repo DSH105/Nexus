@@ -52,10 +52,6 @@ public class NexusServer {
     public void start() {
         long startTime = System.currentTimeMillis();
 
-        CommandReaderThread commandReaderThread = new CommandReaderThread(this);
-        commandReaderThread.setDaemon(true);
-        commandReaderThread.start();
-
         // The properties
         try {
             this.logger.info("Loading properties...");
@@ -96,6 +92,10 @@ public class NexusServer {
         createWebServer();
 
         this.logger.info("Done (" + (System.currentTimeMillis() - startTime) + "ms)! For help, type \"help\" or \"?\"");
+
+        CommandReaderThread commandReaderThread = new CommandReaderThread(this);
+        //commandReaderThread.setDaemon(true);
+        commandReaderThread.start();
     }
 
     protected void createWebServer() {

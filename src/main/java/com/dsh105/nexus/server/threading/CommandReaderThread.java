@@ -1,6 +1,7 @@
 package com.dsh105.nexus.server.threading;
 
 import com.dsh105.nexus.server.NexusServer;
+import com.dsh105.nexus.server.debug.Debugger;
 import jline.console.ConsoleReader;
 import jline.console.completer.FileNameCompleter;
 
@@ -20,15 +21,16 @@ public class CommandReaderThread extends Thread {
 
     @Override
     public void run() {
-        while (this.nexusServer.isRunning()) {
+        while (true) {
             try {
+                Debugger.getInstance().log(2, "lolwat");
                 reader = new ConsoleReader();
                 reader.addCompleter(new FileNameCompleter());
                 reader.setPrompt("> ");
                 String line;
                 PrintWriter out = new PrintWriter(System.out);
 
-                while ((line = reader.readLine("")) != null) {
+                while ((line = reader.readLine()) != null) {
                     if (this.nexusServer != null) {
                         this.nexusServer.handleConsoleCommand(line);
                     }
