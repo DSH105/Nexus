@@ -81,7 +81,7 @@ public class GitHubKeyCommand extends CommandModule {
                     try {
                         final String accessToken = response.getBody().getObject().getString("access_token");
                         final String nick = event.getSender().getNick();
-                        Nexus.getInstance().sendIRC().ctcpCommand("NickServ", "info " + nick);
+                        Nexus.getInstance().send("NickServ", "info " + nick);
                         new Timer().schedule(new TimerTask() {
                             @Override
                             public void run() {
@@ -90,6 +90,8 @@ public class GitHubKeyCommand extends CommandModule {
                                     Nexus.getInstance().getGitHubConfig().set("github-key-" + account, accessToken);
                                     Nexus.getInstance().getGitHubConfig().save();
                                     event.respondWithPing("You may now use the Nexus commands requiring API key information (e.g. IRC notification settings).");
+                                } else {
+                                    event.errorWithPing("Oh no! Something bad happened. I couldn't retrieve your API key from GitHub :(");
                                 }
                             }
                         }, 5000);
