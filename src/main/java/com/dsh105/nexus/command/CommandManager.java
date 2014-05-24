@@ -20,6 +20,7 @@ package com.dsh105.nexus.command;
 import com.dsh105.nexus.Nexus;
 import com.dsh105.nexus.exception.general.DateParseException;
 import com.dsh105.nexus.exception.github.GitHubAPIKeyInvalidException;
+import com.dsh105.nexus.exception.github.GitHubHookNotFoundException;
 import com.dsh105.nexus.exception.github.GitHubRateLimitExceededException;
 import com.dsh105.nexus.hook.github.GitHub;
 import com.dsh105.nexus.util.StringUtil;
@@ -182,6 +183,8 @@ public class CommandManager {
                 event.errorWithPing(e.getMessage());
             } else if (e instanceof GitHubRateLimitExceededException) {
                 event.errorWithPing("Rate limit for this GitHub API Key exceeded. Further requests cannot be executed on the behalf of this user.");
+            } else if (e instanceof GitHubHookNotFoundException) {
+                event.errorWithPing(e.getMessage());
             } else {
                 if (Nexus.getInstance().getGitHubConfig().getNexusGitHubApiKey().isEmpty()) {
                     e.printStackTrace();
