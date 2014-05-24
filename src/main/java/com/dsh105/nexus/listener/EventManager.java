@@ -102,15 +102,16 @@ public class EventManager extends ListenerAdapter<Nexus> {
 
     @Override
     public void onKick(KickEvent<Nexus> event) throws Exception {
+        Nexus.getInstance().saveChannels();
         if (event.getRecipient().getNick().equalsIgnoreCase(Nexus.getInstance().getNick())) {
-            Nexus.LOGGER.info("Kicked from " + event.getChannel() + " by " + event.getUser().getNick());
+            Nexus.LOGGER.info("Kicked from " + event.getChannel().getName() + " by " + event.getUser().getNick());
         }
     }
 
     @Override
     public void onVoice(VoiceEvent<Nexus> event) throws Exception {
         if (event.getRecipient().getNick().equalsIgnoreCase(Nexus.getInstance().getNick())) {
-            Nexus.LOGGER.info("Voice " + (event.hasVoice() ? " given to " : " removed from ") + event.getRecipient().getNick() + " by " + event.getUser().getNick() + "in " + event.getChannel());
+            Nexus.LOGGER.info("Voice " + (event.hasVoice() ? " given to " : " removed from ") + event.getRecipient().getNick() + " by " + event.getUser().getNick() + "in " + event.getChannel().getName());
         }
     }
 }
