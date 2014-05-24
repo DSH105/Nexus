@@ -3,6 +3,7 @@ package com.dsh105.nexus.server.threading;
 public class SleepForeverThread extends Thread {
 
     public SleepForeverThread() {
+        super("Sleeping beauty");
         this.setDaemon(true);
         this.start();
     }
