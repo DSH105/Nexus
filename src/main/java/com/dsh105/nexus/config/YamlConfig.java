@@ -68,7 +68,8 @@ public class YamlConfig {
         try {
             File file = new File(fileName);
             if (!file.exists()) {
-                file.createNewFile();
+                file.mkdirs();
+                //file.createNewFile();
             }
             input = new FileInputStream(file);
             Yaml yaml = new Yaml();
@@ -89,6 +90,13 @@ public class YamlConfig {
             }
         }
         this.save();
+    }
+
+    public void clearFile() {
+        File file = new File(fileName);
+        if (!file.exists()) {
+            file.delete();
+        }
     }
 
     public void loadData(Map<String, Object> loadedData) {

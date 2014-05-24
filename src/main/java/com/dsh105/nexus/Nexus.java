@@ -19,9 +19,7 @@ package com.dsh105.nexus;
 
 import com.dsh105.nexus.command.CommandManager;
 import com.dsh105.nexus.command.module.general.RemindCommand;
-import com.dsh105.nexus.config.GitHubConfig;
-import com.dsh105.nexus.config.NicksConfig;
-import com.dsh105.nexus.config.OptionsConfig;
+import com.dsh105.nexus.config.*;
 import com.dsh105.nexus.hook.github.GitHub;
 import com.dsh105.nexus.hook.jenkins.Jenkins;
 import com.dsh105.nexus.listener.EventManager;
@@ -38,22 +36,29 @@ import org.pircbotx.exception.IrcException;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.util.HashMap;
 import java.util.logging.*;
 
 public class Nexus extends PircBotX {
 
     private static Nexus INSTANCE;
+
     public static Logger LOGGER = Logger.getLogger(Nexus.class.getName());
     public static PrettyTime PRETTY_TIME = new PrettyTime();
+
+    private ConsoleReader consoleReader;
+
+    private ChannelConfiguration channelConfiguration;
     public static String CONFIG_FILE_NAME = "options.yml";
     private OptionsConfig config;
     private GitHubConfig githubConfig;
     private NicksConfig nicksConfig;
+
     private CommandManager commandManager;
     private ResponseManager responseManager;
+
     private Jenkins jenkins;
     private GitHub github;
-    private ConsoleReader consoleReader;
 
     public static void main(String[] args) throws Exception {
         System.out.println("Starting up Nexus, please wait...");
@@ -91,7 +96,9 @@ public class Nexus extends PircBotX {
         for (String channel : config.getChannels()) {
             builder.addAutoJoinChannel(channel);
         }
+
         Nexus bot = new Nexus(builder.buildConfiguration());
+        bot.channelConfiguration = new ChannelConfiguration();
         bot.config = config;
         bot.githubConfig = githubConfig;
         bot.nicksConfig = nicksConfig;
@@ -233,6 +240,7 @@ public class Nexus extends PircBotX {
         this.config.clearChannels();
         for (Channel channel : this.getUserBot().getChannels()) {
             this.config.addChannel(channel.getName());
+            this.channelConfiguration.getChannel(channel.getName());
         }
         this.config.save();
     }
@@ -271,6 +279,10 @@ public class Nexus extends PircBotX {
 
     public NicksConfig getNicksConfig() {
         return nicksConfig;
+    }
+
+    public ChannelConfiguration getChannelConfiguration() {
+        return channelConfiguration;
     }
 
     public CommandManager getCommandManager() {

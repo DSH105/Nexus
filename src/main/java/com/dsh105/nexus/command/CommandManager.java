@@ -152,6 +152,13 @@ public class CommandManager {
     public boolean onCommand(CommandPerformEvent event) {
         try {
             CommandModule module = this.getModuleFor(event.getCommand());
+
+            if (!event.isInPrivateMessage()) {
+                if (Nexus.getInstance().getChannelConfiguration().getChannel(event.getChannel().getName()).isDisabled(module.getCommand())) {
+                    return true;
+                }
+            }
+
             if (module != null && module.checkPerm(event.getChannel(), event.getSender())) {
                 if (module.getCommandInfo().needsChannel() && event.isInPrivateMessage()) {
                     event.respond("You cannot perform {0} here.", event.getCommandPrefix() + module.getCommand() + " " + StringUtil.combineSplit(0, event.getArgs(), " "));
