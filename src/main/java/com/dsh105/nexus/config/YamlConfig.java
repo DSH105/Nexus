@@ -68,7 +68,6 @@ public class YamlConfig {
         try {
             File file = new File(fileName);
             if (!file.exists()) {
-                file.mkdirs();
                 file.createNewFile();
             }
             input = new FileInputStream(file);
