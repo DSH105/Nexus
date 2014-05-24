@@ -4,7 +4,7 @@
         <Console name="WINDOWS_COMPAT" target="SYSTEM_OUT">
             <PatternLayout pattern="[%d{HH:mm:ss} %level]: %msg%n" />
         </Console>
-        <RollingRandomAccessFile name="File" fileName="logs/latest.log" filePattern="maintenance-logs/%d{yyyy-MM-dd}-%i.log.gz">
+        <RollingRandomAccessFile name="File" fileName="logs/latest.log" filePattern="logs/%d{yyyy-MM-dd}-%i.log.gz">
             <PatternLayout pattern="[%d{HH:mm:ss}] [%t/%level]: %msg%n" />
             <Policies>
                 <TimeBasedTriggeringPolicy />
@@ -12,14 +12,5 @@
             </Policies>
         </RollingRandomAccessFile>
     </Appenders>
-    <Loggers>
-        <Root level="info">
-            <filters>
-                <MarkerFilter marker="NETWORK_PACKETS" onMatch="DENY" onMismatch="NEUTRAL" />
-            </filters>
-            <AppenderRef ref="WINDOWS_COMPAT"/>
-            <AppenderRef ref="File"/>
-        </Root>
-    </Loggers>
 </Configuration>
 

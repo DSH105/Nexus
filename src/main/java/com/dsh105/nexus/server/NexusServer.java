@@ -1,11 +1,15 @@
 package com.dsh105.nexus.server;
 
 import com.dsh105.nexus.server.debug.Debugger;
+import com.dsh105.nexus.server.threading.CommandReaderThread;
+import com.dsh105.nexus.server.threading.SleepForeverThread;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.jetty.server.Server;
 
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Properties;
 
@@ -36,27 +40,62 @@ public class NexusServer {
      */
     private boolean debugging = false;
 
-    public NexusServer() {
+    /**
+     * Whether or not the server is running
+     */
+    private boolean running = true;
 
+    public NexusServer() {
+        new SleepForeverThread();
     }
 
     public void start() {
-        this.serverProperties = new Properties();
+        long startTime = System.currentTimeMillis();
 
+        CommandReaderThread commandReaderThread = new CommandReaderThread(this);
+        commandReaderThread.setDaemon(true);
+        commandReaderThread.start();
+
+        // The properties
         try {
-            this.serverProperties.load(new FileInputStream("NexusServer.properties"));
+            this.logger.info("Loading properties...");
+
+            this.serverProperties = new Properties();
+            this.serverProperties.setProperty("debug.enabled", "false");
+            this.serverProperties.setProperty("debug.level", "5");
+            this.serverProperties.setProperty("port", "8080");
+            this.serverProperties.setProperty("webapp.path", "<PATH_HERE>");
+            this.serverProperties.setProperty("webapp.context", "<PATH_HERE>");
+
+            File propertyFile = new File(getRoot(), "nexus-server.properties");
+            if(!propertyFile.exists()) {
+                FileOutputStream fileOutputStream = new FileOutputStream(propertyFile);
+                this.serverProperties.store(fileOutputStream, "NexusServer settings");
+            }
+
+            FileInputStream fileInputStream = new FileInputStream(propertyFile);
+            this.serverProperties.load(fileInputStream);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
+        /**
+         * Initialize the debugger
+         */
         debugging = this.serverProperties.getProperty("debug.enabled").equalsIgnoreCase("true");
         int debugLevel = Integer.parseInt(this.serverProperties.getProperty("debug.level"));
         Debugger.getInstance().setEnabled(debugging);
+        Debugger.getInstance().setLevel(debugLevel);
 
-        this.logger.info("Starting NexusServer");
+        /**
+         * Let the world know what we're doing
+         */
+        this.logger.info("Starting NexusServer...");
         this.logger.info("Debug mode is " + (this.debugging ? "enabled" : "disabled"));
 
         createWebServer();
+
+        this.logger.info("Done (" + (System.currentTimeMillis() - startTime) + "ms)! For help, type \"help\" or \"?\"");
     }
 
     protected void createWebServer() {
@@ -68,6 +107,34 @@ public class NexusServer {
 
         this.webServer = new Server(port);
 
+    }
 
+    public void shutdownSafe() {
+        this.logger.info("Shutting down...");
+
+        try {
+            this.webServer.stop();
+            this.webServer.join();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        this.running = false;
+    }
+
+    public boolean isRunning() {
+        return this.running;
+    }
+
+    public void handleConsoleCommand(final String command) {
+        logger.info("Not implemented yet!");
+    }
+
+    public File getRoot() {
+        return new File(".");
+    }
+
+    public static NexusServer getInstance() {
+        return instance;
     }
 }
