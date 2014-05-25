@@ -15,7 +15,7 @@ public class StopIRCBullyCommand extends CommandModule {
     @Override
     public boolean onCommand(CommandPerformEvent event) {
         if (event.getArgs().length == 1) {
-            event.respond("({0}) {1} feels offended by your recent action(s). Please read http://stop-irc-bullying.eu/stop", event.getArgs()[0], event.getSender().getNick());
+            event.respond("{0}: {1} feels offended by your recent action(s). Please read http://stop-irc-bullying.eu/stop", event.getArgs()[0], event.getSender().getNick());
             return true;
         } else {
             return false;
