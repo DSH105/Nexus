@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <title>Nexus by DSH105</title>
+  </head>
+
+  <body>
+    <div id="container">
+      <div class="inner">
+
+        <header>
+          <h1>Nexus</h1>
+          <h2>Nexus \o/</h2>
+        </header>
+
+        <section id="downloads" class="clearfix">
+          <a href="https://github.com/DSH105/Nexus/zipball/master" id="download-zip" class="button"><span>Download .zip</span></a>
+          <a href="https://github.com/DSH105/Nexus/tarball/master" id="download-tar-gz" class="button"><span>Download .tar.gz</span></a>
+          <a href="https://github.com/DSH105/Nexus" id="view-on-github" class="button"><span>View on GitHub</span></a>
+        </section>
+
+        <hr>
+
+        <section id="main_content">
+          <p>DSH105's IRC bot. A versatile Java IRC bot using the PircBotX library.</p>
+
+<p>According to Latin (<code>C17</code>), Nexus can be defined as <code>a binding together</code> (from <code>nectere</code> - <code>to bind</code>). Therefore, Nexus is the bot that brings everyone together.</p>
+
+<p>I like contributions ;D</p>
+
+<h1>
+<a name="current-features" class="anchor" href="#current-features"><span class="octicon octicon-link"></span></a>Current Features</h1>
+
+<p>We're very early in development, but we have the features below in place:</p>
+
+<ul>
+<li>Modular commands system</li>
+<li>Built-in help system
+
+<ul>
+<li>Users can PM the bot for info on all commands or to request extended information on a command.</li>
+</ul>
+</li>
+<li>A few useful commands offering the following functionality:
+
+<ul>
+<li>A reminder command to ping a user (or yourself) after a set amount of time with a customisable message.</li>
+<li>Currency converter</li>
+<li>GitHub user/repo info retrieval</li>
+<li>IP geolocation with google maps support</li>
+<li>Channel statistics</li>
+<li>Jenkins build info
+
+<ul>
+<li>Currently hardcoded to our CI server. We hope to make this configurable.</li>
+</ul>
+</li>
+<li>Temperature converter</li>
+<li>Dogecoin/USD currency converter</li>
+<li>Bukkit user profile info</li>
+<li>Weather lookup command</li>
+<li>7 day weather forecast</li>
+<li>Actions
+
+<ul>
+<li>Punch</li>
+<li>Slap</li>
+<li>Whip</li>
+<li>And more..</li>
+</ul>
+</li>
+<li>Insult command.</li>
+<li>Time command</li>
+</ul>
+</li>
+<li>Some unit testing! We're still working on expanding coverage but the basics are in place.</li>
+</ul><h1>
+<a name="development-builds" class="anchor" href="#development-builds"><span class="octicon octicon-link"></span></a>Development Builds</h1>
+
+<p>You can grab the latest builds from our <a href="http://ci.hawkfalcon.com/view/DSH105/job/Nexus/">Jenkins instance</a>.</p>
+
+<p><img src="https://api.travis-ci.org/repositories/DSH105/Nexus.svg" alt="Build Status"></p>
+
+<h1>
+<a name="javadoc" class="anchor" href="#javadoc"><span class="octicon octicon-link"></span></a>JavaDoc</h1>
+
+<p>JavaDocs are available on the <a href="http://ci.hawkfalcon.com/view/DSH105/job/Nexus/javadoc/">Jenkins instance</a>.</p>
+
+<h1>
+<a name="contributing" class="anchor" href="#contributing"><span class="octicon octicon-link"></span></a>Contributing</h1>
+
+<p>See <a href="CONTRIBUTING.md">here</a> for contributing guidelines.</p>
+
+<p>You don't really need to worry about that though. The only thing I really want you to follow on that document is the PR formatting. </p>
+
+<p>We'll happily work with you on any PRs to ensure they can be pulled ASAP. <img class="emoji" title=":smile:" alt=":smile:" src="https://assets-cdn.github.com/images/icons/emoji/smile.png" height="20" width="20" align="absmiddle"></p>
+
+<h3>
+<a name="adding-a-new-command" class="anchor" href="#adding-a-new-command"><span class="octicon octicon-link"></span></a>Adding a new command</h3>
+
+<p>The most common contributions will be in the form of adding a new command. This is a relatively painless procedure. The general steps for doing so are outlined below:</p>
+
+<ol>
+<li>Fork the repository and clone your fork</li>
+<li>Navigate to the <code>com.dsh105.nexus.command.module package</code> in your IDE (in the <code>src/main/java/com/dsh105/nexus/command/module/</code> directory)</li>
+<li>Choose the right category for your command, if not create one</li>
+<li>Create a new class that extends the <code>com.dsh105.nexus.command.CommandModule</code> class</li>
+<li>Add the <a href="https://github.com/DSH105/Nexus/blob/master/src/main/java/com/dsh105/nexus/command/Command.java">@Command</a> (<code>com.dsh105.nexus.command.Command</code>) annotation to your class and implement the interface</li>
+<li>Implement the <strong>onCommand</strong> method
+
+<ul>
+<li>In general returning true signifies a valid command (i.e. args were valid)</li>
+<li>Returning false will result in a help message on command usage</li>
+</ul>
+</li>
+</ol><p>You can take a look at the <a href="https://github.com/DSH105/Nexus/blob/master/src/main/java/com/dsh105/nexus/command/module/general/ChannelStatsCommand.java">channel stats command</a> to give you a head-start.</p>
+
+<h1>
+<a name="building" class="anchor" href="#building"><span class="octicon octicon-link"></span></a>Building</h1>
+
+<p>We use Maven 3 to build Nexus. Simply run the <code>mvn</code> command in the project root to compile the code and run the unit tests. You'll get a complete JAR in the target/ directory with the dependencies appropriately shaded for you.</p>
+
+<h1>
+<a name="todo-list" class="anchor" href="#todo-list"><span class="octicon octicon-link"></span></a>Todo List</h1>
+
+<ul>
+<li>Allow disabling of certain commands per channel</li>
+<li>Custom command prefix for each channel</li>
+<li>More hooking into GitHub
+
+<ul>
+<li>Currently per-user authentication with GitHub is implemented (see <code>ghkey</code> command). Maybe there's a nicer way to do this instead of having to post Nexus the link?</li>
+</ul>
+</li>
+<li>Plenty more commands</li>
+<li>Travis integration (<a href="http://docs.travis-ci.com/api/">Click for more information</a>)</li>
+<li>See #41 for a list of possible new commands</li>
+</ul>
+        </section>
+
+        <footer>
+          Nexus is maintained by <a href="https://github.com/DSH105">DSH105</a><br>
+          This page was generated by <a href="http://pages.github.com">GitHub Pages</a>. Tactile theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.
+        </footer>
+
+        
+      </div>
+    </div>
+  </body>
+</html>
