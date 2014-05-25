@@ -23,7 +23,9 @@ import com.dsh105.nexus.command.Command;
         needsChannel = false,
         helpGroups = "action",
         help = "Like a user",
-        extendedHelp = {"{b}{p}{c}{/b} <user> - like someone!"})
+        extendedHelp = {
+                "{b}{p}{c}{/b} <user> - like someone!"
+        })
 public class LikeCommand extends AbstractActionCommand {
     public LikeCommand() {
         this.setVerb("like");

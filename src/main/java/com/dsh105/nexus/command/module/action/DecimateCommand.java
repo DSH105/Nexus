@@ -23,7 +23,9 @@ import com.dsh105.nexus.command.Command;
         needsChannel = false,
         helpGroups = "action",
         help = "Decimate a user",
-        extendedHelp = {"{b}{p}{c}{/b} <user> - decimate someone!"})
+        extendedHelp = {
+                "{b}{p}{c}{/b} <user> - decimate someone!"
+        })
 public class DecimateCommand extends AbstractActionCommand {
     public DecimateCommand() {
         this.setVerb("decimate");

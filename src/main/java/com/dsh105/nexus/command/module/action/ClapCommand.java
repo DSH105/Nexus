@@ -19,11 +19,13 @@ package com.dsh105.nexus.command.module.action;
 
 import com.dsh105.nexus.command.Command;
 
-@Command(command = "poke",
+@Command(command = "clap",
         needsChannel = false,
         helpGroups = "action",
         help = "Clap",
-        extendedHelp = {"{b}{p}{c}{/b} <user> - applaud someone!"})
+        extendedHelp = {
+                "{b}{p}{c}{/b} <user> - applaud someone!"
+        })
 public class ClapCommand extends AbstractActionCommand {
     public ClapCommand() {
         this.setVerb("clap");
