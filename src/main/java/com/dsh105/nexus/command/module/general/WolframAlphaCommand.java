@@ -71,7 +71,7 @@ public class WolframAlphaCommand extends CommandModule {
 
         StringBuilder answer = new StringBuilder();
         try {
-            String apiUrl = URLEncoder.encode(String.format(API_URL, input, apiKey), "UTF-8");
+            String apiUrl = String.format(API_URL, URLEncoder.encode(input, "UTF-8"), apiKey);
             Nexus.LOGGER.info("Requesting WolframAlpha interpretation at " + apiUrl);
 
             SAXReader reader = new SAXReader();
