@@ -2,6 +2,7 @@ package com.dsh105.nexus.server;
 
 import com.dsh105.nexus.server.debug.Debugger;
 import com.dsh105.nexus.server.threading.CommandReaderThread;
+import com.dsh105.nexus.server.threading.ServerShutdownThread;
 import com.dsh105.nexus.server.threading.ServerThread;
 import com.dsh105.nexus.server.threading.SleepForeverThread;
 import org.apache.logging.log4j.LogManager;
@@ -46,6 +47,9 @@ public class NexusServer implements Runnable {
      */
     private boolean running = true;
 
+    /**
+     * Oh noes, our server was interrupted D:
+     */
     private boolean isInterrupted = false;
 
     public NexusServer() {
@@ -124,6 +128,8 @@ public class NexusServer implements Runnable {
 
         this.logger.info("Done (" + (System.currentTimeMillis() - startTime) + "ms)! For help, type \"help\" or \"?\"");
 
+        Runtime.getRuntime().addShutdownHook(new ServerShutdownThread(this));
+
         return true;
     }
 
@@ -154,7 +160,6 @@ public class NexusServer implements Runnable {
 
         try {
             this.webServer.stop();
-            this.webServer.join();
         } catch (Exception e) {
             e.printStackTrace();
         }
