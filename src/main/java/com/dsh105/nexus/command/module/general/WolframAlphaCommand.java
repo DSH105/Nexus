@@ -100,14 +100,16 @@ public class WolframAlphaCommand extends CommandModule {
             }
 
             List<String> tips = new ArrayList<>();
-            for (Iterator tipElements = root.element("tips").elementIterator("tip"); tipElements.hasNext(); ) {
-                if (tips.size() > 3) {
-                    break;
-                }
-                Element tip = (Element) tipElements.next();
-                String result = tip.attributeValue("text");
-                if (result != null && !result.isEmpty()) {
-                    tips.add(result.replaceAll("\\s+", " "));
+            if (!root.element("tips") != null) {
+                for (Iterator tipElements = root.element("tips").elementIterator("tip"); tipElements.hasNext(); ) {
+                    if (tips.size() > 3) {
+                        break;
+                    }
+                    Element tip = (Element) tipElements.next();
+                    String result = tip.attributeValue("text");
+                    if (result != null && !result.isEmpty()) {
+                        tips.add(result.replaceAll("\\s+", " "));
+                    }
                 }
             }
             event.errorWithPing("WolframAlpha could not interpret that!");
