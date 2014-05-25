@@ -23,7 +23,9 @@ import com.dsh105.nexus.command.Command;
         needsChannel = false,
         helpGroups = "action",
         help = "Poke a user",
-        extendedHelp = {"{b}{p}{c}{/b} <user> - poke someone!"})
+        extendedHelp = {
+                "{b}{p}{c}{/b} <user> - poke someone!"
+        })
 public class PokeCommand extends AbstractActionCommand {
     public PokeCommand() {
         this.setVerb("poke");

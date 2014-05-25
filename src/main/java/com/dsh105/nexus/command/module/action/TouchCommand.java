@@ -23,7 +23,9 @@ import com.dsh105.nexus.command.Command;
         needsChannel = false,
         helpGroups = "action",
         help = "Touch a user",
-        extendedHelp = {"{b}{p}{c}{/b} <user> - touch someone!"})
+        extendedHelp = {
+                "{b}{p}{c}{/b} <user> - touch someone!"
+        })
 public class TouchCommand extends AbstractActionCommand {
     public TouchCommand() {
         this.setVerb("touche");

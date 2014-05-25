@@ -23,7 +23,9 @@ import com.dsh105.nexus.command.Command;
         needsChannel = false,
         helpGroups = "action",
         help = "Hugs a user",
-        extendedHelp = {"{b}{p}{c}{/b} <user> - Hug someone!"})
+        extendedHelp = {
+                "{b}{p}{c}{/b} <user> - Hug someone!"
+        })
 public class HugCommand extends AbstractActionCommand {
     public HugCommand() {
         this.setVerb("hug");

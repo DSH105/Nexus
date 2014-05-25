@@ -23,7 +23,9 @@ import com.dsh105.nexus.command.Command;
         needsChannel = false,
         helpGroups = "action",
         help = "glare at a user",
-        extendedHelp = {"{b}{p}{c}{/b} <user> - glare at someone!"})
+        extendedHelp = {
+                "{b}{p}{c}{/b} <user> - glare at someone!"
+        })
 public class GlareCommand extends AbstractActionCommand {
     public GlareCommand() {
         this.setVerb("glares at");
