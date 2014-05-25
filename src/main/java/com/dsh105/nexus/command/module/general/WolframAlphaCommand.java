@@ -32,6 +32,8 @@ import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 import org.pircbotx.Colors;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -69,7 +71,7 @@ public class WolframAlphaCommand extends CommandModule {
 
         StringBuilder answer = new StringBuilder();
         try {
-            String apiUrl = String.format(API_URL, input, apiKey);
+            String apiUrl = URLEncoder.encode(String.format(API_URL, input, apiKey), "UTF-8");
             Nexus.LOGGER.info("Requesting WolframAlpha interpretation at " + apiUrl);
 
             SAXReader reader = new SAXReader();
@@ -117,6 +119,8 @@ public class WolframAlphaCommand extends CommandModule {
             throw new WolframAlphaQueryException("Failed to execute WolframAlpha query: " + input, e);
         } catch (DocumentException e) {
             throw new WolframAlphaQueryException("Failed to execute WolframAlpha query: " + input, e);
+        } catch (UnsupportedEncodingException e) {
+            throw new WolframAlphaQueryException("Failed to encode URL", e);
         }
     }
 }
