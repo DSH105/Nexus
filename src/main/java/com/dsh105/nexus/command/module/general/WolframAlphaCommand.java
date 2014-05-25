@@ -100,7 +100,7 @@ public class WolframAlphaCommand extends CommandModule {
             }
 
             List<String> tips = new ArrayList<>();
-            if (!root.element("tips") != null) {
+            if (root.element("tips") != null) {
                 for (Iterator tipElements = root.element("tips").elementIterator("tip"); tipElements.hasNext(); ) {
                     if (tips.size() > 3) {
                         break;
