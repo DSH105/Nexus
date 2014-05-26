@@ -40,7 +40,7 @@ public class HelpCommand extends CommandModule {
     @Override
     public boolean onCommand(CommandPerformEvent event) {
         if (event.getArgs().length == 1) {
-            CommandModule module = event.getManager().matchModule(event.getArgs()[0]);
+            CommandModule module = event.getManager().getModuleFor(event.getArgs()[0]);
             if (module == null) {
                 ArrayList<CommandModule> groupMatch = event.getManager().matchGroup(event.getArgs()[0]);
                 if (groupMatch != null && !groupMatch.isEmpty()) {
@@ -52,8 +52,13 @@ public class HelpCommand extends CommandModule {
                     }
                     return true;
                 }
-                event.errorWithPing("Could not match {0} to a command.", event.getArgs()[0]);
-                return true;
+
+                module = event.getManager().matchModule(event.getArgs()[0]);
+
+                if (module == null) {
+                    event.errorWithPing("Could not match {0} to a command.", event.getArgs()[0]);
+                    return true;
+                }
             }
             if (!event.isInPrivateMessage()) {
                 event.respondWithPing("Check your private messages for help information.");
