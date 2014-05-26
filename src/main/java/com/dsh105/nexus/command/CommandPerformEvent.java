@@ -71,6 +71,10 @@ public class CommandPerformEvent {
         return Nexus.getInstance().getConfig().getCommandPrefix();
     }
 
+    public CommandManager getManager() {
+        return Nexus.getInstance().getCommandManager();
+    }
+
     public String removePing(String nick) {
         return nick == null ? null : (nick.substring(0, 1) + '\u200b' + (nick.length() >= 2 ? nick.substring(1, nick.length()) : ""));
     }

@@ -35,7 +35,7 @@ public class GitHubForkCommand extends CommandModule {
     public boolean onCommand(CommandPerformEvent event) {
         if (event.getArgs().length == 1 || event.getArgs().length == 2) {
             String fullName = event.getArgs().length == 1 ? event.getArgs()[0] : event.getArgs()[0] + " " + event.getArgs()[1];
-            Nexus.getInstance().getCommandManager().onCommand(event.getChannel(), event.getSender(), "repo " + fullName + " fork");
+            event.getManager().onCommand(event.getChannel(), event.getSender(), "repo " + fullName + " fork");
             return true;
         }
         return false;

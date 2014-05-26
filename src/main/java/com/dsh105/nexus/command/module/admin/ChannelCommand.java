@@ -67,7 +67,7 @@ public class ChannelCommand extends CommandModule {
 
         if (!command.equalsIgnoreCase("ALL")) {
             // Check if the command is valid
-            CommandModule module = Nexus.getInstance().getCommandManager().getModuleFor(command);
+            CommandModule module = event.getManager().getModuleFor(command);
             if (module == null) {
                 event.errorWithPing("{0} is not a valid command! Use {1} for help info.", command, event.getCommandPrefix() + "help");
                 return true;

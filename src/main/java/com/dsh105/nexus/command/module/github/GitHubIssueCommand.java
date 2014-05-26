@@ -50,6 +50,6 @@ public class GitHubIssueCommand extends CommandModule {
                 break;
             }
         }
-        return Nexus.getInstance().getCommandManager().onCommand(event.getChannel(), event.getSender(), "repo " + fullName + " issue " + issueId + postArgs);
+        return event.getManager().onCommand(event.getChannel(), event.getSender(), "repo " + fullName + " issue " + issueId + postArgs);
     }
 }

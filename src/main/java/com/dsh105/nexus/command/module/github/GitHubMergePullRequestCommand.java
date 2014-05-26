@@ -42,7 +42,7 @@ public class GitHubMergePullRequestCommand extends CommandModule {
                 event.errorWithPing("{0} needs to be a number.", issueNumber);
                 return true;
             }
-            return Nexus.getInstance().getCommandManager().onCommand(event.getChannel(), event.getSender(), "repo " + fullName + " issue " + issueNumber + " merge");
+            return event.getManager().onCommand(event.getChannel(), event.getSender(), "repo " + fullName + " issue " + issueNumber + " merge");
         }
         return false;
     }

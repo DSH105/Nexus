@@ -45,7 +45,7 @@ public class JenkinsCommand extends CommandModule {
             return true;
         }
         if (event.getArgs().length == 2 && event.getArgs()[0].equalsIgnoreCase("build")) {
-            Nexus.getInstance().getCommandManager().onCommand(event.getChannel(), event.getSender(), "build", event.getArgs()[1]);
+            event.getManager().onCommand(event.getChannel(), event.getSender(), "build", event.getArgs()[1]);
             return true;
         }
         String jobName = event.getArgs()[0];

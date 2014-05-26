@@ -40,15 +40,15 @@ public class HelpCommand extends CommandModule {
     @Override
     public boolean onCommand(CommandPerformEvent event) {
         if (event.getArgs().length == 1) {
-            CommandModule module = Nexus.getInstance().getCommandManager().matchModule(event.getArgs()[0]);
+            CommandModule module = event.getManager().matchModule(event.getArgs()[0]);
             if (module == null) {
-                ArrayList<CommandModule> groupMatch = Nexus.getInstance().getCommandManager().matchGroup(event.getArgs()[0]);
+                ArrayList<CommandModule> groupMatch = event.getManager().matchGroup(event.getArgs()[0]);
                 if (groupMatch != null && !groupMatch.isEmpty()) {
                     if (!event.isInPrivateMessage()) {
                         event.respondWithPing("Check your private messages for help information.");
                     }
                     for (CommandModule groupModule : groupMatch) {
-                        event.respond(getHelpInfoFor(event, groupModule), true);
+                        event.respond(event.getManager().getHelpInfoFor(event, groupModule), true);
                     }
                     return true;
                 }
@@ -61,7 +61,7 @@ public class HelpCommand extends CommandModule {
             event.respond("Help info for {0}{1}:", true, event.getCommandPrefix(), module.getCommand());
             event.respond("(Aliases for {0}: {1})", true, module.getCommand(), StringUtil.combineSplit(0, module.getCommandInfo().aliases(), ", "));
             for (String part : module.getCommandInfo().extendedHelp()) {
-                event.respond(format(event, module, part), true);
+                event.respond(event.getManager().format(module, part), true);
             }
             return true;
         }
@@ -70,32 +70,23 @@ public class HelpCommand extends CommandModule {
         if (!event.isInPrivateMessage()) {
             event.respondWithPing("Check your private messages for help information.");
         }
-        for (CommandModule module : Nexus.getInstance().getCommandManager().getRegisteredCommands()) {
+        for (CommandModule module : event.getManager().getRegisteredCommands()) {
             List<String> groups = Arrays.asList(module.getCommandInfo().helpGroups());
             if (!groups.contains("all")) {
                 continue;
             }
-            event.respond(getHelpInfoFor(event, module), true);
+            event.respond(event.getManager().getHelpInfoFor(event, module), true);
         }
 
-        for (Map.Entry<String, ArrayList<CommandModule>> entry : Nexus.getInstance().getCommandManager().getGroupsMap().entrySet()) {
+        for (Map.Entry<String, ArrayList<CommandModule>> entry : event.getManager().getGroupsMap().entrySet()) {
             if (entry.getKey().equalsIgnoreCase("all")) {
                 continue;
             }
             ArrayList<CommandModule> modules = entry.getValue();
             if (!modules.isEmpty()) {
-                event.respond(format(event, null, "Use {b}{p}help " + entry.getKey() + "{/b} to view {0} more command" + (modules.size() > 1 ? "s" : "")), true, modules.size() + "");
+                event.respond(event.getManager().format(null, "Use {b}{p}help " + entry.getKey() + "{/b} to view {0} more command" + (modules.size() > 1 ? "s" : "")), true, modules.size() + "");
             }
         }
         return true;
-    }
-
-    private String format(CommandPerformEvent event, CommandModule module, String s) {
-        return s.replace("{c}", module == null ? "" : module.getCommand()).replace("{p}", event.getCommandPrefix()).replace("{b}", Colors.BOLD).replace("{/b}", Colors.NORMAL);
-    }
-
-    private String getHelpInfoFor(CommandPerformEvent event, CommandModule module) {
-        String aliases = (module.getCommandInfo().aliases().length <= 0 ? "" : " (Aliases: " + Colors.BOLD + StringUtil.combineSplit(0, module.getCommandInfo().aliases(), ", ") + Colors.NORMAL + ")");
-        return format(event, module, "{b}{p}{c}{/b} - " + module.getCommandInfo().help()) + aliases;
     }
 }

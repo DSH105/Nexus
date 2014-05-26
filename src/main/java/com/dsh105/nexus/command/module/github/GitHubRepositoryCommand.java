@@ -57,7 +57,7 @@ public class GitHubRepositoryCommand extends CommandModule {
     @Override
     public boolean onCommand(final CommandPerformEvent event) {
         if (event.getArgs().length == 0) {
-            Nexus.getInstance().getCommandManager().onCommand(event.getChannel(), event.getSender(), "repo DSH105 Nexus");
+            event.getManager().onCommand(event.getChannel(), event.getSender(), "repo DSH105 Nexus");
             return true;
         }
         int startCheck = 2;
