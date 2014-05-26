@@ -4,6 +4,5 @@ public class Main {
 
     public static void main(String[] args) {
         NexusServer server = NexusServer.getInstance();
-        server.startServerThread();
     }
 }

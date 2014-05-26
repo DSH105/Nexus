@@ -14,6 +14,6 @@ public class ServerShutdownThread extends Thread {
 
     @Override
     public void run() {
-        this.nexusServer.shutdownSafe();
+        this.nexusServer.stop();
     }
 }

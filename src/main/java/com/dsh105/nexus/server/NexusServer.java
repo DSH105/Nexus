@@ -1,9 +1,7 @@
 package com.dsh105.nexus.server;
 
 import com.dsh105.nexus.server.debug.Debugger;
-import com.dsh105.nexus.server.threading.CommandReaderThread;
 import com.dsh105.nexus.server.threading.ServerShutdownThread;
-import com.dsh105.nexus.server.threading.ServerThread;
 import com.dsh105.nexus.server.threading.SleepForeverThread;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -15,7 +13,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Properties;
 
-public class NexusServer implements Runnable {
+public class NexusServer {
 
     /**
      * The Logger
@@ -47,47 +45,17 @@ public class NexusServer implements Runnable {
      */
     private boolean running = true;
 
-    /**
-     * Oh noes, our server was interrupted D:
-     */
-    private boolean isInterrupted = false;
-
     public NexusServer() {
         new SleepForeverThread();
-    }
-
-    public void startServerThread() {
-        new ServerThread(this).start();
-    }
-
-    @Override
-    public void run() {
-        try {
-            if (this.start()) {
-                while (this.running) {
-                    this.createWebServer();
-                }
-            }
-        } catch (Throwable throwable) {
-            this.logger.error("Encountered an unexpected error", throwable);
-        } finally {
-            try {
-                this.stop();
-                this.isInterrupted = true;
-            } catch (Throwable throwable1) {
-                logger.error("Exception stopping the server", throwable1);
-            } finally {
-                System.exit(0);
-            }
-        }
+        start();
     }
 
     protected boolean start() {
         long startTime = System.currentTimeMillis();
 
-        CommandReaderThread commandReaderThread = new CommandReaderThread(this);
+       /** CommandReaderThread commandReaderThread = new CommandReaderThread(this);
         commandReaderThread.setDaemon(true);
-        commandReaderThread.start();
+        commandReaderThread.start();  */
 
         // The properties
         try {
@@ -126,7 +94,9 @@ public class NexusServer implements Runnable {
         this.logger.info("Starting NexusServer...");
         this.logger.info("Debug mode is " + (this.debugging ? "enabled" : "disabled"));
 
-        this.logger.info("Done (" + (System.currentTimeMillis() - startTime) + "ms)! For help, type \"help\" or \"?\"");
+        this.logger.info("Done (" + (System.currentTimeMillis() - startTime) + "ms)!");
+
+        createWebServer();
 
         Runtime.getRuntime().addShutdownHook(new ServerShutdownThread(this));
 
@@ -152,10 +122,6 @@ public class NexusServer implements Runnable {
     }
 
     public void stop() {
-        this.running = false;
-    }
-
-    public void shutdownSafe() {
         this.logger.info("Shutting down...");
 
         try {
@@ -169,10 +135,6 @@ public class NexusServer implements Runnable {
 
     public boolean isRunning() {
         return this.running;
-    }
-
-    public boolean isInterrupted() {
-        return this.isInterrupted;
     }
 
     public void handleConsoleCommand(final String command) {
