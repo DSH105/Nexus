@@ -18,6 +18,7 @@
 package com.dsh105.nexus.command;
 
 import com.dsh105.nexus.Nexus;
+import com.dsh105.nexus.config.ChannelConfiguration;
 import com.dsh105.nexus.exception.general.DateParseException;
 import com.dsh105.nexus.exception.github.GitHubAPIKeyInvalidException;
 import com.dsh105.nexus.exception.github.GitHubHookNotFoundException;
@@ -154,8 +155,13 @@ public class CommandManager {
             CommandModule module = this.getModuleFor(event.getCommand());
 
             if (module != null) {
+                ChannelConfiguration channelConfiguration = Nexus.getInstance().getChannelConfiguration();
+                if (channelConfiguration.getChannel("GLOBAL").isDisabled(module.getCommand())) {
+                    return true;
+                }
+
                 if (!event.isInPrivateMessage() && !Arrays.asList(module.getCommandInfo().helpGroups()).contains("admin")) {
-                    if (Nexus.getInstance().getChannelConfiguration().getChannel(event.getChannel().getName()).isDisabled(module.getCommand())) {
+                    if (channelConfiguration.getChannel(event.getChannel().getName()).isDisabled(module.getCommand())) {
                         return true;
                     }
                 }
@@ -166,13 +172,8 @@ public class CommandManager {
                         return true;
                     }
                     if (!module.onCommand(event)) {
-                        event.errorWithPing("Use " + Nexus.getInstance().getConfig().getCommandPrefix() + "{0} for help (" + module.getCommandInfo().help() + ").", Nexus.getInstance().getConfig().getCommandPrefix() + "help " + event.getCommand());
+                        event.errorWithPing("Use " + Nexus.getInstance().getConfig().getCommandPrefix() + "{0} for help (" + formatHelp(module) + ").", Nexus.getInstance().getConfig().getCommandPrefix() + "help " + event.getCommand());
                         return true;
-                    /*Suggestion suggestion = new Suggestion(event.getArgs()[1], module.getCommandInfo().subCommands());
-                    if (suggestion.getSuggestions() != null && suggestion.getSuggestions().length() > 0) {
-                        event.respondWithPing("Sub command not found. Did you mean: " + Colors.BOLD + suggestion.getSuggestions());
-                        return true;
-                    }*/
                     } else {
                         return true;
                     }
@@ -199,5 +200,22 @@ public class CommandManager {
             return true;
         }
         return false;
+    }
+
+    public String formatHelp(CommandModule module) {
+        return format(module, module.getCommandInfo().help());
+    }
+
+    public String format(CommandModule module, String toFormat) {
+        return toFormat.replace("{c}", module == null ? "" : module.getCommand()).replace("{p}", Nexus.getInstance().getConfig().getCommandPrefix()).replace("{b}", Colors.BOLD).replace("{/b}", Colors.NORMAL);
+    }
+
+    public String getHelpInfoFor(CommandPerformEvent event, CommandModule module) {
+        String aliases = (module.getCommandInfo().aliases().length <= 0 ? "" : " (Aliases: " + Colors.BOLD + StringUtil.combineSplit(0, module.getCommandInfo().aliases(), ", ") + Colors.NORMAL + ")");
+        String status = "";
+        if (!event.isInPrivateMessage()) {
+            status = Nexus.getInstance().getChannelConfiguration().getChannel(event.getChannel().getName()).isDisabled(module.getCommand()) ? "" : Colors.RED + " (Disabled - " + event.getChannel().getName() + ")";
+        }
+        return format(module, "{b}{p}{c}{/b} - " + module.getCommandInfo().help()) + aliases + status;
     }
 }

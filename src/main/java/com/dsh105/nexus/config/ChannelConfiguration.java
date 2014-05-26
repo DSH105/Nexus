@@ -25,8 +25,10 @@ import java.util.HashMap;
 public class ChannelConfiguration {
 
     private HashMap<String, ChannelConfig> channels = new HashMap<>();
+    private ChannelConfig globalChannelConfig;
 
     public ChannelConfiguration() {
+        globalChannelConfig = new ChannelConfig("GLOBAL");
         File channelsFolder = new File("channels");
         if (!channelsFolder.exists()) {
             channelsFolder.mkdirs();
@@ -45,6 +47,9 @@ public class ChannelConfiguration {
     }
 
     public ChannelConfig getChannel(String channelName) {
+        if (channelName.equalsIgnoreCase("GLOBAL")) {
+            return globalChannelConfig;
+        }
         if (!channelName.startsWith("#")) {
             channelName = "#" + channelName;
         }
