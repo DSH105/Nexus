@@ -15,20 +15,19 @@
  * along with Nexus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.dsh105.nexus.command.module.action;
+package com.dsh105.nexus.command.module;
 
-import com.dsh105.nexus.command.Command;
-import com.dsh105.nexus.command.module.CommandGroup;
+import com.dsh105.nexus.command.Exclude;
 
-@Command(command = "bully",
-        needsChannel = false,
-        groups = CommandGroup.ACTION,
-        help = "Bully a user",
-        extendedHelp = {
-                "{b}{p}{c}{/b} <user> - bully someone!"
-        })
-public class BullyCommand extends AbstractActionCommand {
-    public BullyCommand() {
-        this.setVerb("bullie");
-    }
+public enum CommandGroup {
+
+    ALL,
+
+    DYNAMIC,
+
+    ACTION,
+
+    GITHUB,
+
+    ADMIN;
 }

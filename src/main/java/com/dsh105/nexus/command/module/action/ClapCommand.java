@@ -18,10 +18,11 @@
 package com.dsh105.nexus.command.module.action;
 
 import com.dsh105.nexus.command.Command;
+import com.dsh105.nexus.command.module.CommandGroup;
 
 @Command(command = "clap",
         needsChannel = false,
-        helpGroups = "action",
+        groups = CommandGroup.ACTION,
         help = "Clap",
         extendedHelp = {
                 "{b}{p}{c}{/b} <user> - applaud someone!"

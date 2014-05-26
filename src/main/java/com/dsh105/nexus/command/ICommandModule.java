@@ -19,9 +19,7 @@ package com.dsh105.nexus.command;
 
 public interface ICommandModule {
 
-    public String getCommand();
-
     public abstract boolean onCommand(CommandPerformEvent event);
 
-    public Command getCommandInfo();
+    public Command info();
 }

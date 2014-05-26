@@ -17,14 +17,14 @@
 
 package com.dsh105.nexus.command.module.github;
 
-import com.dsh105.nexus.Nexus;
 import com.dsh105.nexus.command.Command;
 import com.dsh105.nexus.command.CommandModule;
 import com.dsh105.nexus.command.CommandPerformEvent;
+import com.dsh105.nexus.command.module.CommandGroup;
 import com.dsh105.nexus.util.StringUtil;
 
 @Command(command = "merge",
-        helpGroups = "github",
+        groups = CommandGroup.GITHUB,
         aliases = {"githubmerge", "ghmerge", "ghm"},
         needsChannel = false,
         help = "Merge a pull request",

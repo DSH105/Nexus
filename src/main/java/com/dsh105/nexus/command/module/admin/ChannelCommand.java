@@ -21,6 +21,7 @@ import com.dsh105.nexus.Nexus;
 import com.dsh105.nexus.command.Command;
 import com.dsh105.nexus.command.CommandModule;
 import com.dsh105.nexus.command.CommandPerformEvent;
+import com.dsh105.nexus.command.module.CommandGroup;
 import com.dsh105.nexus.config.ChannelConfig;
 import com.dsh105.nexus.util.StringUtil;
 import org.apache.commons.lang3.BooleanUtils;
@@ -30,7 +31,7 @@ import java.util.ArrayList;
 @Command(command = "channel",
         aliases = "chan",
         needsChannel = false,
-        helpGroups = "admin",
+        groups = CommandGroup.ADMIN,
         help = "Disable and enable commands in certain channels",
         extendedHelp = {
                 "{b}{p}{c}{/b} <channel> <command> <enable/disable> - Disable or enable a command in a channel.",
@@ -72,7 +73,7 @@ public class ChannelCommand extends CommandModule {
                 event.errorWithPing("{0} is not a valid command! Use {1} for help info.", command, event.getCommandPrefix() + "help");
                 return true;
             }
-            command = module.getCommand();
+            command = module.info().command();
         }
 
         if (event.getArgs().length == 3) {

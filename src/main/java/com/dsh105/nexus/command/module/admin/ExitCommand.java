@@ -21,10 +21,11 @@ import com.dsh105.nexus.Nexus;
 import com.dsh105.nexus.command.Command;
 import com.dsh105.nexus.command.CommandModule;
 import com.dsh105.nexus.command.CommandPerformEvent;
+import com.dsh105.nexus.command.module.CommandGroup;
 
 @Command(command = "exit",
         needsChannel = false,
-        helpGroups = "admin",
+        groups = CommandGroup.ADMIN,
         help = "Exit and shutdown Nexus",
         extendedHelp = {
                 "Use {b}{p}{c}{/b} to shutdown the bot. Only admins may use this command."

@@ -18,7 +18,7 @@
 package com.dsh105.nexus.command;
 
 
-import com.dsh105.nexus.command.module.general.TempCommand;
+import com.dsh105.nexus.command.module.information.TempCommand;
 import org.junit.Assert;
 import org.junit.Test;
 

@@ -24,10 +24,6 @@ import org.pircbotx.User;
 
 public abstract class CommandModule implements ICommandModule {
 
-    public String getCommand() {
-        return getCommandInfo().command();
-    }
-
     public abstract boolean onCommand(CommandPerformEvent event);
 
     protected boolean checkPerm(Channel channel, User sender) {
@@ -45,7 +41,7 @@ public abstract class CommandModule implements ICommandModule {
         return false;
     }
 
-    public Command getCommandInfo() {
+    public Command info() {
         return this.getClass().getAnnotation(Command.class);
     }
 }

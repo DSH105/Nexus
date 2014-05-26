@@ -15,20 +15,22 @@
  * along with Nexus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.dsh105.nexus.command.module.action;
+package com.dsh105.nexus.exception.general;
 
-import com.dsh105.nexus.command.Command;
-import com.dsh105.nexus.command.module.CommandGroup;
+public class DynamicCommandRegistrationFailedException extends RuntimeException {
 
-@Command(command = "bully",
-        needsChannel = false,
-        groups = CommandGroup.ACTION,
-        help = "Bully a user",
-        extendedHelp = {
-                "{b}{p}{c}{/b} <user> - bully someone!"
-        })
-public class BullyCommand extends AbstractActionCommand {
-    public BullyCommand() {
-        this.setVerb("bullie");
+    public DynamicCommandRegistrationFailedException() {
+    }
+
+    public DynamicCommandRegistrationFailedException(String s) {
+        super(s);
+    }
+
+    public DynamicCommandRegistrationFailedException(String s, Throwable throwable) {
+        super(s, throwable);
+    }
+
+    public DynamicCommandRegistrationFailedException(Throwable throwable) {
+        super(throwable);
     }
 }

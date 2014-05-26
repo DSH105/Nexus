@@ -21,6 +21,7 @@ import com.dsh105.nexus.Nexus;
 import com.dsh105.nexus.command.Command;
 import com.dsh105.nexus.command.CommandModule;
 import com.dsh105.nexus.command.CommandPerformEvent;
+import com.dsh105.nexus.command.module.CommandGroup;
 import com.dsh105.nexus.exception.general.GenericUrlConnectionException;
 import com.dsh105.nexus.util.shorten.URLShortener;
 import com.mashape.unirest.http.HttpResponse;
@@ -36,7 +37,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 @Command(command = "ghkey",
-        helpGroups = "github",
+        groups = CommandGroup.GITHUB,
         aliases = {"ghk", "githubkey"},
         needsChannel = false,
         help = "Authenticate with GitHub through Nexus to allow the use of various GitHub commands requiring an API key.",
@@ -58,7 +59,7 @@ public class GitHubKeyCommand extends CommandModule {
                     .replace("{state}", Nexus.getInstance().getGitHubConfig().getGitHubOauthAppState())), true);
             event.respond("- Allow Nexus access.", true);
             event.respond("- Copy the URL you are redirected to (the code information in this is important, so don't change anything!).", true);
-            event.respond("- Perform {0}, where <code> is the URL you copied above.", true, Nexus.getInstance().getConfig().getCommandPrefix() + this.getCommand() + " <code>");
+            event.respond("- Perform {0}, where <code> is the URL you copied above.", true, Nexus.getInstance().getConfig().getCommandPrefix() + this.info().command() + " <code>");
             if (!event.isInPrivateMessage()) {
                 event.respondWithPing("Please check your private messages for instructions on how to configure your GitHub API key.");
             }

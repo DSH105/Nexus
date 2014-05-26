@@ -18,10 +18,11 @@
 package com.dsh105.nexus.command.module.action;
 
 import com.dsh105.nexus.command.Command;
+import com.dsh105.nexus.command.module.CommandGroup;
 
 @Command(command = "glare",
         needsChannel = false,
-        helpGroups = "action",
+        groups = CommandGroup.ACTION,
         help = "glare at a user",
         extendedHelp = {
                 "{b}{p}{c}{/b} <user> - glare at someone!"

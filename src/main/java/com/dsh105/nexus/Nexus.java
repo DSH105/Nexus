@@ -189,7 +189,6 @@ public class Nexus extends PircBotX {
         LOGGER.info("Registering commands");
         commandManager = new CommandManager();
         commandManager.registerDefaults();
-        commandManager.buildGroupMap();
 
         LOGGER.info("Preparing response manager");
         responseManager = new ResponseManager();

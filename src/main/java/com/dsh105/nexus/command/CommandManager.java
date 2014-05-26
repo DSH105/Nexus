@@ -18,6 +18,7 @@
 package com.dsh105.nexus.command;
 
 import com.dsh105.nexus.Nexus;
+import com.dsh105.nexus.command.module.CommandGroup;
 import com.dsh105.nexus.config.ChannelConfiguration;
 import com.dsh105.nexus.exception.general.DateParseException;
 import com.dsh105.nexus.exception.github.GitHubAPIKeyInvalidException;
@@ -34,7 +35,7 @@ import java.util.*;
 
 public class CommandManager {
 
-    HashMap<String, ArrayList<CommandModule>> groupToModules = new HashMap<>();
+    private HashMap<CommandGroup, ArrayList<CommandModule>> groupToModules = new HashMap<>();
     private ArrayList<CommandModule> modules = new ArrayList<>();
 
     public void registerDefaults() {
@@ -51,30 +52,22 @@ public class CommandManager {
                 e.printStackTrace();
             }
         }
-
-    }
-
-    public void buildGroupMap() {
-        for (CommandModule module : Nexus.getInstance().getCommandManager().getRegisteredCommands()) {
-            for (String group : module.getCommandInfo().helpGroups()) {
-                if (!group.equalsIgnoreCase("all")) {
-                    ArrayList<CommandModule> existing = groupToModules.get(group);
-                    if (existing == null) {
-                        existing = new ArrayList<>();
-                    }
-                    existing.add(module);
-                    groupToModules.put(group, existing);
-                }
-            }
-        }
     }
 
     public void register(CommandModule module) {
-        if (module.getCommandInfo() == null) {
+        if (module.info() == null) {
             Nexus.LOGGER.warning("Failed to register command: " + module.getClass().getSimpleName() + ". Missing @Command annotation!");
             return;
         }
         this.modules.add(module);
+        for (CommandGroup group : module.info().groups()) {
+            ArrayList<CommandModule> groupModules = groupToModules.get(group);
+            if (groupModules == null) {
+                groupModules = new ArrayList<>();
+            }
+            groupModules.add(module);
+            groupToModules.put(group, groupModules);
+        }
     }
 
     public <T extends CommandModule> T getModuleOfType(Class<T> type) {
@@ -87,8 +80,12 @@ public class CommandManager {
     }
 
     public CommandModule getModuleFor(String commandArguments) {
-        for (CommandModule module : modules) {
-            if (module.getCommandInfo().command().equalsIgnoreCase(commandArguments) || Arrays.asList(module.getCommandInfo().aliases()).contains(commandArguments.toLowerCase())) {
+        return getModuleFor(modules, commandArguments);
+    }
+
+    public CommandModule getModuleFor(ArrayList<CommandModule> moduleList, String commandArguments) {
+        for (CommandModule module : moduleList) {
+            if (module.info().command().equalsIgnoreCase(commandArguments) || Arrays.asList(module.info().aliases()).contains(commandArguments.toLowerCase())) {
                 return module;
             }
         }
@@ -96,19 +93,23 @@ public class CommandManager {
     }
 
     public CommandModule matchModule(String commandArguments) {
+        return matchModule(modules, commandArguments);
+    }
+
+    public CommandModule matchModule(ArrayList<CommandModule> moduleList, String commandArguments) {
         CommandModule possibleMatch = null;
-        for (CommandModule module : modules) {
-            if (module.getCommandInfo().command().equalsIgnoreCase(commandArguments)) {
+        for (CommandModule module : moduleList) {
+            if (module.info().command().equalsIgnoreCase(commandArguments)) {
                 return module;
             }
 
-            for (String alias : module.getCommandInfo().aliases()) {
+            for (String alias : module.info().aliases()) {
                 if (commandArguments.equalsIgnoreCase(alias) || alias.startsWith(commandArguments)) {
                     return module;
                 }
             }
 
-            if (module.getCommand().startsWith(commandArguments)) {
+            if (module.info().command().toLowerCase().startsWith(commandArguments.toLowerCase())) {
                 possibleMatch = module;
             }
         }
@@ -117,12 +118,12 @@ public class CommandManager {
 
     public ArrayList<CommandModule> matchGroup(String commandArguments) {
         ArrayList<CommandModule> possibleMatch = null;
-        for (Map.Entry<String, ArrayList<CommandModule>> entry : Nexus.getInstance().getCommandManager().getGroupsMap().entrySet()) {
-            if (entry.getKey().equalsIgnoreCase(commandArguments)) {
+        for (Map.Entry<CommandGroup, ArrayList<CommandModule>> entry : Nexus.getInstance().getCommandManager().getGroupsMap().entrySet()) {
+            if (entry.getKey().toString().equalsIgnoreCase(commandArguments)) {
                 return entry.getValue();
             }
 
-            if (entry.getKey().startsWith(commandArguments)) {
+            if (entry.getKey().toString().toLowerCase().startsWith(commandArguments.toLowerCase())) {
                 possibleMatch = entry.getValue();
             }
         }
@@ -133,7 +134,7 @@ public class CommandManager {
         return modules;
     }
 
-    public HashMap<String, ArrayList<CommandModule>> getGroupsMap() {
+    public HashMap<CommandGroup, ArrayList<CommandModule>> getGroupsMap() {
         return new HashMap<>(groupToModules);
     }
 
@@ -154,21 +155,28 @@ public class CommandManager {
         try {
             CommandModule module = this.getModuleFor(event.getCommand());
 
+            if (module == null) {
+                ArrayList<CommandModule> dynamicModules = getGroupsMap().get(CommandGroup.DYNAMIC);
+                if (dynamicModules != null && !dynamicModules.isEmpty()) {
+                    module = matchModule(dynamicModules, event.getCommand());
+                }
+            }
+
             if (module != null) {
                 ChannelConfiguration channelConfiguration = Nexus.getInstance().getChannelConfiguration();
-                if (channelConfiguration.getChannel("GLOBAL").isDisabled(module.getCommand())) {
+                if (channelConfiguration.getChannel("GLOBAL").isDisabled(module.info().command())) {
                     return true;
                 }
 
-                if (!event.isInPrivateMessage() && !Arrays.asList(module.getCommandInfo().helpGroups()).contains("admin")) {
-                    if (channelConfiguration.getChannel(event.getChannel().getName()).isDisabled(module.getCommand())) {
+                if (!event.isInPrivateMessage() && !Arrays.asList(module.info().groups()).contains(CommandGroup.ADMIN)) {
+                    if (channelConfiguration.getChannel(event.getChannel().getName()).isDisabled(module.info().command())) {
                         return true;
                     }
                 }
                 
                 if (module.checkPerm(event.getChannel(), event.getSender())) {
-                    if (module.getCommandInfo().needsChannel() && event.isInPrivateMessage()) {
-                        event.respond("You cannot perform {0} here.", event.getCommandPrefix() + module.getCommand() + " " + StringUtil.combineSplit(0, event.getArgs(), " "));
+                    if (module.info().needsChannel() && event.isInPrivateMessage()) {
+                        event.respond("You cannot perform {0} here.", event.getCommandPrefix() + module.info().command() + " " + StringUtil.combineSplit(0, event.getArgs(), " "));
                         return true;
                     }
                     if (!module.onCommand(event)) {
@@ -203,19 +211,19 @@ public class CommandManager {
     }
 
     public String formatHelp(CommandModule module) {
-        return format(module, module.getCommandInfo().help());
+        return format(module, module.info().help());
     }
 
     public String format(CommandModule module, String toFormat) {
-        return toFormat.replace("{c}", module == null ? "" : module.getCommand()).replace("{p}", Nexus.getInstance().getConfig().getCommandPrefix()).replace("{b}", Colors.BOLD).replace("{/b}", Colors.NORMAL);
+        return toFormat.replace("{c}", module == null ? "" : module.info().command()).replace("{p}", Nexus.getInstance().getConfig().getCommandPrefix()).replace("{b}", Colors.BOLD).replace("{/b}", Colors.NORMAL);
     }
 
     public String getHelpInfoFor(CommandPerformEvent event, CommandModule module) {
-        String aliases = (module.getCommandInfo().aliases().length <= 0 ? "" : " (Aliases: " + Colors.BOLD + StringUtil.combineSplit(0, module.getCommandInfo().aliases(), ", ") + Colors.NORMAL + ")");
+        String aliases = (module.info().aliases().length <= 0 ? "" : " (Aliases: " + Colors.BOLD + StringUtil.combineSplit(0, module.info().aliases(), ", ") + Colors.NORMAL + ")");
         String status = "";
         if (!event.isInPrivateMessage()) {
-            status = Nexus.getInstance().getChannelConfiguration().getChannel(event.getChannel().getName()).isDisabled(module.getCommand()) ? Colors.RED + " (Disabled - " + event.getChannel().getName() + ")" : "";
+            status = Nexus.getInstance().getChannelConfiguration().getChannel(event.getChannel().getName()).isDisabled(module.info().command()) ? Colors.RED + " (Disabled - " + event.getChannel().getName() + ")" : "";
         }
-        return format(module, "{b}{p}{c}{/b} - " + module.getCommandInfo().help()) + aliases + status;
+        return format(module, "{b}{p}{c}{/b} - " + module.info().help()) + aliases + status;
     }
 }

@@ -20,6 +20,7 @@ package com.dsh105.nexus.command.module.github;
 import com.dsh105.nexus.command.Command;
 import com.dsh105.nexus.command.CommandModule;
 import com.dsh105.nexus.command.CommandPerformEvent;
+import com.dsh105.nexus.command.module.CommandGroup;
 import com.dsh105.nexus.exception.github.GitHubUserNotFoundException;
 import com.dsh105.nexus.hook.github.GitHub;
 import com.dsh105.nexus.hook.github.GitHubUser;
@@ -30,7 +31,7 @@ import org.pircbotx.Colors;
 @Command(command = "ghuser",
         aliases = {"ghu", "githubuser"},
         needsChannel = false,
-        helpGroups = "github",
+        groups = CommandGroup.GITHUB,
         help = "Retrieves information on a GitHub user",
         extendedHelp = {
                 "{b}{p}{c}{/b} <user_name> - Provides information on a GitHub user."

@@ -41,7 +41,7 @@ public class JenkinsCommand extends CommandModule {
     @Override
     public boolean onCommand(CommandPerformEvent event) {
         if (event.getArgs().length == 0) {
-            event.respondWithPing("Usage: {0}", event.getCommandPrefix() + this.getCommand() + " <job_name>");
+            event.respondWithPing("Usage: {0}", event.getCommandPrefix() + this.info().command() + " <job_name>");
             return true;
         }
         if (event.getArgs().length == 2 && event.getArgs()[0].equalsIgnoreCase("build")) {

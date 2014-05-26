@@ -17,13 +17,13 @@
 
 package com.dsh105.nexus.command.module.github;
 
-import com.dsh105.nexus.Nexus;
 import com.dsh105.nexus.command.Command;
 import com.dsh105.nexus.command.CommandModule;
 import com.dsh105.nexus.command.CommandPerformEvent;
+import com.dsh105.nexus.command.module.CommandGroup;
 
 @Command(command = "fork",
-        helpGroups = "github",
+        groups = CommandGroup.GITHUB,
         aliases = {"githubfork", "ghf"},
         needsChannel = false,
         help = "Fork a GitHub repository. Requires a GitHub API key (see {b}{p}ghkey{/b})",

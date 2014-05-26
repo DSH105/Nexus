@@ -17,12 +17,11 @@
 
 package com.dsh105.nexus.command.module.irc;
 
-import com.dsh105.nexus.Nexus;
 import com.dsh105.nexus.command.Command;
 import com.dsh105.nexus.command.CommandModule;
 import com.dsh105.nexus.command.CommandPerformEvent;
+import com.dsh105.nexus.command.module.CommandGroup;
 import com.dsh105.nexus.util.StringUtil;
-import org.pircbotx.Colors;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -63,9 +62,9 @@ public class HelpCommand extends CommandModule {
             if (!event.isInPrivateMessage()) {
                 event.respondWithPing("Check your private messages for help information.");
             }
-            event.respond("Help info for {0}{1}:", true, event.getCommandPrefix(), module.getCommand());
-            event.respond("(Aliases for {0}: {1})", true, module.getCommand(), StringUtil.combineSplit(0, module.getCommandInfo().aliases(), ", "));
-            for (String part : module.getCommandInfo().extendedHelp()) {
+            event.respond("Help info for {0}{1}:", true, event.getCommandPrefix(), module.info().command());
+            event.respond("(Aliases for {0}: {1})", true, module.info().command(), StringUtil.combineSplit(0, module.info().aliases(), ", "));
+            for (String part : module.info().extendedHelp()) {
                 event.respond(event.getManager().format(module, part), true);
             }
             return true;
@@ -76,17 +75,14 @@ public class HelpCommand extends CommandModule {
             event.respondWithPing("Check your private messages for help information.");
         }
         for (CommandModule module : event.getManager().getRegisteredCommands()) {
-            List<String> groups = Arrays.asList(module.getCommandInfo().helpGroups());
-            if (!groups.contains("all")) {
+            List<CommandGroup> groups = Arrays.asList(module.info().groups());
+            if (!groups.contains(CommandGroup.ALL)) {
                 continue;
             }
             event.respond(event.getManager().getHelpInfoFor(event, module), true);
         }
 
-        for (Map.Entry<String, ArrayList<CommandModule>> entry : event.getManager().getGroupsMap().entrySet()) {
-            if (entry.getKey().equalsIgnoreCase("all")) {
-                continue;
-            }
+        for (Map.Entry<CommandGroup, ArrayList<CommandModule>> entry : event.getManager().getGroupsMap().entrySet()) {
             ArrayList<CommandModule> modules = entry.getValue();
             if (!modules.isEmpty()) {
                 event.respond(event.getManager().format(null, "Use {b}{p}help " + entry.getKey() + "{/b} to view {0} more command" + (modules.size() > 1 ? "s" : "")), true, modules.size() + "");

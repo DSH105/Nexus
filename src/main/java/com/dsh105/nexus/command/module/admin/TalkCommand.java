@@ -21,11 +21,12 @@ import com.dsh105.nexus.Nexus;
 import com.dsh105.nexus.command.Command;
 import com.dsh105.nexus.command.CommandModule;
 import com.dsh105.nexus.command.CommandPerformEvent;
+import com.dsh105.nexus.command.module.CommandGroup;
 import com.dsh105.nexus.util.StringUtil;
 
 @Command(command = "talk",
         needsChannel = false,
-        helpGroups = "admin",
+        groups = CommandGroup.ADMIN,
         help = "Make Nexus talk",
         extendedHelp = {
                 "Use {b}{p}{c}{/b} <chan> <msg>. Only admins may use this command."

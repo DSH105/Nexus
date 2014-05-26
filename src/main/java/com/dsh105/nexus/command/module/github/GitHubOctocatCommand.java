@@ -20,6 +20,7 @@ package com.dsh105.nexus.command.module.github;
 import com.dsh105.nexus.command.Command;
 import com.dsh105.nexus.command.CommandModule;
 import com.dsh105.nexus.command.CommandPerformEvent;
+import com.dsh105.nexus.command.module.CommandGroup;
 import com.dsh105.nexus.exception.general.GenericUrlConnectionException;
 import com.dsh105.nexus.hook.github.Octocat;
 import com.dsh105.nexus.util.JsonUtil;
@@ -35,7 +36,7 @@ import java.util.Random;
 @Command(command = "octo",
         aliases = {"githuboctocat", "octocat"},
         needsChannel = false,
-        helpGroups = "github",
+        groups = CommandGroup.GITHUB,
         help = "Give information on a random or specified Octocat.",
         extendedHelp = {
                 "{b}{p}{c}{/b} - Display a random Octocat.", "{b}{p}{c}{/b} <id> - Display a specified Octocat."

@@ -21,6 +21,7 @@ import com.dsh105.nexus.Nexus;
 import com.dsh105.nexus.command.Command;
 import com.dsh105.nexus.command.CommandModule;
 import com.dsh105.nexus.command.CommandPerformEvent;
+import com.dsh105.nexus.command.module.CommandGroup;
 import com.dsh105.nexus.exception.jenkins.JenkinsException;
 import com.dsh105.nexus.exception.jenkins.JenkinsJobNotFoundException;
 import com.dsh105.nexus.hook.jenkins.Jenkins;
@@ -28,7 +29,7 @@ import com.dsh105.nexus.hook.jenkins.JenkinsJob;
 
 @Command(command = "build",
         needsChannel = false,
-        helpGroups = "admin",
+        groups = CommandGroup.ADMIN,
         help = "Start building a Jenkins job on the stored CI. Only Nexus admins may use this command",
         extendedHelp = {
                 "Begins the build process for a job on the configured Jenkins server",
@@ -42,7 +43,7 @@ public class BuildCommand extends CommandModule {
     @Override
     public boolean onCommand(CommandPerformEvent event) {
         if (event.getArgs().length == 0) {
-            event.respondWithPing("Usage: {0}", event.getCommandPrefix() + this.getCommand() + " <job_name>");
+            event.respondWithPing("Usage: {0}", event.getCommandPrefix() + this.info().command() + " <job_name>");
             return true;
         }
 
