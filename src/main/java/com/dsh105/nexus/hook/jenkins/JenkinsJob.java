@@ -70,6 +70,8 @@ public class JenkinsJob {
                     throw new JenkinsJobNotFoundException("Failed to locate Jenkins API!", e);
                 }
                 throw new JenkinsJobException("Failed to connect to Jenkins API!", e);
+            } catch (ArrayIndexOutOfBoundsException ignored) {
+                // most likely event is that the job has no builds
             }
         }
         return health;
