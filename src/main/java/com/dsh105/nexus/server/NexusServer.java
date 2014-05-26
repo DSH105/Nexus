@@ -5,12 +5,17 @@ import com.dsh105.nexus.server.threading.ServerShutdownThread;
 import com.dsh105.nexus.server.threading.SleepForeverThread;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.ServerConnector;
+import org.eclipse.jetty.server.handler.HandlerList;
+import org.eclipse.jetty.webapp.WebAppContext;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URL;
 import java.util.Properties;
 
 public class NexusServer {
@@ -109,6 +114,21 @@ public class NexusServer {
         String webAppContextPath = this.serverProperties.getProperty("webapp.context");
 
         Debugger.getInstance().log(1, "Loading webapp from {0} at url {1}", webApp, webAppContextPath);
+
+        URL warURL = getClass().getClassLoader().getResource(webApp);
+        WebAppContext webAppContext = new WebAppContext(warURL.toExternalForm(), webAppContextPath);
+
+        // Create the handler list
+        HandlerList handlers = new HandlerList();
+        handlers.setHandlers(new Handler[] { webAppContext });
+
+        webServer.setHandler(handlers);
+
+        ServerConnector connector = new ServerConnector(webServer, 2, 2);
+        connector.setPort(port);
+        connector.setAcceptQueueSize(1024);
+        connector.setSoLingerTime(0);
+        webServer.addConnector(connector);
 
         this.webServer = new Server(port);
         try {
