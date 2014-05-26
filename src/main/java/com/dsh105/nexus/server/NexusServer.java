@@ -2,7 +2,6 @@ package com.dsh105.nexus.server;
 
 import com.dsh105.nexus.server.debug.Debugger;
 import com.dsh105.nexus.server.threading.ServerShutdownThread;
-import com.dsh105.nexus.server.threading.SleepForeverThread;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.jetty.server.Handler;
@@ -51,7 +50,6 @@ public class NexusServer {
     private boolean running = true;
 
     public NexusServer() {
-        new SleepForeverThread();
         start();
     }
 
@@ -155,10 +153,6 @@ public class NexusServer {
 
     public boolean isRunning() {
         return this.running;
-    }
-
-    public void handleConsoleCommand(final String command) {
-        logger.info("Not implemented yet!");
     }
 
     public File getRoot() {
