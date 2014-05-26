@@ -214,7 +214,7 @@ public class CommandManager {
         String aliases = (module.getCommandInfo().aliases().length <= 0 ? "" : " (Aliases: " + Colors.BOLD + StringUtil.combineSplit(0, module.getCommandInfo().aliases(), ", ") + Colors.NORMAL + ")");
         String status = "";
         if (!event.isInPrivateMessage()) {
-            status = Nexus.getInstance().getChannelConfiguration().getChannel(event.getChannel().getName()).isDisabled(module.getCommand()) ? "" : Colors.RED + " (Disabled - " + event.getChannel().getName() + ")";
+            status = Nexus.getInstance().getChannelConfiguration().getChannel(event.getChannel().getName()).isDisabled(module.getCommand()) ? Colors.RED + " (Disabled - " + event.getChannel().getName() + ")" : "";
         }
         return format(module, "{b}{p}{c}{/b} - " + module.getCommandInfo().help()) + aliases + status;
     }
