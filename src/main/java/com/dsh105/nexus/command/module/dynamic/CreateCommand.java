@@ -67,6 +67,11 @@ public class CreateCommand extends CommandModule {
     }
 
     private boolean isValidType(String type) {
-        return Arrays.asList(new String[] {"ACTION", "COMMAND"}).contains(type.toUpperCase());
+        return Arrays.asList(new String[]{"ACTION", "COMMAND"}).contains(type.toUpperCase());
+    }
+
+    @Override
+    public boolean adminOnly() {
+        return true;
     }
 }

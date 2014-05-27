@@ -65,7 +65,7 @@ public class StringUtilTest {
 
     @Test
     public void testSplitArgs() {
-        Assert.assertArrayEquals(new String[] {"arg", "1", "arg", "2"}, StringUtil.splitArgs(0, new String[] {"arg 1", "arg 2"}, " "));
+        Assert.assertArrayEquals(new String[]{"arg", "1", "arg", "2"}, StringUtil.splitArgs(0, new String[]{"arg 1", "arg 2"}, " "));
     }
 
     @Test
