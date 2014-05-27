@@ -114,11 +114,7 @@ public class NexusServer {
 
         this.webServer = new Server();
 
-        // Create the handler list
         HandlerList handlers = new HandlerList();
-       // ResourceHandler resourceHandler = new ResourceHandler();
-       // resourceHandler.setWelcomeFiles(new String[]{ "index.html" });
-       // resourceHandler.setResourceBase(".");
         handlers.setHandlers(new Handler[] { this.requestHandler });
 
         webServer.setHandler(handlers);
