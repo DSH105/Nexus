@@ -18,6 +18,9 @@
 package com.dsh105.nexus;
 
 import com.dsh105.nexus.command.CommandManager;
+import com.dsh105.nexus.command.CommandModule;
+import com.dsh105.nexus.command.module.CommandGroup;
+import com.dsh105.nexus.command.module.dynamic.DynamicCommand;
 import com.dsh105.nexus.command.module.general.RemindCommand;
 import com.dsh105.nexus.config.ChannelConfiguration;
 import com.dsh105.nexus.config.GitHubConfig;
@@ -228,13 +231,22 @@ public class Nexus extends PircBotX {
         this.getConfig().save();
         this.getNicksConfig().save();
         this.getGitHubConfig().save();
-        LOGGER.info("Saving channels");
+
+        //LOGGER.info("Saving channels");
         //this.saveChannels();
         RemindCommand remindCommand = this.getCommandManager().getModuleOfType(RemindCommand.class);
         if (remindCommand != null) {
             LOGGER.info("Saving reminders");
             remindCommand.saveReminders();
         }
+
+        LOGGER.info("Saving dynamic commands");
+        for (CommandModule module : this.getCommandManager().getGroupsMap().get(CommandGroup.DYNAMIC)) {
+            if (module instanceof DynamicCommand) {
+                ((DynamicCommand) module).save();
+            }
+        }
+
         LOGGER.info("Saving responses");
         responseManager.save();
     }

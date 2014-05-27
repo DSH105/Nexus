@@ -27,6 +27,7 @@ public class DynamicCommandFactory {
     private String response;
     private boolean needsChannel = false;
     private boolean action = false;
+    private boolean commandResponse = false;
     private String help;
     private String[] extendedHelp;
     private String[] aliases = new String[0];
@@ -45,6 +46,22 @@ public class DynamicCommandFactory {
         this.response = response;
         this.action = true;
         return this;
+    }
+
+    public DynamicCommandFactory withCommandResponse(String response) {
+        this.response = response;
+        this.commandResponse = true;
+        return this;
+    }
+
+    public DynamicCommandFactory withResponseOfType(String response, String type) {
+        if (type.equalsIgnoreCase("ACTION")) {
+            return this.withActionResponse(response);
+        } else if (type.equalsIgnoreCase("COMMAND")) {
+            return this.withCommandResponse(response);
+        } else {
+            return this.withResponse(response);
+        }
     }
 
     public DynamicCommandFactory withChannelRequirement(boolean needsChannel) {
@@ -74,6 +91,6 @@ public class DynamicCommandFactory {
         Validate.notNull(extendedHelp, "Extended help for DynamicCommand must not be null");
         Validate.notNull(aliases, "Aliases for DynamicCommand must not be null");
 
-        return new DynamicCommand(command, response, needsChannel, help, extendedHelp, aliases, action);
+        return new DynamicCommand(command, response, needsChannel, help, extendedHelp, aliases, action, commandResponse);
     }
 }

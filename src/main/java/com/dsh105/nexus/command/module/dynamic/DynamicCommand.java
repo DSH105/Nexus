@@ -23,11 +23,15 @@ import com.dsh105.nexus.command.CommandModule;
 import com.dsh105.nexus.command.CommandPerformEvent;
 import com.dsh105.nexus.command.Exclude;
 import com.dsh105.nexus.command.module.CommandGroup;
+import com.dsh105.nexus.config.ChannelConfig;
+import com.dsh105.nexus.config.YamlConfig;
 import com.dsh105.nexus.exception.general.DynamicCommandRegistrationFailedException;
+import org.yaml.snakeyaml.Yaml;
 
+import java.io.*;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
-import java.util.Map;
+import java.util.*;
 
 @Exclude
 @Command(command = "dynamic",
@@ -43,12 +47,13 @@ public class DynamicCommand extends CommandModule {
     private String[] extendedHelp;
     private String[] aliases = new String[0];
     private boolean action = false;
+    private boolean commandResponse = false;
 
     public DynamicCommand(String command, String response, boolean needsChannel, String help, String[] extendedHelp, String[] aliases) {
-        this(command, response, needsChannel, help, extendedHelp, aliases, false);
+        this(command, response, needsChannel, help, extendedHelp, aliases, false, false);
     }
 
-    public DynamicCommand(String command, String response, boolean needsChannel, String help, String[] extendedHelp, String[] aliases, boolean action) {
+    public DynamicCommand(String command, String response, boolean needsChannel, String help, String[] extendedHelp, String[] aliases, boolean action, boolean commandResponse) {
         this.command = command;
         this.response = response;
         this.needsChannel = needsChannel;
@@ -56,14 +61,35 @@ public class DynamicCommand extends CommandModule {
         this.extendedHelp = extendedHelp;
         this.aliases = aliases;
         this.action = action;
+        this.commandResponse = commandResponse;
 
         this.prepare();
+    }
+
+    public static void loadCommands() {
+        File commandsFolder = new File("commands");
+        if (!commandsFolder.exists()) {
+            commandsFolder.mkdirs();
+        }
+        for (File file : commandsFolder.listFiles()) {
+            int extIndex = file.getName().lastIndexOf(".");
+            String extension = "";
+            if (extIndex > 0) {
+                extension = file.getName().substring(extIndex + 1);
+            }
+            if (extension.equalsIgnoreCase("YML")) {
+                YamlConfig config = new YamlConfig(file.getName());
+                Nexus.getInstance().getCommandManager().register(new DynamicCommand(config.get("command", ""), config.get("response", ""), config.get("needsChannel", false), config.get("help", ""), config.get("extendedHelp", new String[]{""}), config.get("aliases", new String[]{""}), config.get("action", false), config.get("commandResponse", false)));
+            }
+        }
     }
 
     @Override
     public boolean onCommand(CommandPerformEvent event) {
         if (this.action) {
             Nexus.getInstance().sendIRC().action(event.getSender().getNick(), appendReplacements(event));
+        } else if (this.commandResponse) {
+            event.getManager().onCommand(event.getChannel(), event.getSender(), response);
         } else {
             event.respond(appendReplacements(event));
         }
@@ -73,7 +99,7 @@ public class DynamicCommand extends CommandModule {
     public String appendReplacements(CommandPerformEvent event) {
         String response = this.response
                 .replace("%s", event.getSender().getNick())
-                .replace("%c", event.getChannel().getName());
+                .replace("%c", event.isInPrivateMessage() ? "PM" : event.getChannel().getName());
 
         for (int i = 0; i < event.getArgs().length; i++) {
             response.replace("%a" + i, event.getArgs()[i]);
@@ -84,6 +110,44 @@ public class DynamicCommand extends CommandModule {
 
     public String getResponse() {
         return response;
+    }
+
+    public void save() {
+        PrintWriter writer = null;
+        try {
+            File commandsFolder = new File("commands");
+            if (!commandsFolder.exists()) {
+                commandsFolder.mkdirs();
+            }
+
+            File saveFile = new File(commandsFolder, command + ".yml");
+            if (saveFile.exists()) {
+                saveFile.delete();
+            }
+            saveFile.createNewFile();
+
+            HashMap<String, Object> valueMap = new HashMap<>();
+            valueMap.put("command", command);
+            valueMap.put("response", response);
+            valueMap.put("needsChannel", needsChannel);
+            valueMap.put("help", help);
+            valueMap.put("extendedHelp", extendedHelp);
+            valueMap.put("aliases", aliases);
+            valueMap.put("action", action);
+            valueMap.put("commandResponse", commandResponse);
+
+            writer = new PrintWriter(new FileOutputStream(saveFile));
+            Yaml yaml = new Yaml();
+            writer.write(yaml.dump(valueMap));
+            writer.close();
+        } catch (IOException e) {
+            Nexus.LOGGER.severe("Failed to save dynamic command: " + command + ".");
+            e.printStackTrace();
+        } finally {
+            if (writer != null) {
+                writer.close();
+            }
+        }
     }
 
     private void prepare() {
