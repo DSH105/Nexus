@@ -39,8 +39,11 @@ import org.pircbotx.PircBotX;
 import org.pircbotx.User;
 import org.pircbotx.exception.IrcException;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.logging.*;
 
 public class Nexus extends PircBotX {
@@ -159,7 +162,8 @@ public class Nexus extends PircBotX {
             Logger root = Logger.getLogger("");
             root.setLevel(Level.INFO);
 
-            FileHandler handler = new FileHandler("Nexus.log", true);
+            String date = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+            FileHandler handler = new FileHandler("logs" + File.separator + "Nexus" + date + ".log", true);
             handler.setLevel(Level.INFO);
             handler.setFormatter(new ShortLoggerFormatter(true));
             root.addHandler(handler);
