@@ -63,7 +63,7 @@ public class CreateCommand extends CommandModule {
         DynamicCommand dynamicCommand = new DynamicCommandFactory().withCommand(command).withHelp(help).withExtendedHelp(help).withResponseOfType(response, type).prepare();
         event.getManager().register(dynamicCommand);
         event.respondWithPing("Command registered as {0}", event.getCommandPrefix() + command);
-        return false;
+        return true;
     }
 
     private boolean isValidType(String type) {
