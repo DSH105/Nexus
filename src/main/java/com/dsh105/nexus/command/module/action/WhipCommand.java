@@ -21,6 +21,7 @@ import com.dsh105.nexus.command.Command;
 import com.dsh105.nexus.command.module.CommandGroup;
 
 @Command(command = "whip",
+        aliases = "w",
         needsChannel = false,
         groups = CommandGroup.ACTION,
         help = "Whip a user",
