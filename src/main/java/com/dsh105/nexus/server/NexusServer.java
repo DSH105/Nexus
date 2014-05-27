@@ -60,10 +60,6 @@ public class NexusServer {
     protected boolean start() {
         long startTime = System.currentTimeMillis();
 
-       /** CommandReaderThread commandReaderThread = new CommandReaderThread(this);
-        commandReaderThread.setDaemon(true);
-        commandReaderThread.start();  */
-
         // The properties
         try {
             this.logger.info("Loading properties...");
@@ -72,7 +68,8 @@ public class NexusServer {
             this.serverProperties.setProperty("debug.enabled", "false");
             this.serverProperties.setProperty("debug.level", "5");
             this.serverProperties.setProperty("port", "8123");
-            this.serverProperties.setProperty("secret", "A secret here");
+            this.serverProperties.setProperty("secret", "<SECRET HERE>");
+            this.serverProperties.setProperty("youtube-api-key", "<API_KEY_HERE>");
 
             File propertyFile = new File(getRoot(), "nexus-server.properties");
             if(!propertyFile.exists()) {
