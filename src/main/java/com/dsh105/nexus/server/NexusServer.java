@@ -1,6 +1,7 @@
 package com.dsh105.nexus.server;
 
 import com.dsh105.nexus.server.debug.Debugger;
+import com.dsh105.nexus.server.handlers.RequestHandler;
 import com.dsh105.nexus.server.threading.ServerShutdownThread;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -8,7 +9,6 @@ import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.server.handler.HandlerList;
-import org.eclipse.jetty.server.handler.ResourceHandler;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -32,6 +32,11 @@ public class NexusServer {
      * The WebServer
      */
     private Server webServer;
+
+    /**
+     * The RequestHandler
+     */
+    private RequestHandler requestHandler = new RequestHandler(this);
 
     /**
      * The server-configuration
@@ -111,10 +116,10 @@ public class NexusServer {
 
         // Create the handler list
         HandlerList handlers = new HandlerList();
-        ResourceHandler resourceHandler = new ResourceHandler();
-        resourceHandler.setWelcomeFiles(new String[]{ "index.html" });
-        resourceHandler.setResourceBase(".");
-        handlers.setHandlers(new Handler[] { resourceHandler });
+       // ResourceHandler resourceHandler = new ResourceHandler();
+       // resourceHandler.setWelcomeFiles(new String[]{ "index.html" });
+       // resourceHandler.setResourceBase(".");
+        handlers.setHandlers(new Handler[] { this.requestHandler });
 
         webServer.setHandler(handlers);
 
