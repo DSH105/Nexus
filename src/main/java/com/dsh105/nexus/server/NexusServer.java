@@ -153,6 +153,10 @@ public class NexusServer {
         return new File(".");
     }
 
+    public Logger getLogger() {
+        return this.logger;
+    }
+
     public static NexusServer getInstance() {
         return instance;
     }
