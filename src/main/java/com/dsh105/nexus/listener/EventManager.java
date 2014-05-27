@@ -91,7 +91,7 @@ public class EventManager extends ListenerAdapter<Nexus> {
 
         for (String channel : event.getBot().getConfig().getChannels()) {
             if (event.getBot().getChannel(channel) == null) {
-                event.getBot().sendIRC().joinChannel(channel);
+                event.getBot().sendRaw().rawLineNow("JOIN " + channel);
             }
         }
 
