@@ -73,6 +73,10 @@ public class Nexus extends PircBotX {
     }
 
     public static void main(String[] args) throws Exception {
+        createBot();
+    }
+
+    public static void createBot() {
         System.out.println("Starting up Nexus, please wait...");
 
         System.out.println("Loading configuration...");
