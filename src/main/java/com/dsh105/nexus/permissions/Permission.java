@@ -20,4 +20,16 @@ package com.dsh105.nexus.permissions;
 public class Permission {
 
     protected String permission;
+
+    public Permission(final String permission) {
+        this(permission, false);
+    }
+
+    public Permission(final String permission, final boolean isDefault) {
+        this.permission = permission;
+    }
+
+    public String getRawPermission() {
+        return this.permission;
+    }
 }
