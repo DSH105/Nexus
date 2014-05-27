@@ -66,7 +66,8 @@ public class NexusServer {
             this.serverProperties = new Properties();
             this.serverProperties.setProperty("debug.enabled", "false");
             this.serverProperties.setProperty("debug.level", "5");
-            this.serverProperties.setProperty("port", "8080");
+            this.serverProperties.setProperty("port", "8123");
+            this.serverProperties.setProperty("secret", "A secret here");
 
             File propertyFile = new File(getRoot(), "nexus-server.properties");
             if(!propertyFile.exists()) {
@@ -155,6 +156,10 @@ public class NexusServer {
 
     public Logger getLogger() {
         return this.logger;
+    }
+
+    public Properties getServerProperties() {
+        return this.serverProperties;
     }
 
     public static NexusServer getInstance() {
