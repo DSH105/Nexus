@@ -1,10 +1,11 @@
 package com.dsh105.nexus.api.user;
 
+import com.dsh105.nexus.api.command.CommandSender;
 import com.dsh105.nexus.permissions.Permission;
 
 import java.util.List;
 
-public class IrcUser implements User {
+public class IrcUser extends CommandSender implements User {
 
     private final org.pircbotx.User user;
 
