@@ -78,8 +78,20 @@ public class DynamicCommand extends CommandModule {
                 extension = file.getName().substring(extIndex + 1);
             }
             if (extension.equalsIgnoreCase("YML")) {
-                YamlConfig config = new YamlConfig(file.getName());
-                Nexus.getInstance().getCommandManager().register(new DynamicCommand(config.get("command", ""), config.get("response", ""), config.get("needsChannel", false), config.get("help", ""), config.get("extendedHelp", new String[]{""}), config.get("aliases", new String[]{""}), config.get("action", false), config.get("commandResponse", false)));
+                try {
+                    FileInputStream input = new FileInputStream(file);
+                    Yaml yaml = new Yaml();
+                    Map<String, Object> data = (Map<String, Object>) yaml.load(input);
+                    if (data != null && !data.isEmpty()) {
+                        try {
+                            Nexus.getInstance().getCommandManager().register(new DynamicCommand((String) data.get("command"),(String)  data.get("response"), (Boolean) data.get("needsChannel"), (String) data.get("help"), (String[]) data.get("extendedHelp"), (String[]) data.get("aliases"), (Boolean) data.get("action"), (Boolean) data.get("commandResponse")));
+                        } catch (Exception e) {
+                        }
+                    }
+                } catch (FileNotFoundException e) {
+                    Nexus.LOGGER.severe("Failed to load dynamic command: " + file.getName().substring(0) + ".");
+                    e.printStackTrace();
+                }
             }
         }
     }
