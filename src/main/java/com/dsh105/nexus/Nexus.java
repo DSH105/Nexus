@@ -167,7 +167,7 @@ public class Nexus extends PircBotX {
             root.setLevel(Level.INFO);
 
             String date = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
-            FileHandler handler = new FileHandler("logs" + File.separator + "Nexus" + date + ".log", true);
+            FileHandler handler = new FileHandler("logs" + File.separator + "Nexus-" + date + ".log", true);
             handler.setLevel(Level.INFO);
             handler.setFormatter(new ShortLoggerFormatter(true));
             root.addHandler(handler);
