@@ -92,6 +92,7 @@ public class RemindCommand extends CommandModule {
             if (!remindersFolder.exists()) {
                 remindersFolder.mkdirs();
             }
+            PrintWriter writer = null;
             try {
                 File file = new File(remindersFolder, "reminders-" + index + ".txt");
                 if (file.exists()) {
@@ -106,13 +107,16 @@ public class RemindCommand extends CommandModule {
                 valueMap.put("reminder", r.reminder);
                 valueMap.put("execution_time", r.scheduledExecutionTime());
 
-                PrintWriter writer = new PrintWriter(new FileOutputStream(file));
+                writer = new PrintWriter(new FileOutputStream(file));
                 Yaml yaml = new Yaml();
                 writer.write(yaml.dump(valueMap));
-                writer.close();
             } catch (IOException e) {
                 Nexus.LOGGER.severe("Could not save reminders!");
                 e.printStackTrace();
+            } finally {
+                if (writer != null) {
+                    writer.close();
+                }
             }
         }
         this.cancelReminders();
