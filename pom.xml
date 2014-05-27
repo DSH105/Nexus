@@ -144,6 +144,7 @@
                 <includes>
                     <include>*.yml</include>
                     <include>*.xml</include>
+                    <include>**</include>
                 </includes>
             </resource>
         </resources>
@@ -209,16 +210,12 @@
                                     </includes>
                                 </filter>
                                 <filter>
-                                    <artifact>commons-logging:commons-logging</artifact>
-                                    <includes>
-                                        <include>**</include>
-                                    </includes>
-                                </filter>
-                                <filter>
-                                    <artifact>org.ocpsoft.prettytime:prettytime</artifact>
-                                    <includes>
-                                        <include>**</include>
-                                    </includes>
+                                    <artifact>*:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/*.SF</exclude>
+                                        <exclude>META-INF/*.DSA</exclude>
+                                        <exclude>META-INF/*.RSA</exclude>
+                                    </excludes>
                                 </filter>
                             </filters>
                         </configuration>
