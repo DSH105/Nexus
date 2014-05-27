@@ -68,7 +68,7 @@ public class RemindCommand extends CommandModule {
                 }
             }
             if (timePeriod <= 0 || timeString.contains("-")) {
-                event.respondWithPing("Invalid time period entered: {0}. Examples: {1} (1 day), {2} (2 hours), {3} (5 minutes, 30 seconds), {4} (1 week, 3 days)", event.getArgs()[0], "1d", "2h", "5m30s", "1w3d");
+                event.errorWithPing("Invalid time period entered: {0}. Examples: {1} (1 day), {2} (2 hours), {3} (5 minutes, 30 seconds), {4} (1 week, 3 days)", event.getArgs()[0], "1d", "2h", "5m30s", "1w3d");
                 return true;
             }
             String reminderMessage = StringUtil.combineSplit(forOtherUser ? 2 : 1, event.getArgs(), " ");
