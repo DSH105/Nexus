@@ -159,6 +159,10 @@ public class Nexus extends PircBotX {
 
     private void registerLogger() {
         try {
+            File f = new File("logs");
+            if (!f.exists()) {
+                f.mkdirs();
+            }
             Logger root = Logger.getLogger("");
             root.setLevel(Level.INFO);
 
