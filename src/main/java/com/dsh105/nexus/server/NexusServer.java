@@ -4,9 +4,11 @@ import com.dsh105.nexus.server.debug.Debugger;
 import com.dsh105.nexus.server.threading.ServerShutdownThread;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.server.handler.HandlerList;
+import org.eclipse.jetty.server.handler.ResourceHandler;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -65,8 +67,6 @@ public class NexusServer {
             this.serverProperties.setProperty("debug.enabled", "false");
             this.serverProperties.setProperty("debug.level", "5");
             this.serverProperties.setProperty("port", "8080");
-            this.serverProperties.setProperty("webapp.path", "<PATH_HERE>");
-            this.serverProperties.setProperty("webapp.context", "<PATH_HERE>");
 
             File propertyFile = new File(getRoot(), "nexus-server.properties");
             if(!propertyFile.exists()) {
@@ -105,22 +105,17 @@ public class NexusServer {
 
     protected void createWebServer() {
         int port = Integer.parseInt(this.serverProperties.getProperty("port"));
-        String webApp = this.serverProperties.getProperty("webapp.path");
-        String webAppContextPath = this.serverProperties.getProperty("webapp.context");
 
         this.webServer = new Server();
 
-        Debugger.getInstance().log(1, "Loading webapp from {0} at url {1}", webApp, webAppContextPath);
-
-        //URL warURL = getClass().getClassLoader().getResource(webApp);
-        //WebAppContext webAppContext = new WebAppContext(warURL.toExternalForm(), webAppContextPath);
-
         // Create the handler list
         HandlerList handlers = new HandlerList();
-        //handlers.setHandlers(new Handler[] { webAppContext });
+        ResourceHandler resourceHandler = new ResourceHandler();
+        resourceHandler.setWelcomeFiles(new String[]{ "index.html" });
+        resourceHandler.setResourceBase(".");
+        handlers.setHandlers(new Handler[] { resourceHandler });
 
         webServer.setHandler(handlers);
-        webServer.setHandler(new TestHelloWorldHandler());
 
         ServerConnector connector = new ServerConnector(webServer, 2, 2);
         connector.setPort(port);
