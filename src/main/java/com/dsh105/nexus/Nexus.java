@@ -123,27 +123,32 @@ public class Nexus extends PircBotX {
 
     public static void endProcess() {
         if (INSTANCE != null) {
-            LOGGER.info("Shutting down Nexus...");
-            INSTANCE.saveAll();
             try {
-                Unirest.shutdown();
-            } catch (IOException e) {
-                LOGGER.severe("Failed to shutdown Unirest");
-                e.printStackTrace();
-            }
-            LOGGER.info("Waiting for outgoing queue");
-            while (INSTANCE.sendRaw().getOutgoingQueueSize() > 0) {
-                ;
-            }
-            INSTANCE.shutdown(true);
-            try {
-                INSTANCE.consoleReader.reader.getTerminal().restore();
+                LOGGER.info("Shutting down Nexus...");
+                INSTANCE.saveAll();
+                try {
+                    Unirest.shutdown();
+                } catch (IOException e) {
+                    LOGGER.severe("Failed to shutdown Unirest");
+                    e.printStackTrace();
+                }
+                LOGGER.info("Waiting for outgoing queue");
+                while (INSTANCE.sendRaw().getOutgoingQueueSize() > 0) {
+                    ;
+                }
+                INSTANCE.shutdown(true);
+                try {
+                    INSTANCE.consoleReader.reader.getTerminal().restore();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                INSTANCE.consoleReader.setRunning(false);
+                INSTANCE = null;
             } catch (Exception e) {
                 e.printStackTrace();
+            } finally {
+                System.exit(-1);
             }
-            INSTANCE.consoleReader.setRunning(false);
-            INSTANCE = null;
-            System.exit(-1);
         }
     }
 
@@ -242,9 +247,11 @@ public class Nexus extends PircBotX {
         }
 
         LOGGER.info("Saving dynamic commands");
-        for (CommandModule module : this.getCommandManager().getGroupsMap().get(CommandGroup.DYNAMIC)) {
-            if (module instanceof DynamicCommand) {
-                ((DynamicCommand) module).save();
+        if (this.getCommandManager().getGroupsMap().get(CommandGroup.DYNAMIC) != null) {
+            for (CommandModule module : this.getCommandManager().getGroupsMap().get(CommandGroup.DYNAMIC)) {
+                if (module instanceof DynamicCommand) {
+                    ((DynamicCommand) module).save();
+                }
             }
         }
 
