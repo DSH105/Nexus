@@ -47,13 +47,7 @@ public class ShortenCommand extends CommandModule {
             return true;
         }
 
-        String shortUrl;
-
-        if (GITHUB_URL_PATTERN.matcher(longUrl).matches()) {
-            shortUrl = URLShortener.shortenGit(longUrl);
-        } else {
-            shortUrl = URLShortener.shorten(longUrl);
-        }
+        String shortUrl = URLShortener.shortenGit(longUrl);
 
         event.respondWithPing("Shortened to " + shortUrl);
         return true;

@@ -46,8 +46,9 @@ public class URLShortener {
                     .field("url", longUrl)
                     .asString();
             return response.getHeaders().get("location").get(0);
-        } catch (UnirestException e) {
-            throw new GenericUrlConnectionException("Failed to shorten URL: " + longUrl, e);
+        } catch (Exception e) {
+            Nexus.LOGGER.severe("Failed to shorten URL via git.io: " + longUrl);
+            return shorten(longUrl);
         }
     }
 }
