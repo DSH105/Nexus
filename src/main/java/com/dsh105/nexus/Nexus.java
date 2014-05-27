@@ -223,6 +223,7 @@ public class Nexus extends PircBotX {
 
     private void prepareConsoleReader() {
         consoleReader = new ConsoleReader();
+        consoleReader.setDaemon(true);
         consoleReader.start();
     }
 
