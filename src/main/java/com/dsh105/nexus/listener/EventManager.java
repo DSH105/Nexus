@@ -88,6 +88,13 @@ public class EventManager extends ListenerAdapter<Nexus> {
     @Override
     public void onConnect(ConnectEvent<Nexus> event) throws Exception {
         Nexus.LOGGER.info("Connected to IRC");
+
+        for (String channel : event.getBot().getConfig().getChannels()) {
+            if (event.getBot().getChannel(channel) == null) {
+                event.getBot().sendIRC().joinChannel(channel);
+            }
+        }
+
         if (!event.getBot().getConfig().getStartupMessage().isEmpty()) {
             event.getBot().send(event.getBot().getConfig().getAdminChannel(), event.getBot().getConfig().getStartupMessage());
         }

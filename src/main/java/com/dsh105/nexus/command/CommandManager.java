@@ -177,7 +177,7 @@ public class CommandManager {
                         return true;
                     }
                 }
-                
+
                 if (module.checkPerm(event.getChannel(), event.getSender())) {
                     if (module.info().needsChannel() && event.isInPrivateMessage()) {
                         event.respond("You cannot perform {0} here.", event.getCommandPrefix() + module.info().command() + " " + StringUtil.combineSplit(0, event.getArgs(), " "));

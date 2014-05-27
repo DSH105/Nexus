@@ -23,15 +23,14 @@ import com.dsh105.nexus.command.CommandModule;
 import com.dsh105.nexus.command.CommandPerformEvent;
 import com.dsh105.nexus.command.Exclude;
 import com.dsh105.nexus.command.module.CommandGroup;
-import com.dsh105.nexus.config.ChannelConfig;
-import com.dsh105.nexus.config.YamlConfig;
 import com.dsh105.nexus.exception.general.DynamicCommandRegistrationFailedException;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.*;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 @Exclude
 @Command(command = "dynamic",
@@ -84,7 +83,7 @@ public class DynamicCommand extends CommandModule {
                     Map<String, Object> data = (Map<String, Object>) yaml.load(input);
                     if (data != null && !data.isEmpty()) {
                         try {
-                            Nexus.getInstance().getCommandManager().register(new DynamicCommand((String) data.get("command"),(String)  data.get("response"), (Boolean) data.get("needsChannel"), (String) data.get("help"), (String[]) data.get("extendedHelp"), (String[]) data.get("aliases"), (Boolean) data.get("action"), (Boolean) data.get("commandResponse")));
+                            Nexus.getInstance().getCommandManager().register(new DynamicCommand((String) data.get("command"), (String) data.get("response"), (Boolean) data.get("needsChannel"), (String) data.get("help"), (String[]) data.get("extendedHelp"), (String[]) data.get("aliases"), (Boolean) data.get("action"), (Boolean) data.get("commandResponse")));
                         } catch (Exception e) {
                         }
                     }
@@ -193,7 +192,7 @@ public class DynamicCommand extends CommandModule {
 
             @Override
             public CommandGroup[] groups() {
-                return new CommandGroup[] {CommandGroup.DYNAMIC};
+                return new CommandGroup[]{CommandGroup.DYNAMIC};
             }
 
             @Override

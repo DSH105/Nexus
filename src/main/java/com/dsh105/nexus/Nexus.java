@@ -100,17 +100,11 @@ public class Nexus extends PircBotX {
                 .setServerPort(config.getPort())
                 .setShutdownHookEnabled(false)
                 .setEncoding(Charset.forName("UTF-8"));
-        if (!config.getAdminChannel().isEmpty()) {
-            builder.addAutoJoinChannel(config.getAdminChannel());
-        }
         if (!config.getNickServPassword().isEmpty()) {
             builder.setNickservPassword(config.getNickServPassword());
         }
         if (!config.getServerPassword().isEmpty()) {
             builder.setServerPassword(config.getServerPassword());
-        }
-        for (String channel : config.getChannels()) {
-            builder.addAutoJoinChannel(channel);
         }
 
         Nexus bot = new Nexus(builder.buildConfiguration());
