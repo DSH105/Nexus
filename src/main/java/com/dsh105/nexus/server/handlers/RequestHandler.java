@@ -2,7 +2,6 @@ package com.dsh105.nexus.server.handlers;
 
 import com.dsh105.nexus.server.NexusServer;
 import com.dsh105.nexus.server.debug.Debugger;
-import com.dsh105.nexus.server.decoder.CurrentSongRequestDecoder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.jetty.server.Request;
@@ -20,13 +19,8 @@ public class RequestHandler extends AbstractHandler {
 
     private NexusServer nexusServer;
 
-    private CurrentSongRequestDecoder currentSongRequestDecoder;
-
     public RequestHandler(final NexusServer nexusServer) {
         this.nexusServer = nexusServer;
-
-        // Decoders
-        this.currentSongRequestDecoder = new CurrentSongRequestDecoder();
     }
 
     @Override
