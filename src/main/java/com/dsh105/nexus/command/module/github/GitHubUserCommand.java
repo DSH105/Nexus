@@ -34,7 +34,7 @@ import org.pircbotx.Colors;
         groups = CommandGroup.GITHUB,
         help = "Retrieves information on a GitHub user",
         extendedHelp = {
-                "{b}{p}{c}{/b} <user_name> - Provides information on a GitHub user."
+                "{b}{p}{c} <username>{/b} - Provides information on a GitHub user."
         })
 public class GitHubUserCommand extends CommandModule {
 

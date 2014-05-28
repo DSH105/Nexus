@@ -25,7 +25,7 @@ import com.dsh105.nexus.command.module.CommandGroup;
         groups = CommandGroup.ACTION,
         help = "Like a user",
         extendedHelp = {
-                "{b}{p}{c}{/b} <user> - like someone!"
+                "{b}{p}{c} <user>{/b} - like someone!"
         })
 public class LikeCommand extends AbstractActionCommand {
     public LikeCommand() {

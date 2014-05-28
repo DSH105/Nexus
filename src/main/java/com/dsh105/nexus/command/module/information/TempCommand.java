@@ -26,7 +26,7 @@ import org.pircbotx.Colors;
         needsChannel = false,
         help = "Temperature converter",
         extendedHelp = {
-                "{b}{p}{c}{/b} <temp>[F/C] - Converts the entered temperature to either celsius or fahrenheit"
+                "{b}{p}{c} <temp>[F/C]{/b} - Converts the entered temperature to either celsius or fahrenheit"
         })
 public class TempCommand extends CommandModule {
     public static double cTof(double c) {

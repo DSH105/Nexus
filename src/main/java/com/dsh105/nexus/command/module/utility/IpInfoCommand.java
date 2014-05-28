@@ -36,7 +36,7 @@ import java.net.URLEncoder;
         needsChannel = false,
         help = "Looks up IP information.",
         extendedHelp = {
-                "{b}{p}{c}{/b} <ip> - Gives approximate location, country & ISP information."
+                "{b}{p}{c} <ip>{/b} - Gives approximate location, country & ISP information."
         })
 public class IpInfoCommand extends CommandModule {
 

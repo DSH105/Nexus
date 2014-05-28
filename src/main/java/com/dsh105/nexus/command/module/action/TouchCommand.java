@@ -25,7 +25,7 @@ import com.dsh105.nexus.command.module.CommandGroup;
         groups = CommandGroup.ACTION,
         help = "Touch a user",
         extendedHelp = {
-                "{b}{p}{c}{/b} <user> - touch someone!"
+                "{b}{p}{c} <user>{/b} - touch someone!"
         })
 public class TouchCommand extends AbstractActionCommand {
     public TouchCommand() {

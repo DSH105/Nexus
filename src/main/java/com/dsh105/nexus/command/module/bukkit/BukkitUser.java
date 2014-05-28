@@ -40,7 +40,7 @@ import java.util.Date;
         needsChannel = false,
         help = "Bukkit user profile info",
         extendedHelp = {
-                "{b}{p}{c}{/b} <user> - Shows a Bukkit user's profile information"
+                "{b}{p}{c} <user>{/b} - Shows a Bukkit user's profile information"
         })
 public class BukkitUser extends CommandModule {
     @Override

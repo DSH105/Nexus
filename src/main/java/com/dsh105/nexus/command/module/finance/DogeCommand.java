@@ -32,7 +32,7 @@ import org.pircbotx.Colors;
         needsChannel = false,
         help = "Dogecoin currency converter",
         extendedHelp = {
-                "{b}{p}{c}{/b} <value> - Converts the entered value to either dogecoin or usd."
+                "{b}{p}{c} <value>{/b} - Converts the entered value to either dogecoin or usd."
         })
 public class DogeCommand extends CommandModule {
 

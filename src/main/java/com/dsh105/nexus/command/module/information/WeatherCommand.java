@@ -33,7 +33,7 @@ import org.pircbotx.Colors;
         needsChannel = false,
         help = "Get a location's weather",
         extendedHelp = {
-                "{b}{p}{c}{/b} <location> - Allows you to get the weather of a location"
+                "{b}{p}{c} <location>{/b} - Allows you to get the weather of a location"
         })
 public class WeatherCommand extends CommandModule {
     public static final String WEATHER_URL = "http://api.openweathermap.org/data/2.5/weather?q=";

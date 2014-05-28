@@ -25,7 +25,7 @@ import com.dsh105.nexus.command.module.CommandGroup;
         groups = CommandGroup.ACTION,
         help = "Bully a user",
         extendedHelp = {
-                "{b}{p}{c}{/b} <user> - bully someone!"
+                "{b}{p}{c} <user>{/b} - bully someone!"
         })
 public class BullyCommand extends AbstractActionCommand {
     public BullyCommand() {

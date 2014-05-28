@@ -35,7 +35,7 @@ import org.pircbotx.Colors;
         needsChannel = false,
         help = "Get a location's time",
         extendedHelp = {
-                "{b}{p}{c}{/b} <location> - Allows you to get the time of a location"
+                "{b}{p}{c} <location>{/b} - Allows you to get the time of a location"
         })
 public class TimeCommand extends CommandModule {
 

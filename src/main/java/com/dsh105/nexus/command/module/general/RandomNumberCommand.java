@@ -33,10 +33,10 @@ import com.mashape.unirest.http.exceptions.UnirestException;
         needsChannel = false,
         help = "Generate a random number from Random.org",
         extendedHelp = {
-                "{b}{p}{c}{/b} <max> - Chooses a number from 1 to <max>.",
-                "{b}{p}{c}{/b} <min> <max> - Chooses a number from <min> to <max>",
-                "{b}{p}{c}{/b} dice - Rolls the dice! (Chooses a number from 1 to 6)",
-                "{b}{p}{c}{/b} coin - Flip a coin"
+                "{b}{p}{c} <max>{/b} - Chooses a number from 1 to <max>.",
+                "{b}{p}{c} <min> <max>{/b} - Chooses a number from <min> to <max>",
+                "{b}{p}{c} dice{/b} - Rolls the dice! (Chooses a number from 1 to 6)",
+                "{b}{p}{c} coin{/b} - Flip a coin"
         })
 public class RandomNumberCommand extends CommandModule {
 

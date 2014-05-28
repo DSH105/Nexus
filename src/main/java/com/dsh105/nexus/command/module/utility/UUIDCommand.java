@@ -27,7 +27,7 @@ import java.util.UUID;
         needsChannel = false,
         help = "Validate a UUID.",
         extendedHelp = {
-                "{b}{p}{c}{/b} <input> - Tests if input is a valid UUID."
+                "{b}{p}{c} <uuid>{/b} - Tests if input is a valid UUID."
         })
 public class UUIDCommand extends CommandModule {
 

@@ -25,7 +25,7 @@ import com.dsh105.nexus.command.module.CommandGroup;
         groups = CommandGroup.ACTION,
         help = "Slaps a user",
         extendedHelp = {
-                "{b}{p}{c}{/b} <user> - slap someone!"
+                "{b}{p}{c} <user>{/b} - slap someone!"
         })
 public class SlapCommand extends AbstractActionCommand {
     public SlapCommand() {

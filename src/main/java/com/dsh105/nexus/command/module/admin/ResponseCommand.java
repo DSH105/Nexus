@@ -26,17 +26,15 @@ import com.dsh105.nexus.response.ResponseTrigger;
 import com.dsh105.nexus.util.StringUtil;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 @Command(command = "response",
-        aliases = {"response"},
         needsChannel = false,
         groups = CommandGroup.ADMIN,
         help = "Manage response triggers",
         extendedHelp = {
-                "{b}{p}{c}{/b} create <trigger> <chance> <response> - Create a response trigger with a trigger chance.",
-                "{b}{p}{c}{/b} add <trigger> <response> - Add a response to an existing trigger.",
-                "{b}{p}{c}{/b} <trigger> - View information on existing response triggers"
+                "{b}{p}{c} create <trigger> <chance> <response>{/b} - Create a response trigger with a trigger chance.",
+                "{b}{p}{c} add <trigger> <response>{/b} - Add a response to an existing trigger.",
+                "{b}{p}{c} <trigger>{/b} - View information on existing response triggers"
         })
 public class ResponseCommand extends CommandModule {
 

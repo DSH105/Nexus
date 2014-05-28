@@ -43,7 +43,7 @@ import java.util.List;
         needsChannel = false,
         help = "Query WolframAlpha.",
         extendedHelp = {
-                "{b}{p}{c}{/b} <query> - Request information from WolframAlpha."
+                "{b}{p}{c} <query>{/b} - Request information from WolframAlpha."
         })
 public class WolframAlphaCommand extends CommandModule {
 

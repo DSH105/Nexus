@@ -9,7 +9,7 @@ import com.dsh105.nexus.command.CommandPerformEvent;
         needsChannel = false,
         help = "Stops IRC Bullying",
         extendedHelp = {
-                "{b}{p}{c}{/b} <target> - Tells the target to stop bullying you."
+                "{b}{p}{c} <target>{/b} - Tells the target to stop bullying you."
         })
 public class StopIRCBullyCommand extends CommandModule {
     @Override

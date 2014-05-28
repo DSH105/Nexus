@@ -29,7 +29,7 @@ import com.dsh105.nexus.util.StringUtil;
         groups = CommandGroup.ADMIN,
         help = "Make Nexus talk",
         extendedHelp = {
-                "Use {b}{p}{c}{/b} <chan> <msg>. Only admins may use this command."
+                "{b}{p}{c} <chan> <msg>{/b} - Send a message to a channel on behalf of Nexus. Only admins may use this command."
         })
 public class TalkCommand extends CommandModule {
 

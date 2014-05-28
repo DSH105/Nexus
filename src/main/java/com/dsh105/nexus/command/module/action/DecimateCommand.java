@@ -25,7 +25,7 @@ import com.dsh105.nexus.command.module.CommandGroup;
         groups = CommandGroup.ACTION,
         help = "Decimate a user",
         extendedHelp = {
-                "{b}{p}{c}{/b} <user> - decimate someone!"
+                "{b}{p}{c} <user>{/b} - decimate someone!"
         })
 public class DecimateCommand extends AbstractActionCommand {
     public DecimateCommand() {

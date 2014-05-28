@@ -25,7 +25,7 @@ import com.dsh105.nexus.command.module.CommandGroup;
         groups = CommandGroup.ACTION,
         help = "Punch a user",
         extendedHelp = {
-                "{b}{p}{c}{/b} <user> - punch someone!"
+                "{b}{p}{c} <user>{/b} - punch someone!"
         })
 public class PunchCommand extends AbstractActionCommand {
     public PunchCommand() {

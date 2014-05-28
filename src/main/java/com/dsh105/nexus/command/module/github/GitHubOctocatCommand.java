@@ -39,7 +39,8 @@ import java.util.Random;
         groups = CommandGroup.GITHUB,
         help = "Give information on a random or specified Octocat.",
         extendedHelp = {
-                "{b}{p}{c}{/b} - Display a random Octocat.", "{b}{p}{c}{/b} <id> - Display a specified Octocat."
+                "{b}{p}{c}{/b} - Display a random Octocat.",
+                "{b}{p}{c} <id>{/b} - Display a specified Octocat."
         })
 public class GitHubOctocatCommand extends CommandModule {
 

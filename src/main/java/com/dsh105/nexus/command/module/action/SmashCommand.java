@@ -25,7 +25,7 @@ import com.dsh105.nexus.command.module.CommandGroup;
         groups = CommandGroup.ACTION,
         help = "Smash a user",
         extendedHelp = {
-                "{b}{p}{c}{/b} <user> - smash someone!"
+                "{b}{p}{c} <user>{/b} - smash someone!"
         })
 public class SmashCommand extends AbstractActionCommand {
     public SmashCommand() {

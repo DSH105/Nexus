@@ -31,7 +31,7 @@ import java.util.Arrays;
         groups = CommandGroup.ADMIN,
         help = "Remove an existing dynamic command.",
         extendedHelp = {
-                "{b}{p}{c}{/b} <command> - Remove an existing dynamic command."
+                "{b}{p}{c} <command>{/b} - Remove an existing dynamic command."
         })
 public class RemoveCommand extends CommandModule {
 

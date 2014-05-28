@@ -26,7 +26,7 @@ import com.dsh105.nexus.command.module.CommandGroup;
         groups = CommandGroup.ACTION,
         help = "Whip a user",
         extendedHelp = {
-                "{b}{p}{c}{/b} <user> - Whip someone!"
+                "{b}{p}{c} <user>{/b} - Whip someone!"
         })
 public class WhipCommand extends AbstractActionCommand {
     public WhipCommand() {

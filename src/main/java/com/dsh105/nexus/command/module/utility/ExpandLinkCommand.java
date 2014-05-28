@@ -29,7 +29,7 @@ import com.mashape.unirest.http.Unirest;
         needsChannel = false,
         help = "See where a shortened URL goes too",
         extendedHelp = {
-                "{b}{p}{c}{/b} <url> - See where a shortened URL goes too."
+                "{b}{p}{c} <url>{/b} - See where a shortened URL goes too."
         })
 public class ExpandLinkCommand extends CommandModule {
 

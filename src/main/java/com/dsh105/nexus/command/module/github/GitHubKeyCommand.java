@@ -42,7 +42,7 @@ import java.util.TimerTask;
         needsChannel = false,
         help = "Authenticate with GitHub through Nexus to allow the use of various GitHub commands requiring an API key.",
         extendedHelp = {
-                "{b}{p}{c}{/b} - Provides instructions on how to set this up."
+                "{b}{p}{c}{/b} - Provides instructions on how to set up your GitHub API key with Nexus."
         })
 public class GitHubKeyCommand extends CommandModule {
 

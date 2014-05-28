@@ -31,12 +31,12 @@ import java.util.Arrays;
         groups = CommandGroup.ADMIN,
         help = "Create a dynamic command.",
         extendedHelp = {
-                "{b}{p}{c}{/b} <command> [type] <response> - Create a command with a certain response on execution.",
-                "[type] - Optional command type -> action (performs action instead of response), command (performs a command), alias (adds an alias to a command)",
+                "{b}{p}{c} <command> [type] <response>{/b} - Create a command with a certain response on execution.",
+                "{b}[type]{/b} - Optional command type -> action (performs action instead of response), command (performs a command), alias (adds an alias to a command)",
                 "Optional response placeholders:",
-                "- %s -> Name of the command sender",
-                "- %c -> Name of the channel executed in. \'PM\' if in private message",
-                "- %a# -> Command argument, where # is the argument number"
+                "- {b}%s{/b} -> Name of the command sender",
+                "- {b}%c{/b} -> Name of the channel executed in. \'PM\' if in private message",
+                "- {b}%a#{/b} -> Command argument, where # is the argument number"
         })
 public class CreateCommand extends CommandModule {
 

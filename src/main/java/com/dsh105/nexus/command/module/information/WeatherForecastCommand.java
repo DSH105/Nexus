@@ -36,7 +36,7 @@ import java.util.Date;
         needsChannel = false,
         help = "Get a location's weather forecast",
         extendedHelp = {
-                "{b}{p}{c}{/b} <location> - Allows you to get the weather forecast of a location"
+                "{b}{p}{c} <location>{/b} - Allows you to get the weather forecast of a location"
         })
 public class WeatherForecastCommand extends CommandModule {
     public static final String WEATHER_URL = "http://api.openweathermap.org/data/2.5/forecast/daily?mode=json&q=";

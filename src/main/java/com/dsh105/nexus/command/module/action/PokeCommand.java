@@ -25,7 +25,7 @@ import com.dsh105.nexus.command.module.CommandGroup;
         groups = CommandGroup.ACTION,
         help = "Poke a user",
         extendedHelp = {
-                "{b}{p}{c}{/b} <user> - poke someone!"
+                "{b}{p}{c} <user>{/b} - poke someone!"
         })
 public class PokeCommand extends AbstractActionCommand {
     public PokeCommand() {

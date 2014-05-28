@@ -32,9 +32,9 @@ import java.util.regex.Pattern;
         aliases = {"minecraftping", "pingserver"},
         needsChannel = false,
         help = "Ping the specified Minecraft server.",
-        extendedHelp = {"{b}{p}{c}{/b} <Hostname> - Ping the Hostname.",
-                "{b}{p}{c}{/b} <Hostname> <Port> - Ping the Hostname on the port.",
-                "{b}{p}{c}{/b} <Hostname> <Port> <Timeout> - Ping the Hostname on the port with the chosen timeout."
+        extendedHelp = {"{b}{p}{c} <hostname>{/b} - Ping the Hostname.",
+                "{b}{p}{c} <hostname> <port>{/b} - Ping the Hostname on the port.",
+                "{b}{p}{c} <hostname> <port> <timeout>{/b} - Ping the Hostname on the port with the chosen timeout."
         })
 public class MinecraftPingCommand extends CommandModule {
 

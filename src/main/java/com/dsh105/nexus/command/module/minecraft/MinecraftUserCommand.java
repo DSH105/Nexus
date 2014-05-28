@@ -34,7 +34,7 @@ import org.pircbotx.Colors;
         needsChannel = false,
         help = "View information about a specific Minecraft username.",
         extendedHelp = {
-                "{b}{p}{c}{/b} <usernane>- View information about the Minecraft username."
+                "{b}{p}{c} <username>{/b} - View information about the Minecraft username."
         })
 public class MinecraftUserCommand extends CommandModule {
 

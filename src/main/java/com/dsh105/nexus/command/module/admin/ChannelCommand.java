@@ -34,8 +34,8 @@ import java.util.ArrayList;
         groups = CommandGroup.ADMIN,
         help = "Disable and enable commands in certain channels",
         extendedHelp = {
-                "{b}{p}{c}{/b} <channel> <command> <enable/disable> - Disable or enable a command in a channel.",
-                "{b}{p}{c}{/b} <channel> - View disabled commands for a channel."
+                "{b}{p}{c} <channel> <command> <enable/disable>{/b} - Disable or enable a command in a channel.",
+                "{b}{p}{c} <channel>{/b} - View disabled commands for a channel."
         })
 public class ChannelCommand extends CommandModule {
 

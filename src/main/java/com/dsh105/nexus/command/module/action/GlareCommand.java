@@ -25,7 +25,7 @@ import com.dsh105.nexus.command.module.CommandGroup;
         groups = CommandGroup.ACTION,
         help = "glare at a user",
         extendedHelp = {
-                "{b}{p}{c}{/b} <user> - glare at someone!"
+                "{b}{p}{c} <user>{/b} - glare at someone!"
         })
 public class GlareCommand extends AbstractActionCommand {
     public GlareCommand() {

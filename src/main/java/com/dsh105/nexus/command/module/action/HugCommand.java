@@ -25,7 +25,7 @@ import com.dsh105.nexus.command.module.CommandGroup;
         groups = CommandGroup.ACTION,
         help = "Hugs a user",
         extendedHelp = {
-                "{b}{p}{c}{/b} <user> - Hug someone!"
+                "{b}{p}{c} <user>{/b} - Hug someone!"
         })
 public class HugCommand extends AbstractActionCommand {
     public HugCommand() {

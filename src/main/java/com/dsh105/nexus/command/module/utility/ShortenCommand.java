@@ -28,7 +28,7 @@ import java.util.regex.Pattern;
         needsChannel = false,
         help = "Shorten a URL via goo.gl",
         extendedHelp = {
-                "{b}{p}{c}{/b} <url> - Shorten a URL via goo.gl."
+                "{b}{p}{c} <url>{/b} - Shorten a URL via goo.gl."
         })
 public class ShortenCommand extends CommandModule {
 
