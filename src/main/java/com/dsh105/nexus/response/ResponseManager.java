@@ -30,6 +30,39 @@ public class ResponseManager {
     private HashMap<ResponseTrigger, ArrayList<String>> responses = new HashMap<>();
     private Random r = new Random();
 
+    public ArrayList<String> getResponsesFor(ResponseTrigger trigger) {
+        return getResponsesFor(trigger.getTrigger());
+    }
+
+    public ArrayList<String> getResponsesFor(String trigger) {
+        for (Map.Entry<ResponseTrigger, ArrayList<String>> entry : responses.entrySet()) {
+            if (entry.getKey().getTrigger().equals(trigger)) {
+                return new ArrayList<>(entry.getValue());
+            }
+        }
+        return null;
+    }
+
+    public ResponseTrigger getTriggerInstance(String trigger) {
+        for (Map.Entry<ResponseTrigger, ArrayList<String>> entry : responses.entrySet()) {
+            if (entry.getKey().getTrigger().equals(trigger)) {
+                return entry.getKey();
+            }
+        }
+        return null;
+    }
+
+    public void addResponses(ResponseTrigger trigger, String... responses) {
+        ArrayList<String> existing = this.responses.get(trigger);
+        if (existing == null) {
+            existing = new ArrayList<>();
+        }
+        for (String response : responses) {
+            existing.add(response);
+        }
+        this.responses.put(trigger, existing);
+    }
+
     public void load() {
         FileInputStream input = null;
         try {
