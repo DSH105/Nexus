@@ -155,7 +155,7 @@ public class GitHubRepositoryCommand extends CommandModule {
                             for (GitHubEvent e : events) {
                                 eventsStr += (eventsStr.isEmpty()) ? e.getJsonName() : ", " + e.getJsonName();
                             }
-                            event.respondWithPing("IRC Notifications for GitHub repository ({0}) set to: " + eventsStr, repo.getFullName());
+                            event.respondWithPing("IRC Notifications for GitHub repository ({0}) set to: {1}", repo.getFullName(), eventsStr);
                             return true;
                         }
                     } else {
@@ -170,7 +170,7 @@ public class GitHubRepositoryCommand extends CommandModule {
                         for (GitHubEvent e : GitHub.getGitHub().getIrcNotifications(repo, AuthUtil.getIdent(event.getSender()))) {
                             eventsStr += (eventsStr.isEmpty()) ? e.getJsonName() : ", " + e.getJsonName();
                         }
-                        event.respondWithPing("IRC notifications for GitHub repository ({0}) are{1}", repo.getFullName(), eventsStr.isEmpty() ? " empty" : ": " + eventsStr);
+                        event.respondWithPing("IRC notifications for GitHub repository ({0}) are: {1}", repo.getFullName(), eventsStr.isEmpty() ? Colors.BOLD + "empty" : eventsStr);
                         return true;
                     } else {
                         event.errorWithPing("Invalid repository setting entered: {0}.", event.getArgs()[startIndex + 1]);

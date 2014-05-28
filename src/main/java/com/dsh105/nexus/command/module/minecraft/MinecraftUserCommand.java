@@ -61,9 +61,9 @@ public class MinecraftUserCommand extends CommandModule {
                 throw new GenericUrlConnectionException("Failed to fetch data on Minecraft username (" + username + ").", e);
             }
 
-            event.respond("Minecraft Username " + Colors.BOLD + username + Colors.NORMAL + " (" + Colors.BOLD + uuid + Colors.NORMAL + "):");
-            event.respond(Colors.BOLD + "Valid Username? " + (isValid ? Colors.BOLD + Colors.UNDERLINE + Colors.GREEN + "Yes" : Colors.BOLD + Colors.UNDERLINE + Colors.RED + "No") + Colors.NORMAL + " | "
-                    + Colors.BOLD + "Paid Account? " + (hasPaid ? Colors.BOLD + Colors.UNDERLINE + Colors.GREEN + "Yes" : Colors.BOLD + Colors.UNDERLINE + Colors.RED + "No"));
+            String valid = isValid ? Colors.GREEN + "valid" + Colors.NORMAL + " (exists)" : Colors.RED + "not valid" + Colors.NORMAL + " (does not exist)";
+            String paid = hasPaid ? "a " + Colors.GREEN + "paid" + Colors.NORMAL : Colors.RED + "not a paid" + Colors.NORMAL;
+            event.respond("Minecraft account {0} ({1}) is " + valid + " and is " + paid + " account", username, uuid);
             return true;
         }
         return false;
