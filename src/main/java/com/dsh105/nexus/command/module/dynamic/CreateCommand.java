@@ -32,7 +32,7 @@ import java.util.Arrays;
         help = "Create a dynamic command.",
         extendedHelp = {
                 "{b}{p}{c}{/b} <command> [type] <response> - Create a command with a certain response on execution.",
-                "[type] - Optional command type -> action (performs action instead of response), command (performs a command), alias (adds an alias to a command(+)",
+                "[type] - Optional command type -> action (performs action instead of response), command (performs a command), alias (adds an alias to a command)",
                 "Optional response placeholders:",
                 "- %s -> Name of the command sender",
                 "- %c -> Name of the channel executed in. \'PM\' if in private message",
@@ -65,7 +65,7 @@ public class CreateCommand extends CommandModule {
         if (type.equalsIgnoreCase("ALIAS")) {
             CommandModule module = event.getManager().getModuleFor(command);
             if (!(module instanceof DynamicCommand)) {
-                event.errorWithPing("Aliases cannot be added to");
+                event.errorWithPing("Aliases cannot be added to {0}.", module.info().command());
                 return true;
             }
             String[] aliases = StringUtil.splitArgs(responseStartIndex, event.getArgs(), " ");
