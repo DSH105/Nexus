@@ -17,9 +17,9 @@
 
 package com.dsh105.nexus;
 
+import com.dsh105.nexus.command.CommandGroup;
 import com.dsh105.nexus.command.CommandManager;
 import com.dsh105.nexus.command.CommandModule;
-import com.dsh105.nexus.command.CommandGroup;
 import com.dsh105.nexus.command.module.dynamic.DynamicCommand;
 import com.dsh105.nexus.command.module.general.RemindCommand;
 import com.dsh105.nexus.config.ChannelConfiguration;
@@ -30,6 +30,7 @@ import com.dsh105.nexus.hook.github.GitHub;
 import com.dsh105.nexus.hook.jenkins.Jenkins;
 import com.dsh105.nexus.listener.EventManager;
 import com.dsh105.nexus.response.ResponseManager;
+import com.dsh105.nexus.script.ScriptManager;
 import com.dsh105.nexus.util.ShortLoggerFormatter;
 import com.mashape.unirest.http.Unirest;
 import org.ocpsoft.prettytime.PrettyTime;
@@ -57,6 +58,8 @@ public class Nexus extends PircBotX {
     private OptionsConfig config;
     private GitHubConfig githubConfig;
     private NicksConfig nicksConfig;
+
+    private ScriptManager scriptManager;
 
     private CommandManager commandManager;
     private ResponseManager responseManager;
@@ -217,6 +220,9 @@ public class Nexus extends PircBotX {
             LOGGER.info("Loading saved reminders");
             remindCommand.loadReminders();
         }
+
+        // Scala stuff
+        LOGGER.info("initializing Scala commands...");
 
         LOGGER.info("Preparing console reader");
         this.prepareConsoleReader();
