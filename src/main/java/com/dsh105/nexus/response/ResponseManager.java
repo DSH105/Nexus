@@ -31,6 +31,7 @@ public class ResponseManager {
     private Random r = new Random();
 
     public void load() {
+        FileInputStream input = null;
         try {
             ArrayList<File> toRemove = new ArrayList<>();
 
@@ -47,7 +48,7 @@ public class ResponseManager {
                 if (extension.equalsIgnoreCase("YML")) {
                     String triggerWord = f.getName().substring(0, extIndex);
 
-                    FileInputStream input = new FileInputStream(f);
+                    input = new FileInputStream(f);
                     Yaml yaml = new Yaml();
                     Map<String, Object> data = (Map<String, Object>) yaml.load(input);
                     if (data != null && !data.isEmpty()) {
@@ -71,6 +72,16 @@ public class ResponseManager {
         } catch (IOException e) {
             Nexus.LOGGER.severe("Could not load responses!");
             e.printStackTrace();
+        } finally {
+
+            if (input != null) {
+                try {
+                    input.close();
+                } catch (IOException e) {
+                    Nexus.LOGGER.severe("Failed to close output stream whilst loading reminders");
+                    e.printStackTrace();
+                }
+            }
         }
     }
 

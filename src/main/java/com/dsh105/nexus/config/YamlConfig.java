@@ -56,6 +56,7 @@ public class YamlConfig {
             writer.write(new Yaml().dump(this.options));
         } catch (IOException e) {
             Nexus.LOGGER.severe("Failed to save configuration file: " + fileName);
+            e.printStackTrace();
         } finally {
             if (writer != null) {
                 writer.close();
@@ -84,6 +85,7 @@ public class YamlConfig {
                 try {
                     input.close();
                 } catch (IOException e) {
+                    Nexus.LOGGER.severe("Failed to load configuration file: " + fileName);
                     e.printStackTrace();
                 }
             }

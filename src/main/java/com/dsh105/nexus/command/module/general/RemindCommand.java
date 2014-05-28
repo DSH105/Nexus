@@ -107,7 +107,7 @@ public class RemindCommand extends CommandModule {
                 valueMap.put("reminder", r.reminder);
                 valueMap.put("execution_time", r.scheduledExecutionTime());
 
-                writer = new PrintWriter(new FileOutputStream(file));
+                writer = new PrintWriter(file);
                 Yaml yaml = new Yaml();
                 writer.write(yaml.dump(valueMap));
             } catch (IOException e) {
@@ -123,6 +123,7 @@ public class RemindCommand extends CommandModule {
     }
 
     public void loadReminders() {
+        FileInputStream input = null;
         try {
             File remindersFolder = new File("reminders");
             if (!remindersFolder.exists()) {
@@ -131,7 +132,7 @@ public class RemindCommand extends CommandModule {
             ArrayList<File> toRemove = new ArrayList<>();
             for (File f : remindersFolder.listFiles()) {
                 if (f.getName().startsWith("reminders-")) {
-                    FileInputStream input = new FileInputStream(f);
+                    input = new FileInputStream(f);
                     Yaml yaml = new Yaml();
                     Map<String, Object> data = (Map<String, Object>) yaml.load(input);
                     if (data != null && !data.isEmpty()) {
@@ -161,6 +162,15 @@ public class RemindCommand extends CommandModule {
         } catch (IOException e) {
             Nexus.LOGGER.severe("Could not load reminders!");
             e.printStackTrace();
+        } finally {
+            if (input != null) {
+                try {
+                    input.close();
+                } catch (IOException e) {
+                    Nexus.LOGGER.severe("Failed to close output stream whilst loading reminders");
+                    e.printStackTrace();
+                }
+            }
         }
     }
 

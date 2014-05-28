@@ -147,10 +147,9 @@ public class DynamicCommand extends CommandModule {
             valueMap.put("action", action);
             valueMap.put("commandResponse", commandResponse);
 
-            writer = new PrintWriter(new FileOutputStream(saveFile));
+            writer = new PrintWriter(saveFile);
             Yaml yaml = new Yaml();
             writer.write(yaml.dump(valueMap));
-            writer.close();
         } catch (IOException e) {
             Nexus.LOGGER.severe("Failed to save dynamic command: " + command + ".");
             e.printStackTrace();
