@@ -32,7 +32,7 @@ import java.util.Arrays;
         help = "Create a dynamic command.",
         extendedHelp = {
                 "{b}{p}{c}{/b} <command> [type] <response> - Create a command with a certain response on execution.",
-                "[type] - Optional command type -> action (performs action instead of response), command (performs a command)",
+                "[type] - Optional command type -> action (performs action instead of response), command (performs a command), alias (adds an alias to a command(+)",
                 "Optional response placeholders:",
                 "- %s -> Name of the command sender",
                 "- %c -> Name of the channel executed in. \'PM\' if in private message",
@@ -61,6 +61,18 @@ public class CreateCommand extends CommandModule {
         }
         String response = StringUtil.combineSplit(responseStartIndex, event.getArgs(), " ");
         String help = "Dynamic command (" + type.toLowerCase() + ") -> " + response;
+
+        if (type.equalsIgnoreCase("ALIAS")) {
+            CommandModule module = event.getManager().getModuleFor(command);
+            if (!(module instanceof DynamicCommand)) {
+                event.errorWithPing("Aliases cannot be added to");
+                return true;
+            }
+            String[] aliases = StringUtil.splitArgs(responseStartIndex, event.getArgs(), " ");
+            ((DynamicCommand) module).addAliases(aliases);
+            event.respondWithPing("Alias" + (aliases.length == 1 ? "" : "es") + " ({0} added to command ({1})", StringUtil.buildSentenceList(aliases), event.getCommandPrefix() + command);
+            return true;
+        }
 
         DynamicCommand dynamicCommand = new DynamicCommandFactory().withCommand(command).withHelp(help).withExtendedHelp(help).withResponseOfType(response, type).prepare();
         event.getManager().register(dynamicCommand);

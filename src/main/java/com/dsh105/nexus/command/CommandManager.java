@@ -236,8 +236,12 @@ public class CommandManager {
     public String getHelpInfoFor(CommandPerformEvent event, CommandModule module) {
         String aliases = (module.info().aliases().length <= 0 ? "" : " (Aliases: " + Colors.BOLD + StringUtil.combineSplit(0, module.info().aliases(), ", ") + Colors.NORMAL + ")");
         String status = "";
+        ChannelConfiguration channelConfiguration = Nexus.getInstance().getChannelConfiguration();
         if (!event.isInPrivateMessage()) {
-            status = Nexus.getInstance().getChannelConfiguration().getChannel(event.getChannel().getName()).isDisabled(module.info().command()) ? Colors.RED + " (Disabled - " + event.getChannel().getName() + ")" : "";
+            status = channelConfiguration.getChannel(event.getChannel().getName()).isDisabled(module.info().command()) ? Colors.RED + " (Disabled - " + event.getChannel().getName() + ")" : "";
+        }
+        if (channelConfiguration.getChannel("GLOBAL").isDisabled(module.info().command())) {
+            status = Colors.RED + " (Disabled globally)";
         }
         return format(module, "{b}{p}{c}{/b} - " + module.info().help()) + aliases + status;
     }

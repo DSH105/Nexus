@@ -24,6 +24,7 @@ import com.dsh105.nexus.command.CommandPerformEvent;
 import com.dsh105.nexus.command.Exclude;
 import com.dsh105.nexus.command.module.CommandGroup;
 import com.dsh105.nexus.exception.general.DynamicCommandRegistrationFailedException;
+import org.pircbotx.Colors;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.*;
@@ -121,7 +122,9 @@ public class DynamicCommand extends CommandModule {
     public String appendReplacements(CommandPerformEvent event) {
         String response = this.response
                 .replace("%s", event.getSender().getNick())
-                .replace("%c", event.isInPrivateMessage() ? "PM" : event.getChannel().getName());
+                .replace("%c", event.isInPrivateMessage() ? "PM" : event.getChannel().getName())
+                .replace("%b", Colors.BOLD)
+                .replace("%u", Colors.UNDERLINE);
 
         for (int i = 0; i < event.getArgs().length; i++) {
             response.replace("%a" + i, event.getArgs()[i]);
@@ -218,5 +221,16 @@ public class DynamicCommand extends CommandModule {
                 return existingAnnotation.annotationType();
             }
         };
+    }
+
+    public void addAliases(String... aliases) {
+        if (aliases != null && aliases.length > 0) {
+            String[] copy = this.aliases.clone();
+            this.aliases = new String[copy.length + aliases.length];
+            for (int i = 0; i < this.aliases.length; i++) {
+                this.aliases[i] = i >= copy.length ? aliases[i - copy.length] : copy[i];
+            }
+            this.save();
+        }
     }
 }
