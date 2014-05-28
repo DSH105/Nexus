@@ -17,8 +17,6 @@
 
 package com.dsh105.nexus.command;
 
-import com.dsh105.nexus.command.module.CommandGroup;
-
 import java.lang.annotation.*;
 
 @Retention(RetentionPolicy.RUNTIME)

@@ -21,7 +21,7 @@ import com.dsh105.nexus.Nexus;
 import com.dsh105.nexus.command.Command;
 import com.dsh105.nexus.command.CommandModule;
 import com.dsh105.nexus.command.CommandPerformEvent;
-import com.dsh105.nexus.command.module.CommandGroup;
+import com.dsh105.nexus.command.CommandGroup;
 import com.dsh105.nexus.response.ResponseTrigger;
 import com.dsh105.nexus.util.StringUtil;
 

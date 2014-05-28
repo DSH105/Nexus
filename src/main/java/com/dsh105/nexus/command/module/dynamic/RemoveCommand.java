@@ -20,10 +20,7 @@ package com.dsh105.nexus.command.module.dynamic;
 import com.dsh105.nexus.command.Command;
 import com.dsh105.nexus.command.CommandModule;
 import com.dsh105.nexus.command.CommandPerformEvent;
-import com.dsh105.nexus.command.module.CommandGroup;
-import com.dsh105.nexus.util.StringUtil;
-
-import java.util.Arrays;
+import com.dsh105.nexus.command.CommandGroup;
 
 @Command(command = "remove",
         aliases = {"rm"},

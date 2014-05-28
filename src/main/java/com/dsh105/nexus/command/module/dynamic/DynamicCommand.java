@@ -22,15 +22,12 @@ import com.dsh105.nexus.command.Command;
 import com.dsh105.nexus.command.CommandModule;
 import com.dsh105.nexus.command.CommandPerformEvent;
 import com.dsh105.nexus.command.Exclude;
-import com.dsh105.nexus.command.module.CommandGroup;
-import com.dsh105.nexus.exception.general.DynamicCommandRegistrationFailedException;
+import com.dsh105.nexus.command.CommandGroup;
 import com.dsh105.nexus.response.ResponseFormatter;
-import org.pircbotx.Colors;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.*;
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;

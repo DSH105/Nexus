@@ -18,7 +18,6 @@
 package com.dsh105.nexus.command;
 
 import com.dsh105.nexus.Nexus;
-import com.dsh105.nexus.command.module.CommandGroup;
 import com.dsh105.nexus.command.module.dynamic.DynamicCommand;
 import com.dsh105.nexus.config.ChannelConfiguration;
 import com.dsh105.nexus.exception.general.DateParseException;

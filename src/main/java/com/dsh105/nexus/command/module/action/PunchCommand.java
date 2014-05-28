@@ -18,7 +18,7 @@
 package com.dsh105.nexus.command.module.action;
 
 import com.dsh105.nexus.command.Command;
-import com.dsh105.nexus.command.module.CommandGroup;
+import com.dsh105.nexus.command.CommandGroup;
 
 @Command(command = "punch",
         needsChannel = false,

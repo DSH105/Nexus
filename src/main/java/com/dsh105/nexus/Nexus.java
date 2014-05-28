@@ -19,7 +19,7 @@ package com.dsh105.nexus;
 
 import com.dsh105.nexus.command.CommandManager;
 import com.dsh105.nexus.command.CommandModule;
-import com.dsh105.nexus.command.module.CommandGroup;
+import com.dsh105.nexus.command.CommandGroup;
 import com.dsh105.nexus.command.module.dynamic.DynamicCommand;
 import com.dsh105.nexus.command.module.general.RemindCommand;
 import com.dsh105.nexus.config.ChannelConfiguration;
