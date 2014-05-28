@@ -74,6 +74,17 @@ public class CommandManager {
         }
     }
 
+    public void unregister(CommandModule module) {
+        this.modules.remove(module);
+        for (CommandGroup group : module.info().groups()) {
+            ArrayList<CommandModule> groupModules = groupToModules.get(group);
+            if (groupModules != null) {
+                groupModules.remove(module);
+            }
+            groupToModules.put(group, groupModules);
+        }
+    }
+
     public <T extends CommandModule> T getModuleOfType(Class<T> type) {
         for (CommandModule module : modules) {
             if (module.getClass().equals(type)) {

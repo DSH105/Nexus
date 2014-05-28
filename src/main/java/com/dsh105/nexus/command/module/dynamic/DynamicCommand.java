@@ -171,6 +171,14 @@ public class DynamicCommand extends CommandModule {
         }
     }
 
+    public void remove() {
+        File saveFile = new File("commands" + File.separator + command + ".yml");
+        if (saveFile.exists()) {
+            saveFile.delete();
+        }
+        Nexus.getInstance().getCommandManager().unregister(this);
+    }
+
     private void prepare() {
         final Command existingAnnotation = this.info();
         customInfo = new Command() {

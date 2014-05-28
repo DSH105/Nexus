@@ -20,6 +20,7 @@ package com.dsh105.nexus.command.module.dynamic;
 import com.dsh105.nexus.command.Command;
 import com.dsh105.nexus.command.CommandModule;
 import com.dsh105.nexus.command.CommandPerformEvent;
+import com.dsh105.nexus.command.module.CommandGroup;
 import com.dsh105.nexus.util.StringUtil;
 
 import java.util.Arrays;
@@ -27,6 +28,7 @@ import java.util.Arrays;
 @Command(command = "create",
         aliases = {"cr"},
         needsChannel = false,
+        groups = CommandGroup.ADMIN,
         help = "Create a dynamic command.",
         extendedHelp = {
                 "{b}{p}{c}{/b} <command> [type] <response> - Create a command with a certain response on execution.",
