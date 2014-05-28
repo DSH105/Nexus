@@ -28,18 +28,15 @@ import com.dsh105.nexus.util.StringUtil;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-@Command(command = "create",
-        aliases = {"cr"},
+@Command(command = "response",
+        aliases = {"response"},
         needsChannel = false,
         groups = CommandGroup.ADMIN,
-        help = "Create a dynamic command.",
+        help = "Manage response triggers",
         extendedHelp = {
-                "{b}{p}{c}{/b} create <trigger> <chance> <response> - Create a command with a certain response on execution.",
-                "[type] - Optional command type -> action (performs action instead of response), command (performs a command), alias (adds an alias to a command)",
-                "Optional response placeholders:",
-                "- %s -> Name of the command sender",
-                "- %c -> Name of the channel executed in. \'PM\' if in private message",
-                "- %a# -> Command argument, where # is the argument number"
+                "{b}{p}{c}{/b} create <trigger> <chance> <response> - Create a response trigger with a trigger chance.",
+                "{b}{p}{c}{/b} add <trigger> <response> - Add a response to an existing trigger.",
+                "{b}{p}{c}{/b} <trigger> - View information on existing response triggers"
         })
 public class ResponseCommand extends CommandModule {
 
