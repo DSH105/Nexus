@@ -124,7 +124,7 @@ public class DynamicCommand extends CommandModule {
         String response = ResponseFormatter.appendReplacements(this.response, event.getSender(), event.getChannel());
 
         for (int i = 0; i < event.getArgs().length; i++) {
-            reponse = response.replace("%a" + i, event.getArgs()[i]);
+            response = response.replace("%a" + i, event.getArgs()[i]);
         }
 
         return event.getManager().format(null, response);
