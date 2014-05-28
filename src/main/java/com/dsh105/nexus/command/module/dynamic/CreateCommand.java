@@ -81,7 +81,7 @@ public class CreateCommand extends CommandModule {
     }
 
     private boolean isValidType(String type) {
-        return Arrays.asList(new String[]{"ACTION", "COMMAND"}).contains(type.toUpperCase());
+        return Arrays.asList(new String[]{"ACTION", "COMMAND", "ALIAS"}).contains(type.toUpperCase());
     }
 
     @Override
