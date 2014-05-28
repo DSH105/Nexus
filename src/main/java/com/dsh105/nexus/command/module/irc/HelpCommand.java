@@ -83,6 +83,9 @@ public class HelpCommand extends CommandModule {
         }
 
         for (Map.Entry<CommandGroup, ArrayList<CommandModule>> entry : event.getManager().getGroupsMap().entrySet()) {
+            if (entry.getKey().exclude()) {
+                continue;
+            }
             ArrayList<CommandModule> modules = entry.getValue();
             if (!modules.isEmpty()) {
                 event.respond(event.getManager().format(null, "Use {b}{p}help " + entry.getKey() + "{/b} to view {0} more command" + (modules.size() > 1 ? "s" : "")), true, modules.size() + "");

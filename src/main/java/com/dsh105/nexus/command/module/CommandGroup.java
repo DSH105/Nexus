@@ -17,8 +17,11 @@
 
 package com.dsh105.nexus.command.module;
 
+import com.dsh105.nexus.command.Exclude;
+
 public enum CommandGroup {
 
+    @Exclude
     ALL,
 
     DYNAMIC,
@@ -28,4 +31,8 @@ public enum CommandGroup {
     GITHUB,
 
     ADMIN;
+
+    public boolean exclude() {
+        return this.getClass().getAnnotation(Exclude.class) != null;
+    }
 }

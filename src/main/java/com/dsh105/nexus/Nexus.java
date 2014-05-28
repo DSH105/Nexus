@@ -134,9 +134,7 @@ public class Nexus extends PircBotX {
                     e.printStackTrace();
                 }
                 LOGGER.info("Waiting for outgoing queue");
-                while (INSTANCE.sendRaw().getOutgoingQueueSize() > 0) {
-                    ;
-                }
+                while (INSTANCE.sendRaw().getOutgoingQueueSize() > 0);
                 INSTANCE.shutdown(true);
                 try {
                     INSTANCE.consoleReader.reader.getTerminal().restore();
