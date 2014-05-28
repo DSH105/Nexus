@@ -32,12 +32,15 @@ public class EventManager extends ListenerAdapter<Nexus> {
     public void onMessage(MessageEvent<Nexus> event) throws Exception {
         String message = event.getMessage();
         String commandPrefix = Nexus.getInstance().getConfig().getCommandPrefix();
+        boolean commandResult = false;
         if (message.startsWith(commandPrefix)) {
             String[] split = message.substring(commandPrefix.length()).replaceAll("\\s+", " ").split(" ");
-            Nexus.getInstance().getCommandManager().onCommand(event.getChannel(), event.getUser(), split[0].toLowerCase(), StringUtil.splitArgs(1, split, " "));
+            commandResult = Nexus.getInstance().getCommandManager().onCommand(event.getChannel(), event.getUser(), split[0].toLowerCase(), StringUtil.splitArgs(1, split, " "));
         }
 
-        Nexus.getInstance().getResponseManager().trigger(event.getChannel(), event.getUser(), message);
+        if (!commandResult) {
+            Nexus.getInstance().getResponseManager().trigger(event.getChannel(), event.getUser(), message);
+        }
     }
 
     @Override
