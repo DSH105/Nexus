@@ -49,7 +49,7 @@ public class ResponseCommand extends CommandModule {
         if (event.getArgs().length == 1) {
             ResponseTrigger trigger = Nexus.getInstance().getResponseManager().getTriggerInstance(event.getArgs()[0]);
             if (trigger == null) {
-                event.errorWithPing("Trigger ({0}) doesn't exist! Use {1} to create one.", event.getArgs()[0], event.getCommandPrefix() + event.getCommand() + " <trigger> <chance> <response>");
+                event.errorWithPing("Trigger ({0}) doesn't exist! Use {1} to create one.", event.getArgs()[0], event.getCommandPrefix() + event.getCommand() + " create <trigger> <chance> <response>");
                 return true;
             }
             ArrayList<String> responses = Nexus.getInstance().getResponseManager().getResponsesFor(trigger);
@@ -73,7 +73,7 @@ public class ResponseCommand extends CommandModule {
             String response = StringUtil.combineSplit(2, event.getArgs(), " ");
             ResponseTrigger triggerInstance = Nexus.getInstance().getResponseManager().getTriggerInstance(trigger);
             if (triggerInstance == null) {
-                event.errorWithPing("Trigger ({0}) doesn't exist! Use {1} to create one.", trigger, event.getCommandPrefix() + event.getCommand() + " <trigger> <chance> <response>");
+                event.errorWithPing("Trigger ({0}) doesn't exist! Use {1} to create one.", trigger, event.getCommandPrefix() + event.getCommand() + " create <trigger> <chance> <response>");
                 return true;
             }
             Nexus.getInstance().getResponseManager().addResponses(triggerInstance, response);

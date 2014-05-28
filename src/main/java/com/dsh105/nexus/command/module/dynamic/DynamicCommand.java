@@ -24,6 +24,7 @@ import com.dsh105.nexus.command.CommandPerformEvent;
 import com.dsh105.nexus.command.Exclude;
 import com.dsh105.nexus.command.module.CommandGroup;
 import com.dsh105.nexus.exception.general.DynamicCommandRegistrationFailedException;
+import com.dsh105.nexus.response.ResponseFormatter;
 import org.pircbotx.Colors;
 import org.yaml.snakeyaml.Yaml;
 
@@ -120,11 +121,7 @@ public class DynamicCommand extends CommandModule {
     }
 
     public String appendReplacements(CommandPerformEvent event) {
-        String response = this.response
-                .replace("%s", event.getSender().getNick())
-                .replace("%c", event.isInPrivateMessage() ? "PM" : event.getChannel().getName())
-                .replace("%b", Colors.BOLD)
-                .replace("%u", Colors.UNDERLINE);
+        String response = ResponseFormatter.appendReplacements(this.response, event.getSender(), event.getChannel());
 
         for (int i = 0; i < event.getArgs().length; i++) {
             response.replace("%a" + i, event.getArgs()[i]);
