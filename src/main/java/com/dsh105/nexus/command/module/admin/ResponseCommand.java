@@ -51,7 +51,7 @@ public class ResponseCommand extends CommandModule {
                 return true;
             }
             ArrayList<String> responses = Nexus.getInstance().getResponseManager().getResponsesFor(trigger);
-            event.respondWithPing("Trigger ({0}) has {1} responses and fires at a chance of {2}", trigger.getTrigger(), responses.size() + "", trigger.getChance() + "%");
+            event.respondWithPing("Trigger ({0}) has {1} response" + (responses.size() == 1 ? "" : "s") + " and fires at a chance of {2}", trigger.getTrigger(), responses.size() + "", trigger.getChance() + "%");
             return true;
         }
 
