@@ -29,6 +29,7 @@ import org.yaml.snakeyaml.Yaml;
 import java.io.*;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -38,6 +39,8 @@ import java.util.Map;
         help = "Dynamic command",
         extendedHelp = "Dynamic command")
 public class DynamicCommand extends CommandModule {
+
+    private Command customInfo;
 
     private String command;
     private String response;
@@ -83,8 +86,11 @@ public class DynamicCommand extends CommandModule {
                     Map<String, Object> data = (Map<String, Object>) yaml.load(input);
                     if (data != null && !data.isEmpty()) {
                         try {
-                            Nexus.getInstance().getCommandManager().register(new DynamicCommand((String) data.get("command"), (String) data.get("response"), (Boolean) data.get("needsChannel"), (String) data.get("help"), (String[]) data.get("extendedHelp"), (String[]) data.get("aliases"), (Boolean) data.get("action"), (Boolean) data.get("commandResponse")));
+                            ArrayList<String> extendedHelp = (ArrayList<String>) data.get("extendedHelp");
+                            ArrayList<String> aliases = (ArrayList<String>) data.get("aliases");
+                            Nexus.getInstance().getCommandManager().register(new DynamicCommand((String) data.get("command"), (String) data.get("response"), (Boolean) data.get("needsChannel"), (String) data.get("help"), extendedHelp.toArray(new String[extendedHelp.size()]), aliases.toArray(new String[aliases.size()]), (Boolean) data.get("action"), (Boolean) data.get("commandResponse")));
                         } catch (Exception e) {
+                            e.printStackTrace();
                         }
                     }
                 } catch (FileNotFoundException e) {
@@ -105,6 +111,11 @@ public class DynamicCommand extends CommandModule {
             event.respond(appendReplacements(event));
         }
         return true;
+    }
+
+    @Override
+    public Command info() {
+        return customInfo;
     }
 
     public String appendReplacements(CommandPerformEvent event) {
@@ -162,7 +173,7 @@ public class DynamicCommand extends CommandModule {
 
     private void prepare() {
         final Command existingAnnotation = this.info();
-        Command annotation = new Command() {
+        customInfo = new Command() {
 
             @Override
             public boolean needsChannel() {
@@ -199,17 +210,5 @@ public class DynamicCommand extends CommandModule {
                 return existingAnnotation.annotationType();
             }
         };
-
-        // hacky stuff, don't try this at home kids! - TODO: use CaptainBern's awesome library
-
-        try {
-            Field field = Class.class.getDeclaredField("annotations");
-            field.setAccessible(true);
-            Map<Class<? extends Annotation>, Annotation> annotations = (Map<Class<? extends Annotation>, Annotation>) field.get(this.getClass());
-            annotations.put(Command.class, annotation);
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            // Oh noes!
-            throw new DynamicCommandRegistrationFailedException(e);
-        }
     }
 }
