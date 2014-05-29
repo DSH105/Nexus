@@ -41,7 +41,7 @@ public class OptionsConfig extends YamlConfig {
         this.options.put("server-password", "");
         this.options.put("startup-message", "Hi, I'm back!");
         this.options.put("nickserv-password", "");
-        this.options.put("command-prefix", "\\");
+        this.options.put("command-prefix", new String[] {"\\"});
         this.options.put("nick", "Nexus");
         this.options.put("admin-channel", "");
         this.options.put("append-nicks", true);
@@ -102,7 +102,11 @@ public class OptionsConfig extends YamlConfig {
     }
 
     public String getCommandPrefix() {
-        return get("command-prefix", "\\");
+        return getCommandPrefixes()[0];
+    }
+
+    public String[] getCommandPrefixes() {
+        return get("command-prefix", new String[] {"\\"});
     }
 
     public String getNick() {

@@ -50,7 +50,13 @@ public class CommandManager {
     }
 
     public void onCommand(Channel channel, User sender, String content) {
-        String[] split = content.substring(content.contains("\\") ? Nexus.getInstance().getConfig().getCommandPrefix().length() : 0).replaceAll("\\s+", " ").split(" ");
+        String commandPrefix = null;
+        for (String prefix : Nexus.getInstance().getConfig().getCommandPrefixes()) {
+            if (content.startsWith(prefix)) {
+                commandPrefix = prefix;
+            }
+        }
+        String[] split = Colors.removeFormattingAndColors(content).substring(commandPrefix == null ? commandPrefix.length() : 0).replaceAll("\\s+", " ").split(" ");
         onCommand(channel, sender, split[0].toLowerCase(), StringUtil.splitArgs(1, split, " "));
     }
 

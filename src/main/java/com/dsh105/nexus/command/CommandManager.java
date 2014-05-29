@@ -111,7 +111,7 @@ public class CommandManager {
     }
 
     public CommandModule matchModule(ArrayList<CommandModule> moduleList, String commandArguments) {
-        if (commandArguments.isEmpty() || commandArguments.length() <= 0 || commandArguments.equalsIgnoreCase(Nexus.getInstance().getConfig().getCommandPrefix())) {
+        if (commandArguments.isEmpty() || commandArguments.length() <= 0) {
             return null;
         }
         CommandModule possibleMatch = null;
@@ -156,7 +156,13 @@ public class CommandManager {
     }
 
     public boolean onCommand(Channel channel, User sender, String content) {
-        String[] split = Colors.removeFormattingAndColors(content).substring(content.contains("\\") ? Nexus.getInstance().getConfig().getCommandPrefix().length() : 0).replaceAll("\\s+", " ").split(" ");
+        String commandPrefix = null;
+        for (String prefix : Nexus.getInstance().getConfig().getCommandPrefixes()) {
+            if (content.startsWith(prefix)) {
+                commandPrefix = prefix;
+            }
+        }
+        String[] split = Colors.removeFormattingAndColors(content).substring(commandPrefix == null ? commandPrefix.length() : 0).replaceAll("\\s+", " ").split(" ");
         return onCommand(channel, sender, split[0].toLowerCase(), StringUtil.splitArgs(1, split, " "));
     }
 

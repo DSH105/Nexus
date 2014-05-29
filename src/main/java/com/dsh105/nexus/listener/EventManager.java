@@ -31,9 +31,15 @@ public class EventManager extends ListenerAdapter<Nexus> {
     @Override
     public void onMessage(MessageEvent<Nexus> event) throws Exception {
         String message = event.getMessage();
-        String commandPrefix = Nexus.getInstance().getConfig().getCommandPrefix();
+        //String commandPrefix = Nexus.getInstance().getConfig().getCommandPrefix();
         boolean commandResult = false;
-        if (message.startsWith(commandPrefix)) {
+        String commandPrefix = null;
+        for (String prefix : Nexus.getInstance().getConfig().getCommandPrefixes()) {
+            if (message.startsWith(prefix)) {
+                commandPrefix = prefix;
+            }
+        }
+        if (commandPrefix != null) {
             String[] split = message.substring(commandPrefix.length()).replaceAll("\\s+", " ").split(" ");
             commandResult = Nexus.getInstance().getCommandManager().onCommand(event.getChannel(), event.getUser(), split[0].toLowerCase(), StringUtil.splitArgs(1, split, " "));
         }
@@ -69,7 +75,6 @@ public class EventManager extends ListenerAdapter<Nexus> {
     @Override
     public void onPrivateMessage(PrivateMessageEvent<Nexus> event) throws Exception {
         String message = event.getMessage();
-        String commandPrefix = Nexus.getInstance().getConfig().getCommandPrefix();
         Nexus.LOGGER.info("Received PM from " + event.getUser().getNick() + ": " + message);
         if (!Nexus.getInstance().getCommandManager().onCommand(null, event.getUser(), message)) {
             /*if (!Nexus.getInstance().getResponseManager().trigger(null, event.getUser(), message)) {

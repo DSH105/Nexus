@@ -119,6 +119,7 @@ public class CommandRegistrationService {
                 if (help.length() == 0) {
                     help = desc;
                 }
+                // TODO: Slap CaptainBern - multiple prefix support
                 final String commandPrefix = Nexus.getInstance().getConfig().getCommandPrefix(); // Change this to "/" when testing
                 final CharSequence arguments = getArguments(cmd);
                 for (String alias : cmd.aliases()) {
@@ -166,6 +167,7 @@ public class CommandRegistrationService {
     protected String getUsage(String[] args, int level, Command cmd) {
         final StringBuilder command = new StringBuilder();
 
+        // TODO: Slap CaptainBern - multiple prefix support
         command.append(Nexus.getInstance().getConfig().getCommandPrefix());
 
         for (int i = 0; i <= level; ++i) {
@@ -206,6 +208,7 @@ public class CommandRegistrationService {
     protected String getNestedUsage(String[] args, int level, Method method, User user) throws CommandException {
         StringBuilder command = new StringBuilder();
 
+        // TODO: Slap CaptainBern - multiple prefix support
         command.append(Nexus.getInstance().getConfig().getCommandPrefix());
 
         for (int i = 0; i <= level; ++i) {
