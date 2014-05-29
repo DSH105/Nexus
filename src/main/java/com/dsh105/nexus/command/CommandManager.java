@@ -111,7 +111,7 @@ public class CommandManager {
     }
 
     public CommandModule matchModule(ArrayList<CommandModule> moduleList, String commandArguments) {
-        if (commandArguments.isEmpty()) {
+        if (commandArguments.isEmpty() || commandArguments.equalsIgnoreCase(Nexus.getInstance().getConfig().getCommandPrefix())) {
             return null;
         }
         CommandModule possibleMatch = null;
