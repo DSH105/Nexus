@@ -54,7 +54,7 @@ public class TimeUtil {
      * @param unit  the specified time unit
      * @return converted value
      */
-    private static long convert(int value, char unit) {
+    public static long convert(int value, char unit) {
         switch (unit) {
             case 'y':
                 return (long) (value * 1000 * 60 * 60 * 24 * 7 * 364.25);

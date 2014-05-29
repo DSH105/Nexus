@@ -145,7 +145,7 @@ public class CommandManager {
     }
 
     public Collection<CommandModule> getRegisteredCommands() {
-        return modules;
+        return new ArrayList<>(modules);
     }
 
     public HashMap<CommandGroup, ArrayList<CommandModule>> getGroupsMap() {

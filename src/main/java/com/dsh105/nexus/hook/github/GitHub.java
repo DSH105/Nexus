@@ -52,9 +52,11 @@ public class GitHub {
     private HashMap<String, GitHubRepo> repositories = new HashMap<>();
     private HashMap<GitHubRepo, Long> expirationDates = new HashMap<>();
     private ArrayList<GitHubIssue> issues = new ArrayList<>();
+    public final RefreshTask TASK;
 
     public GitHub() {
-        new Timer(true).schedule(new RefreshTask(), 0, 90000);
+        TASK = new RefreshTask();
+        new Timer(true).schedule(TASK, 0, 90000);
     }
 
     public static String getRepoApiUrl(String repoName) {

@@ -32,6 +32,8 @@ import com.dsh105.nexus.listener.EventManager;
 import com.dsh105.nexus.response.ResponseManager;
 import com.dsh105.nexus.script.ScriptManager;
 import com.dsh105.nexus.util.ShortLoggerFormatter;
+import com.dsh105.nexus.util.TimeUtil;
+import com.dsh105.nexus.util.TimeoutUtil;
 import com.mashape.unirest.http.Unirest;
 import org.ocpsoft.prettytime.PrettyTime;
 import org.pircbotx.Channel;
@@ -130,14 +132,21 @@ public class Nexus extends PircBotX {
             try {
                 LOGGER.info("Shutting down Nexus...");
                 INSTANCE.saveAll();
+                Jenkins.getJenkins().TASK.cancel();
+                GitHub.getGitHub().TASK.cancel();
                 try {
                     Unirest.shutdown();
-                } catch (IOException e) {
+                } catch (Exception e) {
                     LOGGER.severe("Failed to shutdown Unirest");
                     e.printStackTrace();
                 }
                 LOGGER.info("Waiting for outgoing queue");
-                while (INSTANCE.sendRaw().getOutgoingQueueSize() > 0);
+                TimeoutUtil.timeout(new Thread() {
+                    @Override
+                    public void run() {
+                        while (INSTANCE.sendRaw().getOutgoingQueueSize() > 0);
+                    }
+                }, TimeUtil.convert(5, 's'));
                 INSTANCE.shutdown(true);
                 try {
                     INSTANCE.consoleReader.reader.getTerminal().restore();
@@ -150,6 +159,7 @@ public class Nexus extends PircBotX {
                 e.printStackTrace();
             } finally {
                 System.exit(-1);
+                LOGGER.info("Nexus shut down");
             }
         }
     }

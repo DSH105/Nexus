@@ -32,12 +32,12 @@ public class Jenkins {
     protected String JENKINS_URL;
     private HashSet<JenkinsJob> jobs = new HashSet<>();
     private HashMap<String, JenkinsJobEntry> jobEntries = new HashMap<>();
+    public final RefreshTask TASK;
 
     public Jenkins() {
         this.JENKINS_URL = Nexus.getInstance().getConfig().getJenkinsUrl();
-        if (!this.JENKINS_URL.isEmpty()) {
-            new Timer(true).schedule(new RefreshTask(), 0, 150000);
-        }
+        TASK = new RefreshTask();
+        new Timer(true).schedule(TASK, 0, 150000);
     }
 
     public static Jenkins getJenkins() {
