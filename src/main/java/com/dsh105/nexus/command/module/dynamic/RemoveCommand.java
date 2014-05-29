@@ -39,7 +39,7 @@ public class RemoveCommand extends CommandModule {
         }
         CommandModule module = event.getManager().getModuleFor(event.getArgs()[0]);
         if (module == null) {
-            event.errorWithPing("{0} is not a valid command.");
+            event.errorWithPing("{0} is not a valid command.", event.getArgs()[0]);
             return true;
         }
         if (!(module instanceof DynamicCommand)) {

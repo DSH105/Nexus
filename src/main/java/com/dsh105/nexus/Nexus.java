@@ -132,8 +132,16 @@ public class Nexus extends PircBotX {
             try {
                 LOGGER.info("Shutting down Nexus...");
                 INSTANCE.saveAll();
-                Jenkins.getJenkins().TASK.cancel();
-                GitHub.getGitHub().TASK.cancel();
+                try {
+                    if (Jenkins.getJenkins().TASK != null) {
+                        Jenkins.getJenkins().TASK.cancel();
+                    }
+                    if (GitHub.getGitHub().TASK != null) {
+                        GitHub.getGitHub().TASK.cancel();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 try {
                     Unirest.shutdown();
                 } catch (Exception e) {
@@ -232,7 +240,8 @@ public class Nexus extends PircBotX {
         }
 
         // Scala stuff
-        LOGGER.info("initializing Scala commands...");
+        LOGGER.info("Initializing Scala commands...");
+        // TODO: 'ere be scala commands
 
         LOGGER.info("Preparing console reader");
         this.prepareConsoleReader();

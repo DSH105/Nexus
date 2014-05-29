@@ -111,6 +111,9 @@ public class CommandManager {
     }
 
     public CommandModule matchModule(ArrayList<CommandModule> moduleList, String commandArguments) {
+        if (commandArguments.isEmpty()) {
+            return null;
+        }
         CommandModule possibleMatch = null;
         for (CommandModule module : moduleList) {
             if (module.info().command().equalsIgnoreCase(commandArguments)) {
@@ -197,6 +200,7 @@ public class CommandManager {
                         event.errorWithPing("Use " + Nexus.getInstance().getConfig().getCommandPrefix() + "{0} for help (" + formatHelp(module) + ").", Nexus.getInstance().getConfig().getCommandPrefix() + "help " + event.getCommand());
                         return true;
                     } else {
+                        Nexus.LOGGER.info(event.getSender() + " used command via " + (event.isInPrivateMessage() ? "PM" : event.getChannel().getName()) + ": " + event.getCommand() + " " + event.getArgs());
                         return true;
                     }
                 }
