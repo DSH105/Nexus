@@ -206,7 +206,7 @@ public class CommandManager {
                         event.errorWithPing("Use " + Nexus.getInstance().getConfig().getCommandPrefix() + "{0} for help (" + formatHelp(module) + ").", Nexus.getInstance().getConfig().getCommandPrefix() + "help " + event.getCommand());
                         return true;
                     } else {
-                        Nexus.LOGGER.info(event.getSender() + " used command via " + (event.isInPrivateMessage() ? "PM" : event.getChannel().getName()) + ": " + event.getCommand() + " " + event.getArgs());
+                        Nexus.LOGGER.info(event.getSender().getNick() + " used command via " + (event.isInPrivateMessage() ? "PM" : event.getChannel().getName()) + ": " + event.getCommand() + " " + event.getArgs());
                         return true;
                     }
                 }
