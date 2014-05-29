@@ -54,7 +54,7 @@ public class GitHubStatusCommand extends CommandModule {
         }
 
         GitHubStatus status = statusMessages.get(0);
-        event.respond(String.format(MESSAGE, getFormatting(status.getStatus()), status.getBody()));
+        event.respondWithPing(String.format(MESSAGE, getFormatting(status.getStatus()), status.getBody()));
 
         return true;
     }
