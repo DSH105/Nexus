@@ -103,7 +103,7 @@ public class DynamicCommand extends CommandModule {
     @Override
     public boolean onCommand(CommandPerformEvent event) {
         if (this.action) {
-            Nexus.getInstance().sendIRC().action(event.getSender().getNick(), appendReplacements(event));
+            Nexus.getInstance().sendIRC().action(event.getChannel().getName(), appendReplacements(event));
         } else if (this.commandResponse) {
             event.getManager().onCommand(event.getChannel(), event.getSender(), response);
         } else {
