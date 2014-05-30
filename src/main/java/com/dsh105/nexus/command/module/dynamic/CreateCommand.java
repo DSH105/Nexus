@@ -54,7 +54,7 @@ public class CreateCommand extends CommandModule {
         String type = "NORMAL";
         int responseStartIndex = 1;
         if (event.getArgs().length >= 3) {
-            if (isValidType(type)) {
+            if (isValidType(event.getArgs()[1])) {
                 type = event.getArgs()[1].toUpperCase();
                 responseStartIndex = 2;
             }
@@ -81,7 +81,7 @@ public class CreateCommand extends CommandModule {
     }
 
     private boolean isValidType(String type) {
-        return Arrays.asList(new String[]{"ACTION", "COMMAND", "ALIAS"}).contains(type.toUpperCase());
+        return Arrays.asList(new String[]{"NORMAL", "ACTION", "COMMAND", "ALIAS"}).contains(type.toUpperCase());
     }
 
     @Override
