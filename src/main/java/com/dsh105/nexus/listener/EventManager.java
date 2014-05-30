@@ -31,20 +31,7 @@ public class EventManager extends ListenerAdapter<Nexus> {
     @Override
     public void onMessage(MessageEvent<Nexus> event) throws Exception {
         String message = event.getMessage();
-        //String commandPrefix = Nexus.getInstance().getConfig().getCommandPrefix();
-        boolean commandResult = false;
-        String commandPrefix = null;
-        for (String prefix : Nexus.getInstance().getConfig().getCommandPrefixes()) {
-            if (message.startsWith(prefix)) {
-                commandPrefix = prefix;
-            }
-        }
-        if (commandPrefix != null) {
-            String[] split = message.substring(commandPrefix.length()).replaceAll("\\s+", " ").split(" ");
-            commandResult = Nexus.getInstance().getCommandManager().onCommand(event.getChannel(), event.getUser(), split[0].toLowerCase(), StringUtil.splitArgs(1, split, " "));
-        }
-
-        if (!commandResult) {
+        if (!Nexus.getInstance().getCommandManager().onCommand(event.getChannel(), event.getUser(), message, true)) {
             Nexus.getInstance().getResponseManager().trigger(event.getChannel(), event.getUser(), message);
         }
     }

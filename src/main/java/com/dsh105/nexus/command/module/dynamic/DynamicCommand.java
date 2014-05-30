@@ -103,7 +103,11 @@ public class DynamicCommand extends CommandModule {
     @Override
     public boolean onCommand(CommandPerformEvent event) {
         if (this.action) {
-            event.getChannel().send().action(appendReplacements(event));
+            if (event.isInPrivateMessage()) {
+                event.getSender().send().action(appendReplacements(event));
+            } else {
+                event.getChannel().send().action(appendReplacements(event));
+            }
         } else if (this.commandResponse) {
             event.getManager().onCommand(event.getChannel(), event.getSender(), response);
         } else {

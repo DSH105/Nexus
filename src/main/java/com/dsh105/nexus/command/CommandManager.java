@@ -155,15 +155,23 @@ public class CommandManager {
         return new HashMap<>(groupToModules);
     }
 
-    public boolean onCommand(Channel channel, User sender, String content) {
+    public boolean onCommand(Channel channel, User sender, String content, boolean onlyWithPrefix) {
         String commandPrefix = null;
         for (String prefix : Nexus.getInstance().getConfig().getCommandPrefixes()) {
             if (content.startsWith(prefix)) {
                 commandPrefix = prefix;
+                break;
             }
+        }
+        if (onlyWithPrefix && commandPrefix == null) {
+            return false;
         }
         String[] split = Colors.removeFormattingAndColors(content).substring(commandPrefix != null ? commandPrefix.length() : 0).replaceAll("\\s+", " ").split(" ");
         return onCommand(channel, sender, split[0].toLowerCase(), StringUtil.splitArgs(1, split, " "));
+    }
+
+    public boolean onCommand(Channel channel, User sender, String content) {
+        return this.onCommand(channel, sender, content, false);
     }
 
     public boolean onCommand(Channel channel, User sender, String command, String... args) {
