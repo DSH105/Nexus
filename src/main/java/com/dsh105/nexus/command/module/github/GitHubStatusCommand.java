@@ -53,6 +53,11 @@ public class GitHubStatusCommand extends CommandModule {
             throw new GenericUrlConnectionException("Error occurred while reading from " + URL, e);
         }
 
+        if (statusMessages.isEmpty()) {
+            event.respond("GitHub Status: {0}", "Nothing reported!");
+            return true;
+        }
+
         GitHubStatus status = statusMessages.get(0);
         event.respondWithPing(String.format(MESSAGE, getFormatting(status.getStatus()), status.getBody()));
 
