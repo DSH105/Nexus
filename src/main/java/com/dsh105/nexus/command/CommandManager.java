@@ -162,7 +162,7 @@ public class CommandManager {
                 commandPrefix = prefix;
             }
         }
-        String[] split = Colors.removeFormattingAndColors(content).substring(commandPrefix == null ? commandPrefix.length() : 0).replaceAll("\\s+", " ").split(" ");
+        String[] split = Colors.removeFormattingAndColors(content).substring(commandPrefix != null ? commandPrefix.length() : 0).replaceAll("\\s+", " ").split(" ");
         return onCommand(channel, sender, split[0].toLowerCase(), StringUtil.splitArgs(1, split, " "));
     }
 
