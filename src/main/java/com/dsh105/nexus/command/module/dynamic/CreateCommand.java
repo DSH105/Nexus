@@ -66,6 +66,7 @@ public class CreateCommand extends CommandModule {
             CommandModule module = event.getManager().getModuleFor(command);
             if (module == null) {
                 event.errorWithPing("Aliases cannot be added to a command that does not exist ({0}).", command);
+                return true;
             }
             if (!(module instanceof DynamicCommand)) {
                 event.errorWithPing("Aliases cannot be added to {0}.", module.info().command());
@@ -79,6 +80,7 @@ public class CreateCommand extends CommandModule {
 
         DynamicCommand dynamicCommand = new DynamicCommandFactory().withCommand(command).withHelp(help).withExtendedHelp(help).withResponseOfType(response, type).prepare();
         event.getManager().register(dynamicCommand);
+        dynamicCommand.save();
         event.respondWithPing("Command registered as {0}", event.getCommandPrefix() + command);
         return true;
     }
