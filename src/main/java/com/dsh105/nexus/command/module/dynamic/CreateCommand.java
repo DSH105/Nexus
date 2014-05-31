@@ -36,8 +36,7 @@ import java.util.Arrays;
                 "Optional response placeholders:",
                 "- {b}%s{/b} -> Name of the command sender",
                 "- {b}%c{/b} -> Name of the channel executed in. \'PM\' if in private message",
-                "- {b}%a#{/b} -> Command argument, where # is the argument number",
-                "- {b}%t#{/b} -> Similar to %a#, but uses the sender\'s nick when the argument is not specified."
+                "- {b}%a#:<default>{/b} -> Command argument, where # is the argument number. If the argument is not specified, the default is used",
         })
 public class CreateCommand extends CommandModule {
 

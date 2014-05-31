@@ -126,14 +126,10 @@ public class DynamicCommand extends CommandModule {
     public String appendReplacements(CommandPerformEvent event) {
         String response = ResponseFormatter.appendReplacements(this.response, event.getSender(), event.getChannel());
 
-        Matcher matcher = Pattern.compile("%t([0-9])").matcher(response);
+        Matcher matcher = Pattern.compile("%a([0-9]):(.+?)").matcher(response);
         while (matcher.find()) {
             int index = Integer.parseInt(matcher.group(1));
-            response = response.replace("%t" + index, (event.getArgs().length >= index ? event.getSender().getNick() : event.getArgs()[index]));
-        }
-
-        for (int i = 0; i < event.getArgs().length; i++) {
-            response = response.replace("%a" + i, event.getArgs()[i]);
+            response = response.replace(matcher.group(0), (index >= event.getArgs().length ? matcher.group(2) : event.getArgs()[index]));
         }
 
         return event.getManager().format(null, response);
