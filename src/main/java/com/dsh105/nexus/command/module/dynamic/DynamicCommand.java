@@ -31,6 +31,8 @@ import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Exclude
 @Command(command = "dynamic",
@@ -124,7 +126,13 @@ public class DynamicCommand extends CommandModule {
     public String appendReplacements(CommandPerformEvent event) {
         String response = ResponseFormatter.appendReplacements(this.response, event.getSender(), event.getChannel());
 
-        response = response.replace("%t", (event.getArgs().length == 0 ? event.getSender().getNick() : event.getArgs()[0]));
+        Matcher matcher = Pattern.compile("%t([0-9])").matcher(response);
+        while (matcher.find()) {
+            int index = Integer.parseInt(matcher.group(1));
+            if (event.getArgs().length >= index) {
+                response = response.replace("%t" + index, (event.getArgs().length >= index ? event.getSender().getNick() : event.getArgs()[index]));
+            }
+        }
 
         for (int i = 0; i < event.getArgs().length; i++) {
             response = response.replace("%a" + i, event.getArgs()[i]);
