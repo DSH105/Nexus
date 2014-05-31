@@ -129,7 +129,7 @@ public class DynamicCommand extends CommandModule {
         Matcher matcher = Pattern.compile("%a([0-9]):(.+?)").matcher(response);
         while (matcher.find()) {
             int index = Integer.parseInt(matcher.group(1));
-            response = response.replace(matcher.group(0), (index >= event.getArgs().length ? matcher.group(2) : event.getArgs()[index]));
+            response = response.replace(matcher.group(), (index >= event.getArgs().length ? matcher.group(2) : event.getArgs()[index]));
         }
 
         return event.getManager().format(null, response);
