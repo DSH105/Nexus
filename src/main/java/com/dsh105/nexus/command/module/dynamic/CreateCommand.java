@@ -63,9 +63,9 @@ public class CreateCommand extends CommandModule {
         String help = "Dynamic command (" + type.toLowerCase() + ") -> " + response;
 
         if (type.equalsIgnoreCase("ALIAS")) {
-            CommandModule module = event.getManager().getModuleFor(command);
+            CommandModule module = event.getManager().getModuleFor(event.getArgs()[responseStartIndex]);
             if (module == null) {
-                event.errorWithPing("Aliases cannot be added to a command that does not exist ({0}).", command);
+                event.errorWithPing("Aliases cannot be added to a command that does not exist ({0}).", event.getArgs()[responseStartIndex]);
                 return true;
             }
             if (!(module instanceof DynamicCommand)) {
