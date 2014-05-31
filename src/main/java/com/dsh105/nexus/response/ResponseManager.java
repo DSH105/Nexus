@@ -66,8 +66,6 @@ public class ResponseManager {
     public void load() {
         FileInputStream input = null;
         try {
-            ArrayList<File> toRemove = new ArrayList<>();
-
             File responsesFolder = new File("responses");
             if (!responsesFolder.exists()) {
                 responsesFolder.mkdirs();
@@ -92,15 +90,7 @@ public class ResponseManager {
                         } catch (Exception ignored) {
                         }
                     }
-                    toRemove.add(f);
                 }
-            }
-
-            Iterator<File> i = toRemove.iterator();
-            while (i.hasNext()) {
-                File f = i.next();
-                f.delete();
-                i.remove();
             }
         } catch (IOException e) {
             Nexus.LOGGER.severe("Could not load responses!");
