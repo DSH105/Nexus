@@ -50,9 +50,10 @@ public class RemindCommand extends CommandModule {
         if (event.getArgs().length >= 2) {
             long timePeriod = -1;
             boolean forOtherUser = false;
+            final String pi = "3.14159";
             final String timeString = event.getArgs()[1];
             try {
-                timePeriod = TimeUtil.parse(timeString);
+                timePeriod = TimeUtil.parse(timeString.replace("\u03C0", pi).replace("pi", pi));
                 if (timePeriod > 0) {
                     forOtherUser = true;
                 }
@@ -63,7 +64,7 @@ public class RemindCommand extends CommandModule {
 
             if (!forOtherUser) {
                 try {
-                    timePeriod = TimeUtil.parse(event.getArgs()[0]);
+                    timePeriod = TimeUtil.parse(event.getArgs()[0].replace("\u03C0", pi).replace("pi", pi));
                 } catch (NumberFormatException ignored) {
                 }
             }
