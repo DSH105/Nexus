@@ -40,7 +40,7 @@ public class TimeUtil {
             if (c >= '0' && c <= '9') {
                 number += c;
             } else if (Character.isLetter(c) && !number.isEmpty()) {
-                result += convert(Double.parseDouble(number), c);
+                result += convert((int) Double.parseDouble(number), c);
                 number = "";
             }
         }
@@ -54,7 +54,7 @@ public class TimeUtil {
      * @param unit  the specified time unit
      * @return converted value
      */
-    public static long convert(double value, char unit) {
+    public static long convert(int value, char unit) {
         switch (unit) {
             case 'y':
                 return (long) (value * 1000 * 60 * 60 * 24 * 7 * 364.25);
