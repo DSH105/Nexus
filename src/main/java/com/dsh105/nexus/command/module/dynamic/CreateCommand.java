@@ -72,9 +72,8 @@ public class CreateCommand extends CommandModule {
                 event.errorWithPing("Aliases cannot be added to {0}.", module.info().command());
                 return true;
             }
-            String[] aliases = StringUtil.splitArgs(responseStartIndex, event.getArgs(), " ");
-            ((DynamicCommand) module).addAliases(aliases);
-            event.respondWithPing("Alias" + (aliases.length == 1 ? "" : "es") + " ({0} added to command ({1})", StringUtil.buildSentenceList(aliases), event.getCommandPrefix() + command);
+            ((DynamicCommand) module).addAliases(command);
+            event.respondWithPing("Alias ({0}) added to command ({1})", command, event.getCommandPrefix() + module.info().command());
             return true;
         }
 
