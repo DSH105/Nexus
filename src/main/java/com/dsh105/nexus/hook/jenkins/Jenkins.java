@@ -125,7 +125,7 @@ public class Jenkins {
 
         @Override
         public void run() {
-            Nexus.LOGGER.info("Updating all jenkins jobs at " + JENKINS_URL);
+            //Nexus.LOGGER.info("Updating all jenkins jobs at " + JENKINS_URL);
             getJobs(true);
         }
     }
