@@ -86,16 +86,7 @@ public class EventManager extends ListenerAdapter<Nexus> {
     @Override
     public void onConnect(ConnectEvent<Nexus> event) throws Exception {
         Nexus.LOGGER.info("Connected to IRC");
-
-        for (String channel : event.getBot().getConfig().getChannels()) {
-            if (event.getBot().getChannel(channel) == null) {
-                event.getBot().sendRaw().rawLineNow("JOIN " + channel);
-            }
-        }
-
-        if (!event.getBot().getConfig().getStartupMessage().isEmpty()) {
-            event.getBot().send(event.getBot().getConfig().getAdminChannel(), event.getBot().getConfig().getStartupMessage());
-        }
+        Nexus.getInstance().onConnect();
     }
 
     @Override
@@ -114,7 +105,7 @@ public class EventManager extends ListenerAdapter<Nexus> {
     @Override
     public void onVoice(VoiceEvent<Nexus> event) throws Exception {
         if (event.getRecipient().getNick().equalsIgnoreCase(Nexus.getInstance().getNick())) {
-            Nexus.LOGGER.info("Voice " + (event.hasVoice() ? " given to " : " removed from ") + event.getRecipient().getNick() + " by " + event.getUser().getNick() + "in " + event.getChannel().getName());
+            Nexus.LOGGER.info("Voice" + (event.hasVoice() ? " given to " : " removed from ") + event.getRecipient().getNick() + " by " + event.getUser().getNick() + " in " + event.getChannel().getName());
         }
     }
 }

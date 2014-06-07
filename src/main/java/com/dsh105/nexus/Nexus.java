@@ -56,6 +56,7 @@ public class Nexus extends PircBotX {
     public static String CONFIG_FILE_NAME = "options.yml";
     private static Nexus INSTANCE;
     private ConsoleReader consoleReader;
+    private ChannelLogHandler channelLogHandler;
     private ChannelConfiguration channelConfiguration;
     private OptionsConfig config;
     private GitHubConfig githubConfig;
@@ -133,7 +134,7 @@ public class Nexus extends PircBotX {
                 LOGGER.info("Shutting down Nexus...");
                 INSTANCE.saveAll();
                 try {
-                    if (Jenkins.getJenkins().TASK != null) {
+                    if (Jenkins.getJenkins() != null && Jenkins.getJenkins().TASK != null) {
                         Jenkins.getJenkins().TASK.cancel();
                     }
                     if (GitHub.getGitHub().TASK != null) {
@@ -162,7 +163,9 @@ public class Nexus extends PircBotX {
                     e.printStackTrace();
                 }
                 INSTANCE.consoleReader.setRunning(false);
+                INSTANCE.channelLogHandler.close();
                 INSTANCE = null;
+                LOGGER.info("System exiting...");
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {
@@ -213,6 +216,20 @@ public class Nexus extends PircBotX {
         }
     }
 
+    private void registerChannelLogger() {
+        String logChannel = getConfig().getLogChannel();
+        if (logChannel.isEmpty()) {
+            return;
+        }
+
+        Logger root = Logger.getLogger("");
+
+        channelLogHandler = new ChannelLogHandler(logChannel);
+        channelLogHandler.setLevel(Level.INFO);
+        channelLogHandler.setFormatter(new ShortLoggerFormatter(true));
+        root.addHandler(channelLogHandler);
+    }
+
     private void prepare() {
         Unirest.setTimeouts(10000, 10000);
         Unirest.setDefaultHeader("user-agent", getConfig().get("user-agent", "Nexus"));
@@ -253,6 +270,20 @@ public class Nexus extends PircBotX {
         } catch (IrcException | IOException ignored) {
         }
 
+    }
+
+    public void onConnect() {
+        registerChannelLogger();
+
+        for (String channel : getConfig().getChannels()) {
+            if (getChannel(channel) == null) {
+                sendRaw().rawLineNow("JOIN " + channel);
+            }
+        }
+
+        if (!getConfig().getStartupMessage().isEmpty()) {
+            send(getConfig().getAdminChannel(), getConfig().getStartupMessage());
+        }
     }
 
     private void prepareConsoleReader() {

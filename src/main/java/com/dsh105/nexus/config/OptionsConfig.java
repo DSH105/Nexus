@@ -44,6 +44,7 @@ public class OptionsConfig extends YamlConfig {
         this.options.put("command-prefix", new String[] {"\\"});
         this.options.put("nick", "Nexus");
         this.options.put("admin-channel", "");
+        this.options.put("log-channel", "");
         this.options.put("append-nicks", true);
         this.options.put("jenkins-url", "");
         this.options.put("response-chance", "");
@@ -171,5 +172,9 @@ public class OptionsConfig extends YamlConfig {
 
     public String getWolframAlphaKey() {
         return get("wolfram-key", "");
+    }
+
+    public String getLogChannel() {
+        return get("log-channel", "");
     }
 }

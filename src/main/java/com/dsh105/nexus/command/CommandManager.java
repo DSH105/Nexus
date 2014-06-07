@@ -212,11 +212,9 @@ public class CommandManager {
                     }
                     if (!module.onCommand(event)) {
                         event.errorWithPing("Use " + Nexus.getInstance().getConfig().getCommandPrefix() + "{0} for help (" + formatHelp(module) + ").", Nexus.getInstance().getConfig().getCommandPrefix() + "help " + event.getCommand());
-                        return true;
-                    } else {
-                        Nexus.LOGGER.info(event.getSender().getNick() + " used command via " + (event.isInPrivateMessage() ? "PM" : event.getChannel().getName()) + ": " + event.getCommand() + " " + StringUtil.combineSplit(0, event.getArgs(), " "));
-                        return true;
                     }
+                    Nexus.LOGGER.info(event.getSender().getNick() + " used command via " + (event.isInPrivateMessage() ? "PM" : event.getChannel().getName()) + ": " + event.getCommand() + " " + StringUtil.combineSplit(0, event.getArgs(), " "));
+                    return true;
                 }
             }
 
