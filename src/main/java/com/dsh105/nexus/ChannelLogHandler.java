@@ -54,12 +54,12 @@ public class ChannelLogHandler extends Handler {
             while (iter.hasNext()) {
                 User u = iter.next();
 
-                StringBuffer buffer = new StringBuffer();
+                /*StringBuffer buffer = new StringBuffer();
                 Matcher nameMatcher = Pattern.compile(u.getNick(), Pattern.CASE_INSENSITIVE).matcher(part);
                 while (nameMatcher.find()) {
                     nameMatcher.appendReplacement(buffer, StringUtil.removePing(nameMatcher.group()));
                 }
-                part = buffer.toString();
+                part = buffer.toString();*/
                 part = part.replace(u.getNick(), StringUtil.removePing(part)).replace(u.getNick().toLowerCase(), StringUtil.removePing(part));
             }
             parts[i] = part;
