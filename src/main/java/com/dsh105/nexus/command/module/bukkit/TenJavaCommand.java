@@ -37,7 +37,9 @@ import java.util.Date;
         needsChannel = false,
         help = "Get tenjava points",
         extendedHelp = {
-                "{b}{p}{c}{/b} - View tenjava donated points"
+                "{b}{p}{c}{/b} - View tenjava donated points",
+                "{b}{p}{c} top{/b} - View the top donors to tenjava.",
+                "{b}{p}{c} top <number>{/b} - View the top donors to tenjava."
         })
 public class TenJavaCommand extends CommandModule {
 
