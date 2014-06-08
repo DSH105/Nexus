@@ -23,6 +23,8 @@ import org.pircbotx.User;
 import java.util.Iterator;
 import java.util.logging.Handler;
 import java.util.logging.LogRecord;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ChannelLogHandler extends Handler {
 
@@ -51,9 +53,13 @@ public class ChannelLogHandler extends Handler {
             Iterator<User> iter = Nexus.getInstance().getChannel(this.channelName).getUsers().iterator();
             while (iter.hasNext()) {
                 User u = iter.next();
-                if (part.equalsIgnoreCase(u.getNick())) {
-                    parts[i] = StringUtil.removePing(part);
+
+                StringBuffer buffer = new StringBuffer();
+                Matcher nameMatcher = Pattern.compile(u.getNick(), Pattern.CASE_INSENSITIVE).matcher(part);
+                while (nameMatcher.find()) {
+                    nameMatcher.appendReplacement(buffer, StringUtil.removePing(nameMatcher.group()));
                 }
+                part = buffer.toString();
             }
         }
         String message = StringUtil.join(parts, " ");
