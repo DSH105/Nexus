@@ -43,8 +43,7 @@ import java.util.Date;
         })
 public class TenJavaCommand extends CommandModule {
 
-    public static final String TEN_JAVA_URL = "http://tenjava.com/assets/data.json";
-    public static final String TEN_JAVA_TOP_URL = "http://beta.tenjava.com/api/points";
+    public static final String TEN_JAVA_URL = "https://tenjava.com/api/points";
     public static final int TOP_LIMIT = 10;
     private final DecimalFormat df = new DecimalFormat("0.00");
 
@@ -79,7 +78,7 @@ public class TenJavaCommand extends CommandModule {
                 }
 
                 try {
-                    TenJavaDonor[] donors = JsonUtil.read(Unirest.get(TEN_JAVA_TOP_URL).header("accept", "application/json"), "better_top", TenJavaDonor[].class);
+                    TenJavaDonor[] donors = JsonUtil.read(Unirest.get(TEN_JAVA_URL).header("accept", "application/json"), "better_top", TenJavaDonor[].class);
                     StringBuilder builder = new StringBuilder();
                     for (int i = 0; i < limit; i++) {
                         TenJavaDonor donor = donors[i];
