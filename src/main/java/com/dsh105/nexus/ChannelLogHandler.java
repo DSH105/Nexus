@@ -60,7 +60,7 @@ public class ChannelLogHandler extends Handler {
                     nameMatcher.appendReplacement(buffer, StringUtil.removePing(nameMatcher.group()));
                 }
                 part = buffer.toString();*/
-                part = part.replace(u.getNick(), StringUtil.removePing(part)).replace(u.getNick().toLowerCase(), StringUtil.removePing(part));
+                part = part.replace(u.getNick(), StringUtil.removePing(u.getNick())).replace(u.getNick().toLowerCase(), StringUtil.removePing(u.getNick().toLowerCase()));
             }
             parts[i] = part;
         }
