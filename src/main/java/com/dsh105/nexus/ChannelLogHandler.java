@@ -62,6 +62,7 @@ public class ChannelLogHandler extends Handler {
                 part = buffer.toString();
                 part = part.replace(u.getNick(), StringUtil.removePing(part)).replace(u.getNick().toLowerCase(), StringUtil.removePing(part));
             }
+            parts[i] = part;
         }
         String message = StringUtil.join(parts, " ");
         for (String exc : EXCLUSIONS) {
