@@ -89,7 +89,7 @@ public class TenJavaCommand extends CommandModule {
                         }
                     }
 
-                    event.respond(Colors.UNDERLINE + "Top " + limit + " donors: " + builder.toString());
+                    event.respond(Colors.UNDERLINE + "Top " + limit + " donors: " + Colors.UNDERLINE + builder.toString());
                     return true;
                 } catch (Exception e) {
                     throw new TenJavaDataLookupException("An error occurred in the lookup process", e);
