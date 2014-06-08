@@ -73,7 +73,7 @@ public class EventManager extends ListenerAdapter<Nexus> {
 
     @Override
     public void onJoin(JoinEvent<Nexus> event) throws Exception {
-        if (event.getUser().getNick().equals(Nexus.getInstance().getNick())) {
+        if (event.getUser().getNick().equals(event.getBot().getUserBot().getNick())) {
             Nexus.getInstance().saveChannels();
             Nexus.LOGGER.info("Joining channel: " + event.getChannel().getName());
         }
@@ -81,7 +81,7 @@ public class EventManager extends ListenerAdapter<Nexus> {
 
     @Override
     public void onPart(PartEvent<Nexus> event) throws Exception {
-        if (event.getUser().getNick().equals(Nexus.getInstance().getNick())) {
+        if (event.getUser().getNick().equals(event.getBot().getUserBot().getNick())) {
             Nexus.getInstance().saveChannels();
             Nexus.LOGGER.info("Parting channel: " + event.getChannel().getName());
         }
