@@ -81,7 +81,7 @@ public class TenJavaCommand extends CommandModule {
                 try {
                     TenJavaDonor[] donors = JsonUtil.read(Unirest.get(TEN_JAVA_TOP_URL).header("accept", "application/json"), "better_top", TenJavaDonor[].class);
                     StringBuilder builder = new StringBuilder();
-                    for (int i = 0; i <= limit; i++) {
+                    for (int i = 0; i < limit; i++) {
                         TenJavaDonor donor = donors[i];
                         builder.append(Colors.BOLD + StringUtil.removePing(donor.getUsername()) + Colors.BOLD + " (" + donor.getAmount() + ")");
                         if (i != limit) {
