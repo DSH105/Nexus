@@ -22,6 +22,7 @@ import com.dsh105.nexus.command.Command;
 import com.dsh105.nexus.command.CommandModule;
 import com.dsh105.nexus.command.CommandPerformEvent;
 import com.dsh105.nexus.exception.currency.DogeCoinException;
+import com.dsh105.nexus.util.StringUtil;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
@@ -49,10 +50,10 @@ public class DogeCommand extends CommandModule {
                         .header("accept", "application/json")
                         .asJson();
                 double amtFromDogeApi = jsonResponse.getBody().getObject().getJSONObject("data").getJSONObject("info").getDouble("doge_usd");
-                double amtInUsdtoDoge = Double.parseDouble(event.getArgs()[0]);
+                double amtInUsdtoDoge = StringUtil.toDouble(event.getArgs()[0]);
                 amtInUsdtoDoge = amtInUsdtoDoge / amtFromDogeApi;
 
-                double amtInDogetoUSD = Double.parseDouble(event.getArgs()[0]);
+                double amtInDogetoUSD = StringUtil.toDouble(event.getArgs()[0]);
                 amtInDogetoUSD = amtInDogetoUSD * amtFromDogeApi;
 
                 amtInDogetoUSD = (double) Math.round(amtInDogetoUSD * 100) / 100;

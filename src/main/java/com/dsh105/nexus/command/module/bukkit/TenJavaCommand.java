@@ -69,8 +69,13 @@ public class TenJavaCommand extends CommandModule {
             if (event.getArgs()[0].equalsIgnoreCase("top")) {
 
                 int limit = TOP_LIMIT;
-                if (event.getArgs().length == 2 && StringUtil.isInt(event.getArgs()[1])) {
-                    limit = Integer.parseInt(event.getArgs()[1]);
+
+                try {
+                    if (event.getArgs().length == 2) {
+                        limit = StringUtil.toInteger(event.getArgs()[1]);
+                    }
+                } catch (NumberFormatException ex) {
+
                 }
 
                 try {

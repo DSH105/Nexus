@@ -47,12 +47,7 @@ public class CurrencyCommand extends CommandModule {
         String to = args[1];
         String amountStr = args[2];
 
-        if (!StringUtil.isDouble(amountStr)) {
-            event.respond("Amount is not a valid value.");
-            return false;
-        }
-
-        double amount = Double.parseDouble(amountStr);
+        double amount = StringUtil.toDouble(amountStr);
 
         try {
             CurrencyConverter converter = new CurrencyConverter(new RateExchangeLookup());

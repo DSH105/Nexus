@@ -227,6 +227,8 @@ public class CommandManager {
                 event.errorWithPing("Rate limit for this GitHub API Key exceeded. Further requests cannot be executed on the behalf of this user.");
             } else if (e instanceof GitHubHookNotFoundException) {
                 event.errorWithPing(e.getMessage());
+            } else if (e instanceof NumberFormatException) {
+                event.errorWithPing("Please specify a valid number!");
             } else {
                 if (Nexus.getInstance().getGitHubConfig().getNexusGitHubApiKey().isEmpty()) {
                     e.printStackTrace();

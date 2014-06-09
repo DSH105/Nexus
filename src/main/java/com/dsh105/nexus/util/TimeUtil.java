@@ -40,7 +40,7 @@ public class TimeUtil {
             if (c >= '0' && c <= '9') {
                 number += c;
             } else if (Character.isLetter(c) && !number.isEmpty()) {
-                result += convert((int) Double.parseDouble(number), c);
+                result += convert((int) StringUtil.toDouble(number), c);
                 number = "";
             }
         }

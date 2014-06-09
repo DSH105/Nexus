@@ -32,33 +32,25 @@ public class StringUtil {
     }
 
     /**
-     * Tests if the given String is an Integer
+     * Attempts to convert a string into an integer value using Regex
      *
      * @param string the String to be checked
-     * @return true if Integer
+     * @return Integer.MIN_VALUE if unable to convert
+     * @throws java.lang.NumberFormatException
      */
-    public static boolean isInt(String string) {
-        try {
-            Integer.parseInt(string);
-        } catch (NumberFormatException ex) {
-            return false;
-        }
-        return true;
+    public static int toInteger(String string) throws NumberFormatException{
+        return Integer.parseInt(string.replaceAll("[^0-9.]", ""));
     }
 
     /**
-     * Tests if the given String is an Double
+     * Attempts to convert a string into an double value using Regex
      *
      * @param string the String to be checked
-     * @return true if Double
+     * @return Double.MIN_VALUE if unable to convert
+     * @throws java.lang.NumberFormatException
      */
-    public static boolean isDouble(String string) {
-        try {
-            Double.parseDouble(string);
-        } catch (NumberFormatException ex) {
-            return false;
-        }
-        return true;
+    public static double toDouble(String string) throws NumberFormatException {
+        return Double.parseDouble(string.replaceAll(".*?([\\d.]+).*", "$1"));
     }
 
     /**
