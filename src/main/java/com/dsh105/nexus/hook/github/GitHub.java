@@ -460,7 +460,7 @@ public class GitHub {
 
     private void cache(GitHubRepo repo) {
         Calendar c = Calendar.getInstance();
-        c.add(Calendar.MINUTE, 15);
+        c.add(Calendar.MINUTE, 10);
         repositories.put(repo.getFullName(), repo);
         expirationDates.put(repo, c.getTimeInMillis());
     }
@@ -475,6 +475,7 @@ public class GitHub {
         public void run() {
             HashMap<String, GitHubRepo> fullNameToRepoMapCopy = new HashMap<>(repositories);
             ArrayList<GitHubIssue> issuesCopy = new ArrayList<>(issues);
+            boolean edited = false;
             if (!fullNameToRepoMapCopy.isEmpty() || !issuesCopy.isEmpty()) {
                 Nexus.LOGGER.info("Updating GitHub repo storage...");
                 for (Map.Entry<String, GitHubRepo> entry : fullNameToRepoMapCopy.entrySet()) {
@@ -485,9 +486,20 @@ public class GitHub {
                         // Only keep them in memory for a certain period of time
                         if (new Date().before(new Date(expiration))) {
                             GitHubRepo repo = getRepo(entry.getKey(), entry.getValue().userLoginForAccessToken);
-                            cache(repo);
+                            repositories.put(repo.getFullName(), repo);
+                        } else {
+                            for (GitHubIssue issue : issuesCopy) {
+                                if (issue.getRepo().getFullName().equals(entry.getValue().getFullName())) {
+                                    issues.remove(issue);
+                                    edited = true;
+                                }
+                            }
                         }
                     }
+                }
+
+                if (edited) {
+                    issuesCopy = new ArrayList<>(issues);
                 }
 
                 for (GitHubIssue issue : issuesCopy) {
