@@ -132,6 +132,7 @@ public class Nexus extends PircBotX {
         if (INSTANCE != null) {
             try {
                 LOGGER.info("Shutting down Nexus...");
+                INSTANCE.channelLogHandler.close();
                 INSTANCE.saveAll();
                 try {
                     if (Jenkins.getJenkins() != null && Jenkins.getJenkins().TASK != null) {
@@ -163,7 +164,6 @@ public class Nexus extends PircBotX {
                     e.printStackTrace();
                 }
                 INSTANCE.consoleReader.setRunning(false);
-                INSTANCE.channelLogHandler.close();
                 INSTANCE = null;
                 LOGGER.info("System exiting...");
             } catch (Exception e) {
@@ -275,11 +275,16 @@ public class Nexus extends PircBotX {
     public void onConnect() {
         registerChannelLogger();
 
-        for (String channel : getConfig().getChannels()) {
-            if (getChannel(channel) == null) {
-                sendRaw().rawLineNow("JOIN " + channel);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                for (String channel : getConfig().getChannels()) {
+                    if (getChannel(channel) == null) {
+                        sendRaw().rawLineNow("JOIN " + channel);
+                    }
+                }
             }
-        }
+        }).start();
 
         if (!getConfig().getStartupMessage().isEmpty()) {
             send(getConfig().getAdminChannel(), getConfig().getStartupMessage());
