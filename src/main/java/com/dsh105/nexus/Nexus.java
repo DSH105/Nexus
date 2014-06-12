@@ -155,6 +155,7 @@ public class Nexus extends PircBotX {
                     @Override
                     public void run() {
                         while (INSTANCE.sendRaw().getOutgoingQueueSize() > 0);
+                        interrupt();
                     }
                 }, TimeUtil.convert(5, 's'));
                 INSTANCE.shutdown(true);
@@ -287,7 +288,7 @@ public class Nexus extends PircBotX {
         }).start();
 
         if (!getConfig().getStartupMessage().isEmpty()) {
-            send(getConfig().getAdminChannel(), getConfig().getStartupMessage());
+            sendIRC().message(getConfig().getAdminChannel(), getConfig().getStartupMessage());
         }
     }
 
@@ -331,10 +332,6 @@ public class Nexus extends PircBotX {
             this.channelConfiguration.getChannel(channel.getName());
         }
         this.config.save();
-    }
-
-    public void send(String target, String message) {
-        Nexus.getInstance().sendIRC().message(target, message);
     }
 
     public String appendNick(String nick, String message) {

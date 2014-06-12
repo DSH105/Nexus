@@ -41,10 +41,10 @@ public class EventManager extends ListenerAdapter<Nexus> {
         Nexus.LOGGER.info("Received invite to " + event.getChannel() + " from " + event.getUser());
         if (Nexus.getInstance().isAdmin(event.getUser())) {
             event.getBot().sendIRC().joinChannel(event.getChannel());
-            event.getBot().send(event.getChannel(), event.getUser() + " wanted me in here.");
+            Nexus.getInstance().sendIRC().message(event.getChannel(), event.getUser() + " wanted me in here.");
             Nexus.LOGGER.info("Channel invite accepted");
         } else {
-            event.getBot().send(event.getUser(), "You are not allowed to invite me.");
+            Nexus.getInstance().sendIRC().message(event.getUser(), "You are not allowed to invite me.");
             Nexus.LOGGER.info("Channel invite denied");
         }
     }

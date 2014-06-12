@@ -139,9 +139,9 @@ public class CommandPerformEvent {
 
     public void respond(String message, boolean forcePrivateMessage) {
         if (this.inPrivateMessage || forcePrivateMessage) {
-            Nexus.getInstance().send(sender.getNick(), message);
+            Nexus.getInstance().sendIRC().message(sender.getNick(), message);
         } else {
-            Nexus.getInstance().send(channel.getName(), message);
+            Nexus.getInstance().sendIRC().message(channel.getName(), message);
         }
     }
 }

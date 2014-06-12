@@ -70,7 +70,7 @@ public class ChannelLogHandler extends Handler {
                 return;
             }
         }
-        Nexus.getInstance().send(this.channelName, message);
+        Nexus.getInstance().sendIRC().message(this.channelName, message);
     }
 
     @Override

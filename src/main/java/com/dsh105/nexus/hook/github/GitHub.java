@@ -484,7 +484,7 @@ public class GitHub {
                         repositories.remove(entry.getKey());
                         expirationDates.remove(entry.getValue());
                         // Only keep them in memory for a certain period of time
-                        if (new Date().before(new Date(expiration))) {
+                        if ((System.currentTimeMillis() - expiration) < 0) {
                             GitHubRepo repo = getRepo(entry.getKey(), entry.getValue().userLoginForAccessToken);
                             repositories.put(repo.getFullName(), repo);
                         } else {
