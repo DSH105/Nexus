@@ -91,6 +91,7 @@ public class DynamicCommand extends CommandModule {
                             ArrayList<String> aliases = (ArrayList<String>) data.get("aliases");
                             Nexus.getInstance().getCommandManager().register(new DynamicCommand((String) data.get("command"), (String) data.get("response"), (Boolean) data.get("needsChannel"), (String) data.get("help"), extendedHelp.toArray(new String[extendedHelp.size()]), aliases.toArray(new String[aliases.size()]), (Boolean) data.get("action"), (Boolean) data.get("commandResponse")));
                         } catch (Exception e) {
+                            Nexus.LOGGER.warning("Failed to load dynamic command from " + file.getName());
                             e.printStackTrace();
                         }
                     }
