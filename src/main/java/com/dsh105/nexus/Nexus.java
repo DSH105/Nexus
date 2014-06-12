@@ -150,28 +150,19 @@ public class Nexus extends PircBotX {
                     LOGGER.severe("Failed to shutdown Unirest");
                     e.printStackTrace();
                 }
-                LOGGER.info("Waiting for outgoing queue");
-                TimeoutUtil.timeout(new Thread() {
-                    @Override
-                    public void run() {
-                        while (INSTANCE.sendRaw().getOutgoingQueueSize() > 0);
-                        interrupt();
-                    }
-                }, TimeUtil.convert(5, 's'));
-                INSTANCE.shutdown(true);
                 try {
                     INSTANCE.consoleReader.reader.getTerminal().restore();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
                 INSTANCE.consoleReader.setRunning(false);
+                INSTANCE.shutdown(true);
                 INSTANCE = null;
                 LOGGER.info("System exiting...");
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {
                 System.exit(-1);
-                LOGGER.info("Nexus shut down");
             }
         }
     }
