@@ -54,7 +54,7 @@ public class ConsoleReader extends Thread {
                                 String[] parts = line.split(" ");
                                 String channel = parts[1];
                                 Nexus.LOGGER.info("Attempting to join channel: " + channel);
-                                Nexus.getInstance().sendRaw().rawLineNow("JOIN " + channel);
+                                Nexus.getInstance().sendIRC().joinChannel(channel);
                             } else {
                                 Nexus.LOGGER.info("Usage: join #channel");
                             }

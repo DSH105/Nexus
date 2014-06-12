@@ -146,7 +146,7 @@ public class GitHub {
             throw new GitHubRateLimitExceededException("Rate limit for GitHub API exceeded. Further requests cannot be executed.");
         }
 
-        Nexus.LOGGER.info("Connecting to " + urlPath + " with ACCESS_TOKEN of " + userLogin);
+        Nexus.LOGGER.fine("Connecting to " + urlPath + " with ACCESS_TOKEN of " + userLogin);
         HttpResponse<JsonNode> response = Unirest.get(urlPath).header("Authorization", "token " + accessToken).asJson();
         if (!assumeAccess) {
             try {

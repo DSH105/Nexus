@@ -49,7 +49,7 @@ public class Travis {
     }
 
     protected HttpResponse<JsonNode> makeRequest(String urlPath, String userLogin, boolean assumeAccess) throws UnirestException {
-        Nexus.LOGGER.info("Connecting to " + urlPath + " with ACCESS_TOKEN of " + userLogin);
+        Nexus.LOGGER.fine("Connecting to " + urlPath + " with ACCESS_TOKEN of " + userLogin);
         String accessToken = getAccessToken(userLogin);
         HttpResponse<JsonNode> response = Unirest.get(urlPath).header("accept", "application/vnd.travis-ci.2+json").header("Authorization", "token " + accessToken).asJson();
         if (!assumeAccess) {
