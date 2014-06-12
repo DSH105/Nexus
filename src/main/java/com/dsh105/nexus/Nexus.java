@@ -334,7 +334,7 @@ public class Nexus extends PircBotX {
     }
 
     public void send(String target, String message) {
-        Nexus.getInstance().sendRaw().rawLine("PRIVMSG " + target + " :" + message);
+        Nexus.getInstance().sendIRC().message(target, message);
     }
 
     public String appendNick(String nick, String message) {
