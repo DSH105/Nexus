@@ -94,7 +94,7 @@ public class WolframAlphaCommand extends CommandModule {
                     }
                 }
                 if (answer.length() > 0) {
-                    event.respondWithPing(answer + " (" + URLShortener.shorten(String.format(QUERY_URL, input)) + ")");
+                    event.respondWithPing(answer + " (" + URLShortener.shorten(String.format(QUERY_URL, URLEncoder.encode(input, "UTF-8"))) + ")");
                     return true;
                 }
             }
