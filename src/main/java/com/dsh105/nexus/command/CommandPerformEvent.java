@@ -35,16 +35,13 @@ public class CommandPerformEvent {
 
     public CommandPerformEvent(Channel channel, User sender, String command, String... args) {
         if (channel == null) {
-            this.sender = sender;
-            this.command = command;
-            this.args = args;
             this.inPrivateMessage = true;
         } else {
             this.channel = channel;
-            this.sender = sender;
-            this.command = command;
-            this.args = args;
         }
+        this.sender = sender;
+        this.command = command;
+        this.args = args;
     }
 
     public Channel getChannel() {
