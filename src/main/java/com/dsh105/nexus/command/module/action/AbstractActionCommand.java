@@ -63,7 +63,7 @@ public abstract class AbstractActionCommand extends CommandModule {
 
     public void setPrefix(String prefix) {
         Validate.notNull(prefix);
-        this.prefix = " " + prefix + " ";
+        this.prefix = " " + prefix;
     }
 
     public boolean isOverriden() {
