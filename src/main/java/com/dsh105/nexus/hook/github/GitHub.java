@@ -100,6 +100,7 @@ public class GitHub {
     }
 
     public String createGist(Exception e) {
+        Nexus.LOGGER.info("Creating a Gist for " + e.getClass().getName());
         Writer writer = new StringWriter();
         PrintWriter printWriter = new PrintWriter(writer);
         e.printStackTrace(printWriter);
