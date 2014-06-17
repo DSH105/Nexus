@@ -24,6 +24,7 @@ import com.dsh105.nexus.command.CommandPerformEvent;
 import com.dsh105.nexus.command.Exclude;
 import com.dsh105.nexus.command.CommandGroup;
 import com.dsh105.nexus.response.ResponseFormatter;
+import com.dsh105.nexus.util.ColorUtil;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.*;
@@ -87,9 +88,7 @@ public class DynamicCommand extends CommandModule {
                     Map<String, Object> data = (Map<String, Object>) yaml.load(input);
                     if (data != null && !data.isEmpty()) {
                         try {
-                            ArrayList<String> extendedHelp = (ArrayList<String>) data.get("extendedHelp");
-                            ArrayList<String> aliases = (ArrayList<String>) data.get("aliases");
-                            Nexus.getInstance().getCommandManager().register(new DynamicCommand((String) data.get("command"), (String) data.get("response"), (Boolean) data.get("needsChannel"), (String) data.get("help"), extendedHelp.toArray(new String[extendedHelp.size()]), aliases.toArray(new String[aliases.size()]), (Boolean) data.get("action"), (Boolean) data.get("commandResponse")));
+                            Nexus.getInstance().getCommandManager().register(new DynamicCommand(ColorUtil.deserialise((String) data.get("command"))[0], ColorUtil.deserialise((String) data.get("response"))[0], (Boolean) data.get("needsChannel"), ColorUtil.deserialise((String) data.get("help"))[0], ColorUtil.deserialise(((ArrayList<String>) data.get("extendedHelp")).toArray(new String[0])), ColorUtil.deserialise(((ArrayList<String>) data.get("aliases")).toArray(new String[0])), (Boolean) data.get("action"), (Boolean) data.get("commandResponse")));
                         } catch (Exception e) {
                             Nexus.LOGGER.warning("Failed to load dynamic command from " + file.getName());
                             e.printStackTrace();
@@ -157,12 +156,12 @@ public class DynamicCommand extends CommandModule {
             saveFile.createNewFile();
 
             HashMap<String, Object> valueMap = new HashMap<>();
-            valueMap.put("command", command);
-            valueMap.put("response", response);
+            valueMap.put("command", ColorUtil.serialise(command)[0]);
+            valueMap.put("response", ColorUtil.serialise(response)[0]);
             valueMap.put("needsChannel", needsChannel);
-            valueMap.put("help", help);
-            valueMap.put("extendedHelp", extendedHelp);
-            valueMap.put("aliases", aliases);
+            valueMap.put("help", ColorUtil.serialise(help)[0]);
+            valueMap.put("extendedHelp", ColorUtil.serialise(extendedHelp));
+            valueMap.put("aliases", ColorUtil.serialise(aliases)[0]);
             valueMap.put("action", action);
             valueMap.put("commandResponse", commandResponse);
 
