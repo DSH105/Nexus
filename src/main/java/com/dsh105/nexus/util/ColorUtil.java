@@ -57,7 +57,7 @@ public class ColorUtil {
             for (int i = colours.size(); i >= 0; i--) {
                 current = current.replace("&" + i, colours.get(i));
             }
-            deserialised.add(index, Colors.removeFormattingAndColors(current));
+            deserialised.add(index, current);
         }
         return deserialised.toArray(new String[0]);
     }
