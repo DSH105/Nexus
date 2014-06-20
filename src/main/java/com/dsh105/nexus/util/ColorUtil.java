@@ -29,9 +29,11 @@ public class ColorUtil {
         ArrayList<String> serialised = new ArrayList<>();
         ArrayList<String> colours = validColours();
         for (int index = 0; index < toSerialise.length; index++) {
+            String current = toSerialise[index];
             for (int i = 0; i < colours.size(); i++) {
-                serialised.add(index, toSerialise[index].replace(colours.get(i), "&" + i));
+                current = current.replace(colours.get(i), "&" + i);
             }
+            serialised.add(index, current);
         }
         return serialised.toArray(new String[0]);
     }
@@ -40,9 +42,11 @@ public class ColorUtil {
         ArrayList<String> deserialised = new ArrayList<>();
         ArrayList<String> colours = validColours();
         for (int index = 0; index < toDeserialise.length; index++) {
+            String current = toDeserialise[index];
             for (int i = 0; i < colours.size(); i++) {
-                deserialised.add(index, toDeserialise[index].replace(colours.get(i), "&" + i));
+                current = current.replace(colours.get(i), "&" + i);
             }
+            deserialised.add(index, current);
         }
         return deserialised.toArray(new String[0]);
     }
