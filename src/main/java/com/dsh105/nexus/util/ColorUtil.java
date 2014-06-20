@@ -44,7 +44,7 @@ public class ColorUtil {
         for (int index = 0; index < toDeserialise.length; index++) {
             String current = toDeserialise[index];
             for (int i = 0; i < colours.size(); i++) {
-                current = current.replace(colours.get(i), "&" + i);
+                current = current.replace("&" + i, colours.get(i));
             }
             deserialised.add(index, current);
         }
