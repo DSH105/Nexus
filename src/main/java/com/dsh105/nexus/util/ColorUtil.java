@@ -38,7 +38,7 @@ public class ColorUtil {
         for (int index = 0; index < toSerialise.length; index++) {
             String current = toSerialise[index];
             for (int i = colours.size(); i >= 0; i--) {
-                current = current.replace(colours.get(i), "&" + i);
+                current = current.replace(colours.get(i), "{" + i + "}");
             }
             serialised.add(index, Colors.removeFormattingAndColors(current));
         }
@@ -55,7 +55,7 @@ public class ColorUtil {
         for (int index = 0; index < toDeserialise.length; index++) {
             String current = toDeserialise[index];
             for (int i = colours.size(); i >= 0; i--) {
-                current = current.replace("&" + i, colours.get(i));
+                current = current.replace("{" + i + "}", colours.get(i));
             }
             deserialised.add(index, current);
         }
