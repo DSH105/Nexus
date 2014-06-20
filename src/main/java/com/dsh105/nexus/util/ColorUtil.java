@@ -56,9 +56,12 @@ public class ColorUtil {
         for (Field field : Colors.class.getDeclaredFields()) {
             if (field.getType().equals(String.class)) {
                 try {
+                    if (!field.isAccessible()) {
+                        field.setAccessible(true);
+                    }
                     colours.add((String) field.get(null));
-                } catch (IllegalAccessException ignored) {
-
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
                 }
             }
         }
