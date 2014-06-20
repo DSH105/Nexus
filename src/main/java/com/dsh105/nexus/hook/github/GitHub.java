@@ -105,6 +105,11 @@ public class GitHub {
         PrintWriter printWriter = new PrintWriter(writer);
         e.printStackTrace(printWriter);
         Gist gist = new Gist(new GistFile(writer.toString()));
+        try {
+            writer.close();
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        }
         return gist.create();
     }
 

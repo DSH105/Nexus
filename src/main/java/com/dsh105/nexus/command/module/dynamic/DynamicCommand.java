@@ -88,7 +88,7 @@ public class DynamicCommand extends CommandModule {
                     Map<String, Object> data = (Map<String, Object>) yaml.load(input);
                     if (data != null && !data.isEmpty()) {
                         try {
-                            Nexus.getInstance().getCommandManager().register(new DynamicCommand(ColorUtil.deserialise((String) data.get("command"))[0], ColorUtil.deserialise((String) data.get("response"))[0], (Boolean) data.get("needsChannel"), ColorUtil.deserialise((String) data.get("help"))[0], ColorUtil.deserialise(((ArrayList<String>) data.get("extendedHelp")).toArray(new String[0])), ColorUtil.deserialise(((ArrayList<String>) data.get("aliases")).toArray(new String[0])), (Boolean) data.get("action"), (Boolean) data.get("commandResponse")));
+                            Nexus.getInstance().getCommandManager().register(new DynamicCommand(ColorUtil.deserialise((String) data.get("command")), ColorUtil.deserialise((String) data.get("response")), (Boolean) data.get("needsChannel"), ColorUtil.deserialise((String) data.get("help")), ColorUtil.deserialise(((ArrayList<String>) data.get("extendedHelp")).toArray(new String[0])), ColorUtil.deserialise(((ArrayList<String>) data.get("aliases")).toArray(new String[0])), (Boolean) data.get("action"), (Boolean) data.get("commandResponse")));
                         } catch (Exception e) {
                             Nexus.LOGGER.warning("Failed to load dynamic command from " + file.getName());
                             e.printStackTrace();
@@ -156,10 +156,10 @@ public class DynamicCommand extends CommandModule {
             saveFile.createNewFile();
 
             HashMap<String, Object> valueMap = new HashMap<>();
-            valueMap.put("command", ColorUtil.serialise(command)[0]);
-            valueMap.put("response", ColorUtil.serialise(response)[0]);
+            valueMap.put("command", ColorUtil.serialise(command));
+            valueMap.put("response", ColorUtil.serialise(response));
             valueMap.put("needsChannel", needsChannel);
-            valueMap.put("help", ColorUtil.serialise(help)[0]);
+            valueMap.put("help", ColorUtil.serialise(help));
             valueMap.put("extendedHelp", ColorUtil.serialise(extendedHelp));
             valueMap.put("aliases", aliases.length <= 0 ? new String[0] : ColorUtil.serialise(aliases)[0]);
             valueMap.put("action", action);

@@ -234,7 +234,12 @@ public class CommandManager {
                     event.errorWithPing("An error was encountered, but my Gist API key is invalid! The stacktrace has been posted to the console.");
                     return true;
                 }
-                event.errorWithPing("Houston, we have a problem! Here is a conveniently provided stacktrace: " + GitHub.getGitHub().createGist(e));
+                try {
+                    event.errorWithPing("Houston, we have a problem! Here is a conveniently provided stacktrace: " + GitHub.getGitHub().createGist(e));
+                } catch (Exception e1) {
+                    event.errorWithPing("An error was encountered, but my Gist API key is invalid! The stacktrace has been posted to the console.");
+                    e.printStackTrace();
+                }
             }
             return true;
         }

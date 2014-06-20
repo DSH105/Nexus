@@ -31,6 +31,7 @@ import com.dsh105.nexus.hook.jenkins.Jenkins;
 import com.dsh105.nexus.listener.EventManager;
 import com.dsh105.nexus.response.ResponseManager;
 import com.dsh105.nexus.script.ScriptManager;
+import com.dsh105.nexus.util.ColorUtil;
 import com.dsh105.nexus.util.ShortLoggerFormatter;
 import com.dsh105.nexus.util.TimeUtil;
 import com.dsh105.nexus.util.TimeoutUtil;
@@ -254,6 +255,9 @@ public class Nexus extends PircBotX {
 
         LOGGER.info("Preparing console reader");
         this.prepareConsoleReader();
+
+        // Prepare colour serialisation stuff
+        ColorUtil.validColours();
         LOGGER.info("Done! Nexus is ready!");
 
         LOGGER.info("Attempting to connect to " + config.getServer() + " and join " + config.getChannels().size() + " channels.");

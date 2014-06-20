@@ -17,6 +17,7 @@
 
 package com.dsh105.nexus.util;
 
+import com.dsh105.nexus.Nexus;
 import org.pircbotx.Colors;
 
 import java.lang.reflect.Field;
@@ -25,7 +26,13 @@ import java.util.Collection;
 
 public class ColorUtil {
 
-    public static String[] serialise(String... toSerialise) {
+    private static ArrayList<String> COLOURS;
+
+    public static String serialise(String toSerialise) {
+        return StringUtil.combineSplit(0, serialise(new String[] {toSerialise}), " ");
+    }
+
+    public static String[] serialise(String[] toSerialise) {
         ArrayList<String> serialised = new ArrayList<>();
         ArrayList<String> colours = validColours();
         for (int index = 0; index < toSerialise.length; index++) {
@@ -33,12 +40,16 @@ public class ColorUtil {
             for (int i = 0; i < colours.size(); i++) {
                 current = current.replace(colours.get(i), "&" + i);
             }
-            serialised.add(index, current);
+            serialised.add(index, Colors.removeFormattingAndColors(current));
         }
         return serialised.toArray(new String[0]);
     }
 
-    public static String[] deserialise(String... toDeserialise) {
+    public static String deserialise(String toDeserialise) {
+        return StringUtil.combineSplit(0, deserialise(new String[] {toDeserialise}), " ");
+    }
+
+    public static String[] deserialise(String[] toDeserialise) {
         ArrayList<String> deserialised = new ArrayList<>();
         ArrayList<String> colours = validColours();
         for (int index = 0; index < toDeserialise.length; index++) {
@@ -46,25 +57,25 @@ public class ColorUtil {
             for (int i = 0; i < colours.size(); i++) {
                 current = current.replace("&" + i, colours.get(i));
             }
-            deserialised.add(index, current);
+            deserialised.add(index, Colors.removeFormattingAndColors(current));
         }
         return deserialised.toArray(new String[0]);
     }
 
-    private static ArrayList<String> validColours() {
-        ArrayList<String> colours = new ArrayList<>();
-        for (Field field : Colors.class.getDeclaredFields()) {
-            if (field.getType().equals(String.class)) {
+    public static ArrayList<String> validColours() {
+        if (COLOURS == null || COLOURS.isEmpty()) {
+            COLOURS = new ArrayList<>();
+            for (Field field : Colors.class.getDeclaredFields()) {
                 try {
                     if (!field.isAccessible()) {
                         field.setAccessible(true);
                     }
-                    colours.add((String) field.get(null));
+                    COLOURS.add((String) field.get(null));
                 } catch (IllegalAccessException e) {
                     e.printStackTrace();
                 }
             }
         }
-        return colours;
+        return COLOURS;
     }
 }
