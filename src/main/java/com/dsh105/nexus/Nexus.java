@@ -221,6 +221,8 @@ public class Nexus extends PircBotX {
         channelLogHandler.setLevel(Level.INFO);
         channelLogHandler.setFormatter(new ShortLoggerFormatter(true));
         root.addHandler(channelLogHandler);
+
+        Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler());
     }
 
     private void prepare() {
