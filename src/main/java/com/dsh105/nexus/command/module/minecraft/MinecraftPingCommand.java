@@ -61,13 +61,9 @@ public class MinecraftPingCommand extends CommandModule {
 
             if (event.getArgs().length >= 3) {
                 String inputTimeout = event.getArgs()[2];
-                try {
-                    timeout = StringUtil.toInteger(inputTimeout);
-                    if (timeout <= 0 || timeout > 30000) {
-                        timeout = 2000;
-                    }
-                } catch (NumberFormatException ex) {
-
+                timeout = StringUtil.toInteger(inputTimeout);
+                if (timeout <= 0 || timeout > 30000) {
+                    timeout = 2000;
                 }
             }
 

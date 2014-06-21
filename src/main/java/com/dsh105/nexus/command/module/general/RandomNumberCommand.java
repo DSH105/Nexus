@@ -64,7 +64,7 @@ public class RandomNumberCommand extends CommandModule {
             }
 
             event.respondWithPing("Random number between {0} and {1}: {2}", String.valueOf(min), String.valueOf(max), String.valueOf(getNumber(min, max)));
-        } catch (Exception ex) {
+        } catch (NumberFormatException ex) {
             if (args[0].equalsIgnoreCase("dice")) {
                 event.respondWithPing("The dice rolled a {0}!", String.valueOf(getNumber(1, 6)));
             } else if (args[0].equalsIgnoreCase("coin")) {
