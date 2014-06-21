@@ -29,17 +29,14 @@ import com.dsh105.nexus.command.CommandPerformEvent;
         groups = CommandGroup.ADMIN,
         help = "Make Nexus part a channel.",
         extendedHelp = {
-                "{b}{p}{c} <channel>{/b} - Make Nexus leave a channel."
+                "{b}{p}{c} [channel]{/b} - Make Nexus part a channel."
         })
 public class PartCommand extends CommandModule {
 
     @Override
     public boolean onCommand(CommandPerformEvent event) {
-        if (event.getArgs().length != 1) {
-            return false;
-        }
+        String channelName = (event.getArgs().length > 0 ? event.getArgs()[0] : event.getChannel().getName());
 
-        String channelName = event.getArgs()[0];
         if (!channelName.startsWith("#")) {
             channelName = "#" + channelName;
         }
