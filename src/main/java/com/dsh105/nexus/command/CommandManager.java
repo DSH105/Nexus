@@ -229,7 +229,7 @@ public class CommandManager {
             } else if (e instanceof GitHubHookNotFoundException) {
                 event.errorWithPing(e.getMessage());
             } else if (e instanceof NumberFormatException) {
-                event.errorWithPing("Please specify a valid number!");
+                event.errorWithPing(e.getMessage());
             } else {
                 if (Nexus.getInstance().getGitHubConfig().getNexusGitHubApiKey().isEmpty()) {
                     e.printStackTrace();

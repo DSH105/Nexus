@@ -39,7 +39,11 @@ public class StringUtil {
      * @throws java.lang.NumberFormatException
      */
     public static int toInteger(String string) throws NumberFormatException{
-        return Integer.parseInt(string.replaceAll("[^0-9.]", ""));
+        try {
+            return Integer.parseInt(string.replaceAll("[^0-9.]", ""));
+        } catch (NumberFormatException e) {
+            throw new NumberFormatException(string + " isn't a number!");
+        }
     }
 
     /**
@@ -49,8 +53,12 @@ public class StringUtil {
      * @return Double.MIN_VALUE if unable to convert
      * @throws java.lang.NumberFormatException
      */
-    public static double toDouble(String string) throws NumberFormatException {
-        return Double.parseDouble(string.replaceAll(".*?([\\d.]+).*", "$1"));
+    public static double toDouble(String string) {
+        try {
+            return Double.parseDouble(string.replaceAll(".*?([\\d.]+).*", "$1"));
+        } catch (NumberFormatException e) {
+            throw new NumberFormatException(string + " isn't a number!");
+        }
     }
 
     /**
