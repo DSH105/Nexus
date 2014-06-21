@@ -51,20 +51,20 @@ public class RandomNumberCommand extends CommandModule {
 
         getNumber(0, 5);
 
-        if (StringUtil.isInt(args[0])) {
+        try {
             int min;
             int max;
 
             if (args.length == 2) {
-                max = Math.max(Integer.parseInt(args[0]), Integer.parseInt(args[1]));
-                min = Math.min(Integer.parseInt(args[0]), Integer.parseInt(args[1]));
+                max = Math.max(StringUtil.toInteger(args[0]), StringUtil.toInteger(args[1]));
+                min = Math.min(StringUtil.toInteger(args[0]), StringUtil.toInteger(args[1]));
             } else {
-                max = Math.max(Integer.parseInt(args[0]), 1);
-                min = Math.min(Integer.parseInt(args[0]), 1);
+                max = Math.max(StringUtil.toInteger(args[0]), 1);
+                min = Math.min(StringUtil.toInteger(args[0]), 1);
             }
 
             event.respondWithPing("Random number between {0} and {1}: {2}", String.valueOf(min), String.valueOf(max), String.valueOf(getNumber(min, max)));
-        } else {
+        } catch (Exception ex) {
             if (args[0].equalsIgnoreCase("dice")) {
                 event.respondWithPing("The dice rolled a {0}!", String.valueOf(getNumber(1, 6)));
             } else if (args[0].equalsIgnoreCase("coin")) {

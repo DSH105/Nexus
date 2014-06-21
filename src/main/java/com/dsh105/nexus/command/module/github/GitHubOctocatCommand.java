@@ -63,12 +63,8 @@ public class GitHubOctocatCommand extends CommandModule {
             id = new Random().nextInt(octocats.size() + 1);
         } else if (event.getArgs().length == 1) {
             String octocatID = event.getArgs()[0];
-            if (!StringUtil.isInt(octocatID)) {
-                event.respondWithPing("{0} needs to be a number.", octocatID);
-                return true;
-            }
 
-            id = Integer.parseInt(event.getArgs()[0]);
+            id = StringUtil.toInteger(event.getArgs()[0]);
         }
 
         Octocat oc = octocats.get(id);

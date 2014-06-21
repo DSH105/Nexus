@@ -18,13 +18,10 @@
 package com.dsh105.nexus.command.module.dynamic;
 
 import com.dsh105.nexus.Nexus;
-import com.dsh105.nexus.command.Command;
-import com.dsh105.nexus.command.CommandModule;
-import com.dsh105.nexus.command.CommandPerformEvent;
-import com.dsh105.nexus.command.Exclude;
-import com.dsh105.nexus.command.CommandGroup;
+import com.dsh105.nexus.command.*;
 import com.dsh105.nexus.response.ResponseFormatter;
 import com.dsh105.nexus.util.ColorUtil;
+import com.dsh105.nexus.util.StringUtil;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.*;
@@ -129,7 +126,7 @@ public class DynamicCommand extends CommandModule {
         StringBuffer buffer = new StringBuffer();
         Matcher matcher = Pattern.compile("%a([0-9]):(.+)").matcher(response);
         while (matcher.find()) {
-            int index = Integer.parseInt(matcher.group(1));
+            int index = StringUtil.toInteger(matcher.group(1));
             matcher.appendReplacement(buffer, (index >= event.getArgs().length ? matcher.group(2) : event.getArgs()[index]));
         }
         matcher.appendTail(buffer);

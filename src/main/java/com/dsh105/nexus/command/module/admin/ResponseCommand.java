@@ -57,11 +57,7 @@ public class ResponseCommand extends CommandModule {
 
         if (event.getArgs()[0].equalsIgnoreCase("create")) {
             String trigger = event.getArgs()[1].toLowerCase();
-            if (!StringUtil.isInt(event.getArgs()[2])) {
-                event.errorWithPing(event.getArgs()[2] + " must be a number.");
-                return true;
-            }
-            int chance = Integer.parseInt(event.getArgs()[2]);
+            int chance = StringUtil.toInteger(event.getArgs()[2]);
             String response = StringUtil.combineSplit(3, event.getArgs(), " ");
             Nexus.getInstance().getResponseManager().addResponses(new ResponseTrigger(chance, trigger), response);
             event.respondWithPing("Response trigger ({0}) created with a chance of {1}.", trigger, chance + "%");

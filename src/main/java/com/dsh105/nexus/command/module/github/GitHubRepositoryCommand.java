@@ -191,13 +191,9 @@ public class GitHubRepositoryCommand extends CommandModule {
             } else if (event.getArgs()[startIndex].equalsIgnoreCase("issue")) {
                 if (event.getArgs().length == startIndex + 2 || event.getArgs().length == startIndex + 3) {
                     String issueNumber = event.getArgs()[startIndex + 1];
-                    if (!StringUtil.isInt(issueNumber)) {
-                        event.respondWithPing("{0} needs to be a number.", issueNumber);
-                        return true;
-                    }
                     GitHubIssue issue;
                     try {
-                        issue = GitHub.getGitHub().getIssue(repo, Integer.parseInt(issueNumber), AuthUtil.getIdent(event.getSender()));
+                        issue = GitHub.getGitHub().getIssue(repo, StringUtil.toInteger(issueNumber), AuthUtil.getIdent(event.getSender()));
                     } catch (GitHubNotFoundException e) {
                         event.errorWithPing("Issue {0} doesn't exist at {1} (or that repository doesn't have issues enabled).", "#" + issueNumber, repo.getFullName());
                         return true;

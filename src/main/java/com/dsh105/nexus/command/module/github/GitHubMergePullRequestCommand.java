@@ -18,10 +18,9 @@
 package com.dsh105.nexus.command.module.github;
 
 import com.dsh105.nexus.command.Command;
+import com.dsh105.nexus.command.CommandGroup;
 import com.dsh105.nexus.command.CommandModule;
 import com.dsh105.nexus.command.CommandPerformEvent;
-import com.dsh105.nexus.command.CommandGroup;
-import com.dsh105.nexus.util.StringUtil;
 
 @Command(command = "merge",
         groups = CommandGroup.GITHUB,
@@ -38,10 +37,6 @@ public class GitHubMergePullRequestCommand extends CommandModule {
         if (event.getArgs().length == 2 || event.getArgs().length == 3) {
             String fullName = event.getArgs().length == 2 ? event.getArgs()[0] : event.getArgs()[0] + " " + event.getArgs()[1];
             String issueNumber = event.getArgs().length == 2 ? event.getArgs()[1] : event.getArgs()[2];
-            if (!StringUtil.isInt(issueNumber)) {
-                event.errorWithPing("{0} needs to be a number.", issueNumber);
-                return true;
-            }
             return event.getManager().onCommand(event.getChannel(), event.getSender(), "repo " + fullName + " issue " + issueNumber + " merge");
         }
         return false;

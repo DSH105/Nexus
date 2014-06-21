@@ -28,27 +28,30 @@ public class StringUtilTest {
     }
 
     @Test
-    public void testIsInt() {
-        Assert.assertTrue("Valid numeric string deemed integer.", StringUtil.isInt("1"));
-        Assert.assertFalse("Invalid numeric string deemed not an integer.", StringUtil.isInt("g"));
-        Assert.assertFalse("Invalid decimal string deemed not an integer.", StringUtil.isInt("1.4"));
+    public void testValidIntegerConversion() {
+        Assert.assertEquals("Valid numeric string deemed integer.", 6, StringUtil.toInteger("6"));
+        Assert.assertEquals("Mixed alphanumerical string converted to integer.", 41336, StringUtil.toInteger("4^%|1g33|6^$#"));
+    }
+
+    @Test(expected = NumberFormatException.class)
+    public void testInvalidIntegerConversion() {
+        int number = StringUtil.toInteger("a");
     }
 
     @Test
-    public void testIsDouble() {
-        Assert.assertTrue("Valid decimal string deemed double.", StringUtil.isDouble("1.4"));
-        Assert.assertTrue("Valid numeric string deemed double.", StringUtil.isDouble("1"));
-        Assert.assertFalse("Invalid numeric string deemed not a double.", StringUtil.isDouble("g"));
+    public void testDoubleConversion() {
+        Assert.assertEquals(6.5, StringUtil.toDouble("6.5"), 0);
+        Assert.assertEquals(4.354, StringUtil.toDouble("aa4.354f|$..|"), 0);
+    }
+
+    @Test(expected = NumberFormatException.class)
+    public void testInvalidDoubleConversion() {
+        int number = StringUtil.toInteger("a");
     }
 
     @Test
     public void testStringCapitalisation() {
         Assert.assertEquals("Words are appropriately capitalised.", "Nexus Bot", StringUtil.capitalise("nexus bot"));
-    }
-
-    @Test
-    public void testSeparate() {
-        // TODO: Not sure what this function does, sorry.
     }
 
     @Test

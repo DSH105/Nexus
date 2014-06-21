@@ -18,6 +18,7 @@
 package com.dsh105.nexus.command;
 
 import com.dsh105.nexus.Nexus;
+import com.dsh105.nexus.util.StringUtil;
 import org.pircbotx.Channel;
 import org.pircbotx.Colors;
 import org.pircbotx.User;
@@ -96,7 +97,7 @@ public class CommandPerformEvent {
         StringBuffer buffer = new StringBuffer();
         Matcher matcher = Pattern.compile("(\\{([0-9]+?)\\})").matcher(message);
         while (matcher.find()) {
-            int index = Integer.parseInt(matcher.group(2));
+            int index = StringUtil.toInteger(matcher.group(2));
             if (index >= highlights.length) {
                 break;
             }
