@@ -233,13 +233,13 @@ public class CommandManager {
             } else {
                 if (Nexus.getInstance().getGitHubConfig().getNexusGitHubApiKey().isEmpty()) {
                     e.printStackTrace();
-                    event.errorWithPing("An error was encountered, but my Gist API key is invalid! The stacktrace has been posted to the console.");
+                    event.errorWithPing("Something unexpected happened, but I failed to Gist! Please see the console or logging channel.");
                     return true;
                 }
                 try {
-                    event.errorWithPing("Houston, we have a problem! Here is a conveniently provided stacktrace: " + GitHub.getGitHub().createGist(e));
+                    event.errorWithPing("Houston, we have a problem! " + GitHub.getGitHub().createGist(e));
                 } catch (Exception e1) {
-                    event.errorWithPing("An error was encountered, but my Gist API key is invalid! The stacktrace has been posted to the console.");
+                    event.errorWithPing("Something unexpected happened, but I failed to Gist! Please see the console or logging channel.");
                     e.printStackTrace();
                 }
             }
