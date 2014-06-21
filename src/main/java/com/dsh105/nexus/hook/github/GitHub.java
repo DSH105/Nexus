@@ -131,7 +131,7 @@ public class GitHub {
 
     private GitHubRateLimit getApiRateLimit(String accessToken) {
         try {
-            return JsonUtil.read(Unirest.get(RATE_LIMIT_API_URL + (accessToken.startsWith("?access_token=") ? accessToken : (accessToken.isEmpty() ? "" : "?access_token=" + accessToken))), "rate", GitHubRateLimit.class);
+            return JsonUtil.read(Unirest.get(RATE_LIMIT_API_URL).header("Authorization", "token " + accessToken), "rate", GitHubRateLimit.class);
         } catch (UnirestException e) {
             throw new GitHubException("Failed to connect to GitHub API!", e);
         }
@@ -148,8 +148,11 @@ public class GitHub {
     protected HttpResponse<JsonNode> makeRequest(String urlPath, String userLogin, boolean assumeAccess, boolean onlyAllowTokenAccess) throws UnirestException {
         String accessToken = getAccessToken(userLogin, onlyAllowTokenAccess);
         // check if the api key has expired - overused
-        if (getApiRateLimit(accessToken).getRemaining() <= 0) {
-            throw new GitHubRateLimitExceededException("Rate limit for GitHub API exceeded. Further requests cannot be executed.");
+        GitHubRateLimit rateLimit = getApiRateLimit(accessToken);
+        if (rateLimit != null) {
+            if (rateLimit.getRemaining() <= 0) {
+                throw new GitHubRateLimitExceededException("Rate limit for GitHub API exceeded. Further requests cannot be executed.");
+            }
         }
 
         Nexus.LOGGER.fine("Connecting to " + urlPath + " with ACCESS_TOKEN of " + userLogin);
@@ -161,8 +164,7 @@ public class GitHub {
                     throw new GitHubAPIKeyInvalidException("Invalid GitHub API key!");
                 }
                 return response;
-            } catch (JSONException ignored) {
-            } catch (NullPointerException ignored) {
+            } catch (JSONException | NullPointerException ignored) {
             }
         }
         return response;
