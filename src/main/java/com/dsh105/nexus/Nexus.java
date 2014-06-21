@@ -57,7 +57,7 @@ public class Nexus extends PircBotX {
     public static String CONFIG_FILE_NAME = "options.yml";
     private static Nexus INSTANCE;
     private ConsoleReader consoleReader;
-    private ChannelLogHandler channelLogHandler;
+    protected ChannelLogHandler channelLogHandler;
     private ChannelConfiguration channelConfiguration;
     private OptionsConfig config;
     private GitHubConfig githubConfig;

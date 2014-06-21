@@ -50,10 +50,7 @@ public class ChannelLogHandler extends Handler {
         String[] parts = record.getMessage().split(" ");
         for (int i = 0; i < parts.length; i++) {
             String part = parts[i];
-            Iterator<User> iter = Nexus.getInstance().getChannel(this.channelName).getUsers().iterator();
-            while (iter.hasNext()) {
-                User u = iter.next();
-
+            for (User u : Nexus.getInstance().getChannel(this.channelName).getUsers()) {
                 /*StringBuffer buffer = new StringBuffer();
                 Matcher nameMatcher = Pattern.compile(u.getNick(), Pattern.CASE_INSENSITIVE).matcher(part);
                 while (nameMatcher.find()) {
