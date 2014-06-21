@@ -40,7 +40,7 @@ public class StringUtil {
      */
     public static int toInteger(String string) throws NumberFormatException{
         try {
-            return Integer.parseInt(string.replaceAll("[^0-9.]", ""));
+            return Integer.parseInt(string.replaceAll("[^\\d]", ""));
         } catch (NumberFormatException e) {
             throw new NumberFormatException(string + " isn't a number!");
         }
