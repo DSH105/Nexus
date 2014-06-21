@@ -24,6 +24,7 @@ import com.dsh105.nexus.command.CommandPerformEvent;
 import com.dsh105.nexus.command.CommandGroup;
 
 @Command(command = "exit",
+        aliases = "shutdown",
         needsChannel = false,
         groups = CommandGroup.ADMIN,
         help = "Exit and shutdown Nexus",
