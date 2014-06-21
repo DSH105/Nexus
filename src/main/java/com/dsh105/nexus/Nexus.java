@@ -276,7 +276,7 @@ public class Nexus extends PircBotX {
             public void run() {
                 for (String channel : getConfig().getChannels()) {
                     if (getChannel(channel) == null) {
-                        sendRaw().rawLineNow("JOIN " + channel);
+                        sendIRC().joinChannel(channel);
                     }
                 }
             }
