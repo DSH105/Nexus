@@ -100,10 +100,16 @@ public class GitHub {
     }
 
     public String createGist(Exception e) {
+        Nexus.LOGGER.info("Creating a Gist for " + e.getClass().getName());
         Writer writer = new StringWriter();
         PrintWriter printWriter = new PrintWriter(writer);
         e.printStackTrace(printWriter);
         Gist gist = new Gist(new GistFile(writer.toString()));
+        try {
+            writer.close();
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        }
         return gist.create();
     }
 
@@ -146,7 +152,7 @@ public class GitHub {
             throw new GitHubRateLimitExceededException("Rate limit for GitHub API exceeded. Further requests cannot be executed.");
         }
 
-        Nexus.LOGGER.info("Connecting to " + urlPath + " with ACCESS_TOKEN of " + userLogin);
+        Nexus.LOGGER.fine("Connecting to " + urlPath + " with ACCESS_TOKEN of " + userLogin);
         HttpResponse<JsonNode> response = Unirest.get(urlPath).header("Authorization", "token " + accessToken).asJson();
         if (!assumeAccess) {
             try {
@@ -460,7 +466,7 @@ public class GitHub {
 
     private void cache(GitHubRepo repo) {
         Calendar c = Calendar.getInstance();
-        c.add(Calendar.MINUTE, 15);
+        c.add(Calendar.MINUTE, 10);
         repositories.put(repo.getFullName(), repo);
         expirationDates.put(repo, c.getTimeInMillis());
     }
@@ -475,6 +481,7 @@ public class GitHub {
         public void run() {
             HashMap<String, GitHubRepo> fullNameToRepoMapCopy = new HashMap<>(repositories);
             ArrayList<GitHubIssue> issuesCopy = new ArrayList<>(issues);
+            boolean edited = false;
             if (!fullNameToRepoMapCopy.isEmpty() || !issuesCopy.isEmpty()) {
                 Nexus.LOGGER.info("Updating GitHub repo storage...");
                 for (Map.Entry<String, GitHubRepo> entry : fullNameToRepoMapCopy.entrySet()) {
@@ -483,11 +490,22 @@ public class GitHub {
                         repositories.remove(entry.getKey());
                         expirationDates.remove(entry.getValue());
                         // Only keep them in memory for a certain period of time
-                        if (new Date().before(new Date(expiration))) {
+                        if ((System.currentTimeMillis() - expiration) < 0) {
                             GitHubRepo repo = getRepo(entry.getKey(), entry.getValue().userLoginForAccessToken);
-                            cache(repo);
+                            repositories.put(repo.getFullName(), repo);
+                        } else {
+                            for (GitHubIssue issue : issuesCopy) {
+                                if (issue.getRepo().getFullName().equals(entry.getValue().getFullName())) {
+                                    issues.remove(issue);
+                                    edited = true;
+                                }
+                            }
                         }
                     }
+                }
+
+                if (edited) {
+                    issuesCopy = new ArrayList<>(issues);
                 }
 
                 for (GitHubIssue issue : issuesCopy) {

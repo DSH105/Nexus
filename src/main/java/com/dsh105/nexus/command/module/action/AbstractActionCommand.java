@@ -33,6 +33,7 @@ public abstract class AbstractActionCommand extends CommandModule {
     private boolean override;
     private String verb;
     private String defaultReceiver;
+    private String prefix = "";
 
     /**
      * Sets the verb to use for the action command.
@@ -56,6 +57,15 @@ public abstract class AbstractActionCommand extends CommandModule {
         this.setVerb(verb, "everybody");
     }
 
+    public String getPrefix() {
+        return prefix;
+    }
+
+    public void setPrefix(String prefix) {
+        Validate.notNull(prefix);
+        this.prefix = " " + prefix;
+    }
+
     public boolean isOverriden() {
         return override;
     }
@@ -74,7 +84,7 @@ public abstract class AbstractActionCommand extends CommandModule {
         if (args.length > 1) {
             additional += StringUtil.join(Arrays.copyOfRange(args, 1, args.length), " ");
         }
-        return verb + (isOverriden() ? " " : "s ") + sentenceList + additional;
+        return verb + (isOverriden() ? " " : "s ") + sentenceList + prefix + additional;
     }
 
     @Override

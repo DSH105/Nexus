@@ -36,16 +36,13 @@ public class CommandPerformEvent {
 
     public CommandPerformEvent(Channel channel, User sender, String command, String... args) {
         if (channel == null) {
-            this.sender = sender;
-            this.command = command;
-            this.args = args;
             this.inPrivateMessage = true;
         } else {
             this.channel = channel;
-            this.sender = sender;
-            this.command = command;
-            this.args = args;
         }
+        this.sender = sender;
+        this.command = command;
+        this.args = args;
     }
 
     public Channel getChannel() {
@@ -140,9 +137,9 @@ public class CommandPerformEvent {
 
     public void respond(String message, boolean forcePrivateMessage) {
         if (this.inPrivateMessage || forcePrivateMessage) {
-            Nexus.getInstance().send(sender.getNick(), message);
+            Nexus.getInstance().sendIRC().message(sender.getNick(), message);
         } else {
-            Nexus.getInstance().send(channel.getName(), message);
+            Nexus.getInstance().sendIRC().message(channel.getName(), message);
         }
     }
 }

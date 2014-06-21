@@ -31,7 +31,7 @@ public abstract class CommandModule implements ICommandModule {
             return true;
         }
         if (adminOnly()) {
-            Nexus.getInstance().send(sender.getNick(), Colors.RED + "I'm sorry. I'm afraid you can't do that.");
+            Nexus.getInstance().sendIRC().message(sender.getNick(), Colors.RED + "I'm sorry. I'm afraid you can't do that.");
             return false;
         }
         return true;

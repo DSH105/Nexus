@@ -72,7 +72,7 @@ public class WolframAlphaCommand extends CommandModule {
         StringBuilder answer = new StringBuilder();
         try {
             String apiUrl = String.format(API_URL, URLEncoder.encode(input, "UTF-8"), apiKey);
-            Nexus.LOGGER.info("Requesting WolframAlpha interpretation at " + apiUrl);
+            Nexus.LOGGER.info("Requesting WolframAlpha interpretation for " + input);
 
             SAXReader reader = new SAXReader();
             Document document = reader.read(Unirest.get(apiUrl).asBinary().getBody());
@@ -94,7 +94,7 @@ public class WolframAlphaCommand extends CommandModule {
                     }
                 }
                 if (answer.length() > 0) {
-                    event.respondWithPing(answer + " (" + URLShortener.shorten(String.format(QUERY_URL, input)) + ")");
+                    event.respondWithPing(answer + " (" + URLShortener.shorten(String.format(QUERY_URL, URLEncoder.encode(input, "UTF-8"))) + ")");
                     return true;
                 }
             }

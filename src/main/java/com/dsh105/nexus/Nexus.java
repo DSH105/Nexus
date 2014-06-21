@@ -31,6 +31,7 @@ import com.dsh105.nexus.hook.jenkins.Jenkins;
 import com.dsh105.nexus.listener.EventManager;
 import com.dsh105.nexus.response.ResponseManager;
 import com.dsh105.nexus.script.ScriptManager;
+import com.dsh105.nexus.util.ColorUtil;
 import com.dsh105.nexus.util.ShortLoggerFormatter;
 import com.dsh105.nexus.util.TimeUtil;
 import com.dsh105.nexus.util.TimeoutUtil;
@@ -132,6 +133,7 @@ public class Nexus extends PircBotX {
         if (INSTANCE != null) {
             try {
                 LOGGER.info("Shutting down Nexus...");
+                INSTANCE.channelLogHandler.close();
                 INSTANCE.saveAll();
                 try {
                     if (Jenkins.getJenkins() != null && Jenkins.getJenkins().TASK != null) {
@@ -149,28 +151,19 @@ public class Nexus extends PircBotX {
                     LOGGER.severe("Failed to shutdown Unirest");
                     e.printStackTrace();
                 }
-                LOGGER.info("Waiting for outgoing queue");
-                TimeoutUtil.timeout(new Thread() {
-                    @Override
-                    public void run() {
-                        while (INSTANCE.sendRaw().getOutgoingQueueSize() > 0);
-                    }
-                }, TimeUtil.convert(5, 's'));
-                INSTANCE.shutdown(true);
                 try {
                     INSTANCE.consoleReader.reader.getTerminal().restore();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
                 INSTANCE.consoleReader.setRunning(false);
-                INSTANCE.channelLogHandler.close();
+                INSTANCE.shutdown(true);
                 INSTANCE = null;
                 LOGGER.info("System exiting...");
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {
                 System.exit(-1);
-                LOGGER.info("Nexus shut down");
             }
         }
     }
@@ -262,6 +255,9 @@ public class Nexus extends PircBotX {
 
         LOGGER.info("Preparing console reader");
         this.prepareConsoleReader();
+
+        // Prepare colour serialisation stuff
+        ColorUtil.validColours();
         LOGGER.info("Done! Nexus is ready!");
 
         LOGGER.info("Attempting to connect to " + config.getServer() + " and join " + config.getChannels().size() + " channels.");
@@ -275,14 +271,19 @@ public class Nexus extends PircBotX {
     public void onConnect() {
         registerChannelLogger();
 
-        for (String channel : getConfig().getChannels()) {
-            if (getChannel(channel) == null) {
-                sendRaw().rawLineNow("JOIN " + channel);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                for (String channel : getConfig().getChannels()) {
+                    if (getChannel(channel) == null) {
+                        sendIRC().joinChannel(channel);
+                    }
+                }
             }
-        }
+        }).start();
 
         if (!getConfig().getStartupMessage().isEmpty()) {
-            send(getConfig().getAdminChannel(), getConfig().getStartupMessage());
+            sendIRC().message(getConfig().getAdminChannel(), getConfig().getStartupMessage());
         }
     }
 
@@ -326,10 +327,6 @@ public class Nexus extends PircBotX {
             this.channelConfiguration.getChannel(channel.getName());
         }
         this.config.save();
-    }
-
-    public void send(String target, String message) {
-        Nexus.getInstance().sendRaw().rawLine("PRIVMSG " + target + " :" + message);
     }
 
     public String appendNick(String nick, String message) {

@@ -17,8 +17,6 @@
 
 package com.dsh105.nexus.command;
 
-import com.dsh105.nexus.command.Exclude;
-
 public enum CommandGroup {
 
     @Exclude
@@ -33,6 +31,10 @@ public enum CommandGroup {
     ADMIN;
 
     public boolean exclude() {
-        return this.getClass().getAnnotation(Exclude.class) != null;
+        try {
+            return this.getClass().getField(this.name()).getAnnotation(Exclude.class) != null;
+        } catch (NoSuchFieldException e) {
+            return false;
+        }
     }
 }

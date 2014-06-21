@@ -18,12 +18,9 @@
 package com.dsh105.nexus.command.module.dynamic;
 
 import com.dsh105.nexus.Nexus;
-import com.dsh105.nexus.command.Command;
-import com.dsh105.nexus.command.CommandModule;
-import com.dsh105.nexus.command.CommandPerformEvent;
-import com.dsh105.nexus.command.Exclude;
-import com.dsh105.nexus.command.CommandGroup;
+import com.dsh105.nexus.command.*;
 import com.dsh105.nexus.response.ResponseFormatter;
+import com.dsh105.nexus.util.ColorUtil;
 import com.dsh105.nexus.util.StringUtil;
 import org.yaml.snakeyaml.Yaml;
 
@@ -88,10 +85,9 @@ public class DynamicCommand extends CommandModule {
                     Map<String, Object> data = (Map<String, Object>) yaml.load(input);
                     if (data != null && !data.isEmpty()) {
                         try {
-                            ArrayList<String> extendedHelp = (ArrayList<String>) data.get("extendedHelp");
-                            ArrayList<String> aliases = (ArrayList<String>) data.get("aliases");
-                            Nexus.getInstance().getCommandManager().register(new DynamicCommand((String) data.get("command"), (String) data.get("response"), (Boolean) data.get("needsChannel"), (String) data.get("help"), extendedHelp.toArray(new String[extendedHelp.size()]), aliases.toArray(new String[aliases.size()]), (Boolean) data.get("action"), (Boolean) data.get("commandResponse")));
+                            Nexus.getInstance().getCommandManager().register(new DynamicCommand(ColorUtil.deserialise((String) data.get("command")), ColorUtil.deserialise((String) data.get("response")), (Boolean) data.get("needsChannel"), ColorUtil.deserialise((String) data.get("help")), ColorUtil.deserialise(((ArrayList<String>) data.get("extendedHelp")).toArray(new String[0])), ColorUtil.deserialise(((ArrayList<String>) data.get("aliases")).toArray(new String[0])), (Boolean) data.get("action"), (Boolean) data.get("commandResponse")));
                         } catch (Exception e) {
+                            Nexus.LOGGER.warning("Failed to load dynamic command from " + file.getName());
                             e.printStackTrace();
                         }
                     }
@@ -127,13 +123,15 @@ public class DynamicCommand extends CommandModule {
     public String appendReplacements(CommandPerformEvent event) {
         String response = ResponseFormatter.appendReplacements(this.response, event.getSender(), event.getChannel());
 
+        StringBuffer buffer = new StringBuffer();
         Matcher matcher = Pattern.compile("%a([0-9]):(.+)").matcher(response);
         while (matcher.find()) {
             int index = StringUtil.toInteger(matcher.group(1));
-            response = response.replace(matcher.group(), (index >= event.getArgs().length ? matcher.group(2) : event.getArgs()[index]));
+            matcher.appendReplacement(buffer, (index >= event.getArgs().length ? matcher.group(2) : event.getArgs()[index]));
         }
+        matcher.appendTail(buffer);
 
-        return event.getManager().format(null, response);
+        return event.getManager().format(null, buffer.toString());
     }
 
     public String getResponse() {
@@ -155,12 +153,12 @@ public class DynamicCommand extends CommandModule {
             saveFile.createNewFile();
 
             HashMap<String, Object> valueMap = new HashMap<>();
-            valueMap.put("command", command);
-            valueMap.put("response", response);
+            valueMap.put("command", ColorUtil.serialise(command));
+            valueMap.put("response", ColorUtil.serialise(response));
             valueMap.put("needsChannel", needsChannel);
-            valueMap.put("help", help);
-            valueMap.put("extendedHelp", extendedHelp);
-            valueMap.put("aliases", aliases);
+            valueMap.put("help", ColorUtil.serialise(help));
+            valueMap.put("extendedHelp", ColorUtil.serialise(extendedHelp));
+            valueMap.put("aliases", aliases.length <= 0 ? new String[0] : ColorUtil.serialise(aliases)[0]);
             valueMap.put("action", action);
             valueMap.put("commandResponse", commandResponse);
 

@@ -23,14 +23,15 @@ import com.dsh105.nexus.command.CommandGroup;
 import com.dsh105.nexus.command.CommandModule;
 import com.dsh105.nexus.command.CommandPerformEvent;
 
-@Command(command = "join",
+@Command(command = "part",
+        aliases = "leave",
         needsChannel = false,
         groups = CommandGroup.ADMIN,
-        help = "Make Nexus join a channel.",
+        help = "Make Nexus part a channel.",
         extendedHelp = {
-                "{b}{p}{c} <channel>{/b} - Make Nexus join a channel."
+                "{b}{p}{c} <channel>{/b} - Make Nexus leave a channel."
         })
-public class JoinCommand extends CommandModule {
+public class PartCommand extends CommandModule {
 
     @Override
     public boolean onCommand(CommandPerformEvent event) {
@@ -43,8 +44,8 @@ public class JoinCommand extends CommandModule {
             channelName = "#" + channelName;
         }
 
-        event.respondWithPing("Attempting to join " + channelName);
-        Nexus.getInstance().sendIRC().joinChannel(channelName);
+        event.respondWithPing("Attempting to part " + channelName);
+        Nexus.getInstance().sendRaw().rawLine("PART " + channelName);
         return true;
     }
 

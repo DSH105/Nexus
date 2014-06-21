@@ -31,5 +31,6 @@ import com.dsh105.nexus.command.CommandGroup;
 public class WhipCommand extends AbstractActionCommand {
     public WhipCommand() {
         this.setVerb("whip");
+        this.setPrefix("for");
     }
 }
