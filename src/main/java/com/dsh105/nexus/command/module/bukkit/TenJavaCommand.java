@@ -70,12 +70,8 @@ public class TenJavaCommand extends CommandModule {
 
                 int limit = TOP_LIMIT;
 
-                try {
-                    if (event.getArgs().length == 2) {
-                        limit = StringUtil.toInteger(event.getArgs()[1]);
-                    }
-                } catch (NumberFormatException ex) {
-
+                if (event.getArgs().length == 2) {
+                    limit = StringUtil.toInteger(event.getArgs()[1]);
                 }
 
                 try {
