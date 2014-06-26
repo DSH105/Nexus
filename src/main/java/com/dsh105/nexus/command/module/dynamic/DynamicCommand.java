@@ -124,7 +124,7 @@ public class DynamicCommand extends CommandModule {
         String response = ResponseFormatter.appendReplacements(this.response, event.getSender(), event.getChannel());
 
         StringBuffer buffer = new StringBuffer();
-        Matcher matcher = Pattern.compile("%a([0-9]):(.+)").matcher(response);
+        Matcher matcher = Pattern.compile("%a([0-9]):(.+)\\b").matcher(response);
         while (matcher.find()) {
             int index = StringUtil.toInteger(matcher.group(1));
             matcher.appendReplacement(buffer, (index >= event.getArgs().length ? matcher.group(2) : event.getArgs()[index]));
