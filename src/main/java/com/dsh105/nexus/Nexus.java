@@ -139,9 +139,6 @@ public class Nexus extends PircBotX {
                     if (Jenkins.getJenkins() != null && Jenkins.getJenkins().TASK != null) {
                         Jenkins.getJenkins().TASK.cancel();
                     }
-                    if (GitHub.getGitHub().TASK != null) {
-                        GitHub.getGitHub().TASK.cancel();
-                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

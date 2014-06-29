@@ -22,6 +22,9 @@ import com.dsh105.nexus.exception.github.*;
 import com.dsh105.nexus.hook.github.gist.Gist;
 import com.dsh105.nexus.hook.github.gist.GistFile;
 import com.dsh105.nexus.util.JsonUtil;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
@@ -33,6 +36,7 @@ import org.json.JSONObject;
 
 import java.io.*;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 public class GitHub {
 
@@ -49,14 +53,24 @@ public class GitHub {
     public static String COLLABORATORS = "/collaborators";
     public static String LANGUAGES = "/languages";
     public static String FORKS = "/forks";
-    private HashMap<String, GitHubRepo> repositories = new HashMap<>();
-    private HashMap<GitHubRepo, Long> expirationDates = new HashMap<>();
-    private ArrayList<GitHubIssue> issues = new ArrayList<>();
-    public final RefreshTask TASK;
+
+    private Cache<String, GitHubRepo> REPO_CACHE = CacheBuilder.newBuilder().expireAfterWrite(10, TimeUnit.MINUTES).refreshAfterWrite(3, TimeUnit.MINUTES).build(new CacheLoader<String, GitHubRepo>() {
+        @Override
+        public GitHubRepo load(String key) throws Exception {
+            GitHubRepo existing = REPO_CACHE.getIfPresent(key);
+            return getRepo(key, existing.userLoginForAccessToken);
+        }
+    });
+
+    private Cache<String, GitHubIssue> ISSUE_CACHE = CacheBuilder.newBuilder().expireAfterWrite(10, TimeUnit.MINUTES).refreshAfterWrite(3, TimeUnit.MINUTES).build(new CacheLoader<String, GitHubIssue>() {
+        @Override
+        public GitHubIssue load(String key) throws Exception {
+            GitHubIssue existing = ISSUE_CACHE.getIfPresent(key);
+            return getIssue(existing.getRepo(), existing.getNumber(), existing.getRepo().userLoginForAccessToken);
+        }
+    });
 
     public GitHub() {
-        TASK = new RefreshTask();
-        new Timer(true).schedule(TASK, 0, 90000);
     }
 
     public static String getRepoApiUrl(String repoName) {
@@ -172,8 +186,8 @@ public class GitHub {
 
     public GitHubRepo getRepo(String name, String userLogin) {
         Nexus.LOGGER.info("Requesting GitHub repo (" + name + ") on behalf of " + userLogin);
-        if (repositories.get(name) != null) {
-            return repositories.get(name);
+        if (REPO_CACHE.getIfPresent(name) != null) {
+            return REPO_CACHE.getIfPresent(name);
         }
         try {
             HttpResponse<JsonNode> response = makeRequest(getRepoApiUrl(name), userLogin);
@@ -187,9 +201,7 @@ public class GitHub {
             repo.contributors = getContributors(repo, userLogin);
             repo.languages = getLanguages(repo, userLogin);
             repo.userLoginForAccessToken = userLogin;
-            if (repo != null) {
-                cache(repo);
-            }
+            cache(repo);
             return repo;
         } catch (UnirestException e) {
             if (e.getCause() instanceof FileNotFoundException) {
@@ -240,9 +252,7 @@ public class GitHub {
 
     public GitHubIssue getIssue(GitHubRepo repo, int id, String userLogin) {
         Nexus.LOGGER.info("Requesting GitHub issue (" + repo.getFullName() + " - #" + id + ") on behalf of " + userLogin);
-        Iterator<GitHubIssue> iter = new ArrayList<>(issues).iterator();
-        while (iter.hasNext()) {
-            GitHubIssue i = iter.next();
+        for (GitHubIssue i : ISSUE_CACHE.asMap().values()) {
             if (repo.getFullName().equals(i.getRepo().getFullName()) && i.getNumber() == id) {
                 return i;
             }
@@ -256,9 +266,8 @@ public class GitHub {
             try {
                 if (response.getBody().getObject().get("pull_request") != null) {
                     checkForPullRequest = true;
-                } else {
                 }
-            } catch (JSONException e) {
+            } catch (JSONException ignored) {
             }
             try {
                 if (!checkForPullRequest) {
@@ -267,7 +276,7 @@ public class GitHub {
                 if (issue == null || issue.getNumber() <= 0) {
                     issue = JsonUtil.read(makeRequest(getPullsUrl(repo.getFullName(), id), userLogin).getRawBody(), GitHubPullRequest.class);
                 }
-            } catch (JSONException e) {
+            } catch (JSONException ignored) {
             }
             if (issue.getNumber() <= 0) {
                 throw new GitHubNotFoundException("Issue #" + id + " doesn't exist at " + repo.getFullName());
@@ -299,7 +308,7 @@ public class GitHub {
             boolean mergeStatus = false;
             try {
                 mergeStatus = responseObject.getBoolean("merged");
-            } catch (JSONException e) {
+            } catch (JSONException ignored) {
             }
             if (!mergeStatus) {
                 if (message.equalsIgnoreCase("NOT FOUND")) {
@@ -422,10 +431,6 @@ public class GitHub {
                 s += s.isEmpty() ? "\"" + e.getJsonName() + "\"" : "," + "\"" + e.getJsonName() + "\"";
             }
             Nexus.LOGGER.info("Attempting to set IRC notifications for " + repo + " to " + s + " on behalf of " + userLogin);
-            ArrayList<String> eventsList = new ArrayList<>();
-            for (GitHubEvent e : events) {
-                eventsList.add(e.getJsonName());
-            }
             try {
                 Unirest.patch(getHooksUrl(repo) + "/" + hook.getId())
                         .header("Authorization", "token " + getAccessToken(userLogin, true))
@@ -467,54 +472,10 @@ public class GitHub {
     }
 
     private void cache(GitHubRepo repo) {
-        Calendar c = Calendar.getInstance();
-        c.add(Calendar.MINUTE, 10);
-        repositories.put(repo.getFullName(), repo);
-        expirationDates.put(repo, c.getTimeInMillis());
+        REPO_CACHE.put(repo.getFullName(), repo);
     }
 
     private void cache(GitHubIssue issue) {
-        issues.add(issue);
-    }
-
-    public class RefreshTask extends TimerTask {
-
-        @Override
-        public void run() {
-            HashMap<String, GitHubRepo> fullNameToRepoMapCopy = new HashMap<>(repositories);
-            ArrayList<GitHubIssue> issuesCopy = new ArrayList<>(issues);
-            boolean edited = false;
-            if (!fullNameToRepoMapCopy.isEmpty() || !issuesCopy.isEmpty()) {
-                Nexus.LOGGER.info("Updating GitHub repo storage...");
-                for (Map.Entry<String, GitHubRepo> entry : fullNameToRepoMapCopy.entrySet()) {
-                    long expiration = expirationDates.get(entry.getValue());
-                    if (expiration > 0) {
-                        repositories.remove(entry.getKey());
-                        // Only keep them in memory for a certain period of time
-                        if ((System.currentTimeMillis() - expiration) < 0) {
-                            GitHubRepo repo = getRepo(entry.getKey(), entry.getValue().userLoginForAccessToken);
-                            repositories.put(repo.getFullName(), repo);
-                        } else {
-                            expirationDates.remove(entry.getValue());
-                            for (GitHubIssue issue : issuesCopy) {
-                                if (issue.getRepo().getFullName().equals(entry.getValue().getFullName())) {
-                                    issues.remove(issue);
-                                    edited = true;
-                                }
-                            }
-                        }
-                    }
-                }
-
-                if (edited) {
-                    issuesCopy = new ArrayList<>(issues);
-                }
-
-                for (GitHubIssue issue : issuesCopy) {
-                    issues.remove(issue);
-                    cache(getIssue(issue.getRepo(), issue.getNumber(), issue.repo.userLoginForAccessToken));
-                }
-            }
-        }
+        ISSUE_CACHE.put(issue.getRepo().getFullName(), issue);
     }
 }
