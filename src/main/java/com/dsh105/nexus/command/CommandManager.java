@@ -211,9 +211,14 @@ public class CommandManager {
                         event.respond("You cannot perform {0} here.", event.getCommandPrefix() + module.info().command() + " " + StringUtil.combineSplit(0, event.getArgs(), " "));
                         return true;
                     }
-                    Nexus.LOGGER.info(event.getSender().getNick() + " used command via " + (event.isInPrivateMessage() ? "PM" : event.getChannel().getName()) + ": " + event.getCommand() + " " + StringUtil.combineSplit(0, event.getArgs(), " "));
-                    if (!module.onCommand(event)) {
-                        event.errorWithPing("Use " + Nexus.getInstance().getConfig().getCommandPrefix() + "{0} for help (" + formatHelp(module) + ").", Nexus.getInstance().getConfig().getCommandPrefix() + "help " + event.getCommand());
+                    try {
+                        if (!module.onCommand(event)) {
+                            event.errorWithPing("Use " + Nexus.getInstance().getConfig().getCommandPrefix() + "{0} for help (" + formatHelp(module) + ").", Nexus.getInstance().getConfig().getCommandPrefix() + "help " + event.getCommand());
+                        }
+                        Nexus.LOGGER.info(event.getSender().getNick() + " used command via " + (event.isInPrivateMessage() ? "PM" : event.getChannel().getName()) + ": " + event.getCommand() + " " + StringUtil.combineSplit(0, event.getArgs(), " "));
+                    } catch (Exception e) {
+                        Nexus.LOGGER.info(event.getSender().getNick() + " used command via " + (event.isInPrivateMessage() ? "PM" : event.getChannel().getName()) + ": " + event.getCommand() + " " + StringUtil.combineSplit(0, event.getArgs(), " "));
+                        throw e;
                     }
                     return true;
                 }
