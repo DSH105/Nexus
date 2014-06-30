@@ -207,6 +207,9 @@ public class Nexus extends PircBotX {
     }
 
     private void registerChannelLogger() {
+        if (channelLogHandler != null) {
+            return;
+        }
         String logChannel = getConfig().getLogChannel();
         if (logChannel.isEmpty()) {
             return;
