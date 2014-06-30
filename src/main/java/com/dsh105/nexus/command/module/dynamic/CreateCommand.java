@@ -37,6 +37,7 @@ import java.util.Arrays;
                 "- {b}%s{/b} -> Name of the command sender",
                 "- {b}%c{/b} -> Name of the channel executed in. \'PM\' if in private message",
                 "- {b}%a#:<default>{/b} -> Command argument, where # is the argument number. If the argument is not specified, the default is used",
+                "- {b}%b{/b} -> Can be used to break out of the %a#:<default> syntax.",
         })
 public class CreateCommand extends CommandModule {
 
