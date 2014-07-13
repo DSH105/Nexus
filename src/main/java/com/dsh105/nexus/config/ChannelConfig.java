@@ -39,6 +39,7 @@ public class ChannelConfig extends YamlConfig {
 
     @Override
     public void setDefaults() {
+        this.options.put("enableAutoCorrectionMatching", true);
     }
 
     @Override
@@ -83,5 +84,9 @@ public class ChannelConfig extends YamlConfig {
 
     public boolean isDisabled(String command) {
         return disabledCommands.contains(command) || disabledCommands.contains("all");
+    }
+
+    public boolean enableAutoCorrection() {
+        return get("enableAutoCorrectionMatching", true);
     }
 }
