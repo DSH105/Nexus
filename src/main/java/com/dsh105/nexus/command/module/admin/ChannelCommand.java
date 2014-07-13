@@ -46,6 +46,7 @@ public class ChannelCommand extends CommandModule {
             return true;
         }
 
+
         String channel = event.getArgs()[0];
         ChannelConfig channelConfig = Nexus.getInstance().getChannelConfiguration().getChannel(channel);
         if (channelConfig == null) {
@@ -53,6 +54,18 @@ public class ChannelCommand extends CommandModule {
             return true;
         }
         channel = channelConfig.getChannelName();
+
+        if (event.getArgs()[1].equalsIgnoreCase("option")) {
+            String option = event.getArgs()[2];
+            String value = StringUtil.combineSplit(3, event.getArgs(), " ");
+            if (channelConfig.get(option) == null) {
+                event.respondWithPing("{0} is not a valid option!", option);
+                return true;
+            }
+            channelConfig.set(option, value);
+            event.respondWithPing("{0} set to \"{1}\"", option, value);
+            return true;
+        }
 
         if (event.getArgs().length == 1) {
             ArrayList<String> disabledCommands = channelConfig.getDisabledCommands();
