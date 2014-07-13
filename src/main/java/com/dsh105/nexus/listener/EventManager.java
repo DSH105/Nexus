@@ -18,6 +18,7 @@
 package com.dsh105.nexus.listener;
 
 import com.dsh105.nexus.Nexus;
+import com.dsh105.nexus.config.ChannelConfig;
 import com.dsh105.nexus.util.StringUtil;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
@@ -34,35 +35,36 @@ public class EventManager extends ListenerAdapter<Nexus> {
 
     public static final Pattern CORRECTION_PATTERN = Pattern.compile("s/([^/]+)/([^/]+)");
 
-    private Cache<String, String> LAST_MESSAGE_CACHE = CacheBuilder.newBuilder().expireAfterWrite(5, TimeUnit.MINUTES).build();
-
     @Override
     public void onMessage(MessageEvent<Nexus> event) throws Exception {
         String message = event.getMessage();
         String realName = event.getUser().getRealName();
         if (!event.getBot().getCommandManager().onCommand(event.getChannel(), event.getUser(), message, true)) {
-            
-            Matcher matcher = CORRECTION_PATTERN.matcher(message);
-            if (matcher.matches()) {
-                String lastMessage = LAST_MESSAGE_CACHE.getIfPresent(realName);
-                if (lastMessage != null) {
-                    if (event.getBot().getChannelConfiguration().getChannel(event.getChannel().getName()).enableAutoCorrection()) {
-                        event.getBot().sendIRC().message(event.getChannel().getName(), event.getUser().getNick() + " meant to say \"" + lastMessage.replace(matcher.group(1), Colors.BOLD + matcher.group(2)) + "\"");
+
+            ChannelConfig channelConfig = event.getBot().getChannelConfiguration().getChannel(event.getChannel().getName());
+            if (channelConfig != null) {
+                Matcher matcher = CORRECTION_PATTERN.matcher(message);
+                if (matcher.matches()) {
+                    String lastMessage = channelConfig.getMessagesCache().getIfPresent(realName);
+                    if (lastMessage != null) {
+                        if (event.getBot().getChannelConfiguration().getChannel(event.getChannel().getName()).enableAutoCorrection()) {
+                            event.getBot().sendIRC().message(event.getChannel().getName(), event.getUser().getNick() + " meant to say \"" + lastMessage.replace(matcher.group(1), Colors.BOLD + matcher.group(2)) + "\"");
+                        }
+                        channelConfig.getMessagesCache().invalidate(realName);
+                        return;
                     }
-                    LAST_MESSAGE_CACHE.invalidate(realName);
-                    return;
-                }
-            } else {
-                cache: {
-                    for (String prefix : event.getBot().getConfig().getCommandPrefixes()) {
-                        if (message.startsWith(prefix)) {
-                            break cache;
+                } else {
+                    cache: {
+                        for (String prefix : event.getBot().getConfig().getCommandPrefixes()) {
+                            if (message.startsWith(prefix)) {
+                                break cache;
+                            }
                         }
                     }
+                    channelConfig.getMessagesCache().put(realName, message);
                 }
-                LAST_MESSAGE_CACHE.put(realName, message);
             }
-            
+
             event.getBot().getResponseManager().trigger(event.getChannel(), event.getUser(), message);
         }
     }

@@ -17,14 +17,19 @@
 
 package com.dsh105.nexus.config;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 public class ChannelConfig extends YamlConfig {
 
     protected String channelName;
     private ArrayList<String> disabledCommands = new ArrayList<>();
+    private Cache<String, String> messagesCache = CacheBuilder.newBuilder().expireAfterWrite(5, TimeUnit.MINUTES).build();
 
     public ChannelConfig(String channelName) {
         super("channels" + File.separator + channelName + ".yml");
@@ -88,5 +93,9 @@ public class ChannelConfig extends YamlConfig {
 
     public boolean enableAutoCorrection() {
         return get("enableAutoCorrectionMatching", true);
+    }
+
+    public Cache<String, String> getMessagesCache() {
+        return messagesCache;
     }
 }
