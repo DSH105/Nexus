@@ -46,9 +46,8 @@ public class HelpCommand extends CommandModule {
                     if (!event.isInPrivateMessage()) {
                         event.respondWithPing("Check your private messages for help information.");
                     }
-                    for (CommandModule groupModule : groupMatch) {
-                        event.respond(event.getManager().getHelpInfoFor(event, groupModule), true);
-                    }
+                    event.respond("{0} commands: " + StringUtil.combineSplit(0, groupMatch.toArray(new String[0]), ", "), event.getArgs()[0].toUpperCase());
+                    event.respond("Use {0} for more info on a particular command", event.getCommandPrefix() + "help <command>");
                     return true;
                 }
 
@@ -62,7 +61,7 @@ public class HelpCommand extends CommandModule {
             if (!event.isInPrivateMessage()) {
                 event.respondWithPing("Check your private messages for help information.");
             }
-            event.respond("Help info for {0}{1}:", true, event.getCommandPrefix(), module.info().command());
+            event.respond("{0}{1} ({2}):", true, event.getCommandPrefix(), module.info().command(), module.info().help());
             event.respond("(Aliases for {0}: {1})", true, module.info().command(), StringUtil.combineSplit(0, module.info().aliases(), ", "));
             for (String part : module.info().extendedHelp()) {
                 event.respond(event.getManager().format(module, part), true);
@@ -74,13 +73,16 @@ public class HelpCommand extends CommandModule {
         if (!event.isInPrivateMessage()) {
             event.respondWithPing("Check your private messages for help information.");
         }
+        List<String> commands = new ArrayList<>();
         for (CommandModule module : event.getManager().getRegisteredCommands()) {
             List<CommandGroup> groups = Arrays.asList(module.info().groups());
             if (!groups.contains(CommandGroup.ALL)) {
                 continue;
             }
-            event.respond(event.getManager().getHelpInfoFor(event, module), true);
+            commands.add(module.info().command());
         }
+        event.respond("Commands: " + StringUtil.combineSplit(0, commands.toArray(new String[0]), ", "));
+        event.respond("Use {0} for more info on a particular command", event.getCommandPrefix() + "help <command>");
 
         for (Map.Entry<CommandGroup, ArrayList<CommandModule>> entry : event.getManager().getGroupsMap().entrySet()) {
             if (entry.getKey().exclude()) {
