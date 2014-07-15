@@ -68,6 +68,8 @@ public class GitHubRepositoryCommand extends CommandModule {
 
         String repoName = subMatchesSecond ? event.getArgs()[0] : ((subMatchesThird || event.getArgs().length == 2) ? event.getArgs()[1] : event.getArgs()[0]);
         String owner = subMatchesSecond ? event.getSender().getNick() : ((subMatchesThird || event.getArgs().length == 2) ? event.getArgs()[0] : event.getSender().getNick());
+
+        repoName = repoName.replace('\\', '/');
         if (repoName.contains("/") && repoName.split("/").length == 2) {
             String[] parts = repoName.split("/");
             owner = parts[0];
