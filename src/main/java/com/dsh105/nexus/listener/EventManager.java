@@ -48,7 +48,7 @@ public class EventManager extends ListenerAdapter<Nexus> {
                     String lastMessage = channelConfig.getMessagesCache().getIfPresent(realName);
                     if (lastMessage != null) {
                         if (event.getBot().getChannelConfiguration().getChannel(event.getChannel().getName()).enableAutoCorrection()) {
-                            event.getBot().sendIRC().message(event.getChannel().getName(), event.getUser().getNick() + " meant to say \"" + lastMessage.replace(matcher.group(1), Colors.BOLD + matcher.group(2)) + "\"");
+                            event.getBot().sendIRC().message(event.getChannel().getName(), event.getUser().getNick() + " meant to say \"" + lastMessage.replace(matcher.group(1), Colors.BOLD + matcher.group(2) + Colors.BOLD) + "\"");
                         }
                         channelConfig.getMessagesCache().invalidate(realName);
                         return;
