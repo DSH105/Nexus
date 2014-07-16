@@ -46,8 +46,12 @@ public class HelpCommand extends CommandModule {
                     if (!event.isInPrivateMessage()) {
                         event.respondWithPing("Check your private messages for help information.");
                     }
-                    event.respond("{0} commands: " + StringUtil.combineSplit(0, groupMatch.toArray(new String[0]), ", "), event.getArgs()[0].toUpperCase());
-                    event.respond("Use {0} for more info on a particular command", event.getCommandPrefix() + "help <command>");
+                    ArrayList<String> groupCommands = new ArrayList<>();
+                    for (CommandModule groupModule : groupMatch) {
+                        groupCommands.add(groupModule.info().command());
+                    }
+                    event.respond("{0} commands: " + StringUtil.combineSplit(0, groupCommands.toArray(new String[0]), ", "), true, event.getArgs()[0].toUpperCase());
+                    event.respond("Use {0} for more info on a particular command", true, event.getCommandPrefix() + "help <command>");
                     return true;
                 }
 
@@ -81,8 +85,8 @@ public class HelpCommand extends CommandModule {
             }
             commands.add(module.info().command());
         }
-        event.respond("Commands: " + StringUtil.combineSplit(0, commands.toArray(new String[0]), ", "));
-        event.respond("Use {0} for more info on a particular command", event.getCommandPrefix() + "help <command>");
+        event.respond("Commands: " + StringUtil.combineSplit(0, commands.toArray(new String[0]), ", "), true);
+        event.respond("Use {0} for more info on a particular command", true, event.getCommandPrefix() + "help <command>");
 
         for (Map.Entry<CommandGroup, ArrayList<CommandModule>> entry : event.getManager().getGroupsMap().entrySet()) {
             if (entry.getKey().exclude()) {
