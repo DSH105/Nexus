@@ -39,7 +39,8 @@ import java.util.*;
                 "--------",
                 "Command syntax:",
                 "{b}{p}{c} <time_period> <reminder>{/b} - schedules a reminder with the given message. The {b}<reminder>{/b} message can be more than one word.",
-                "{b}{p}{c} <user_to_remind> <time_period> <reminder>{/b} - schedules a reminder with the given message for a user. The {b}<reminder>{/b} message can be more than one word."
+                "{b}{p}{c} <user_to_remind> <time_period> <reminder>{/b} - schedules a reminder with the given message for a user. The {b}<reminder>{/b} message can be more than one word.",
+                "{b}{p}{c} clear{/b} - removes all associated reminders for yourself."
         })
 public class RemindCommand extends CommandModule {
 
@@ -77,6 +78,20 @@ public class RemindCommand extends CommandModule {
             reminders.add(reminder);
             event.respondWithPing("Reminder scheduled for {0}", event.getArgs()[forOtherUser ? 1 : 0]);
             return true;
+        } else if (event.getArgs().length == 1) {
+            if (event.getArgs()[0].equalsIgnoreCase("clear")) {
+                int count = 0;
+                Iterator<Reminder> i = reminders.iterator();
+                while (i.hasNext()) {
+                    Reminder reminder = i.next();
+                    if (reminder.from.equalsIgnoreCase(event.getSender().getNick()) || reminder.userToRemind.equalsIgnoreCase(event.getSender().getNick())) {
+                        reminder.cancel(true);
+                        count ++;
+                    }
+                }
+
+                event.respondWithPing("Removed {0} reminder" + (count == 1 ? "" : "s") + " for {1}.", String.valueOf(count), event.getSender().getNick());
+            }
         }
         return false;
     }
