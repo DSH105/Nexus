@@ -134,7 +134,7 @@ public class TenJavaCommand extends CommandModule {
                             total += judge.getAssignedItems();
                             completed += judge.getCompletedItems();
                         }
-                        int percentCompleted = (total / completed) * 100;
+                        int percentCompleted = (completed / total) * 100;
                         event.respondWithPing("TenJava Judging stats: {0}/{1} items completed ({2})", completed + "", total + "", percentCompleted + "%");
                         return true;
                     }
