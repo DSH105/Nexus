@@ -158,7 +158,7 @@ public class DynamicCommand extends CommandModule {
             valueMap.put("needsChannel", needsChannel);
             valueMap.put("help", ColorUtil.serialise(help));
             valueMap.put("extendedHelp", ColorUtil.serialise(extendedHelp));
-            valueMap.put("aliases", aliases.length <= 0 ? new String[0] : ColorUtil.serialise(aliases)[0]);
+            valueMap.put("aliases", aliases.length <= 0 ? new String[0] : ColorUtil.serialise(aliases));
             valueMap.put("action", action);
             valueMap.put("commandResponse", commandResponse);
 
