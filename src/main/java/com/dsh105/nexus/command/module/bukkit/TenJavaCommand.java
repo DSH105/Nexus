@@ -128,8 +128,9 @@ public class TenJavaCommand extends CommandModule {
                         for (TenJavaJudge judge : judges) {
                             total += judge.getAssignedItems();
                             completed += judge.getCompletedItems();
-                            totalPercentCompleted += judge.getPercentComplete();
                         }
+                        totalPercentCompleted = ((double) completed) / total;
+                        totalPercentCompleted *= 100;
                         event.respondWithPing("ten.java Judging stats: {0}/{1} items completed ({2})", completed + "", total + "", (totalPercentCompleted / judges.length) + "%");
                         return true;
                     }
