@@ -28,6 +28,7 @@ import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import org.ocpsoft.prettytime.PrettyTime;
 import org.pircbotx.Colors;
+import com.google.gson.annotations.SerializedName;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -36,16 +37,16 @@ import java.util.Date;
 import java.util.List;
 
 @Command(command = "tenjava",
-        aliases = {"tj"},
-        needsChannel = false,
-        help = "See the total prize pool, and the top donors",
-        extendedHelp = {
-                "{b}{p}{c}{/b} - View tenjava donated points",
-                "{b}{p}{c} top{/b} - View the top donors to tenjava.",
-                "{b}{p}{c} top <number>{/b} - View the top donors to tenjava.",
-                "{b}{p}{c} judge{/b} - View judging stats.",
-                "{b}{p}{c} judge <judge_name>{/b} - View stats for a certain judge."
-        })
+         aliases = {"tj"},
+         needsChannel = false,
+         help = "See the total prize pool, and the top donors",
+         extendedHelp = {
+                 "{b}{p}{c}{/b} - View tenjava donated points",
+                 "{b}{p}{c} top{/b} - View the top donors to tenjava.",
+                 "{b}{p}{c} top <number>{/b} - View the top donors to tenjava.",
+                 "{b}{p}{c} judge{/b} - View judging stats.",
+                 "{b}{p}{c} judge <judge_name>{/b} - View stats for a certain judge."
+         })
 public class TenJavaCommand extends CommandModule {
 
     public static final String TEN_JAVA_URL = "https://tenjava.com/api/points";
@@ -58,8 +59,8 @@ public class TenJavaCommand extends CommandModule {
         if (event.getArgs().length == 0) {
             try {
                 HttpResponse<JsonNode> jsonResponse = Unirest.get(TEN_JAVA_URL)
-                        .header("accept", "application/json")
-                        .asJson();
+                                                             .header("accept", "application/json")
+                                                             .asJson();
                 int points = jsonResponse.getBody().getObject().getInt("points");
                 long time = jsonResponse.getBody().getObject().getLong("last_update");
                 PrettyTime pt = new PrettyTime();
@@ -136,6 +137,7 @@ public class TenJavaCommand extends CommandModule {
     }
 
     public class TenJavaDonor {
+
         private int amount;
         private String username;
 
@@ -149,6 +151,7 @@ public class TenJavaCommand extends CommandModule {
     }
 
     public class TenJavaJudge {
+
         @SerializedName("github_username")
         private String githubUserName;
         @SerializedName("assignedItems")
