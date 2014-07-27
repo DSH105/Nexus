@@ -106,7 +106,7 @@ public class TenJavaCommand extends CommandModule {
                         if (event.getArgs()[1].equalsIgnoreCase("list")) {
                             StringBuilder builder = new StringBuilder();
                             for (String judgeName : judgeNames) {
-                                builder.append(Colors.BOLD).append(StringUtil.removePing(judgeName)).append(", ");
+                                builder.append(StringUtil.removePing(judgeName)).append(", ");
                             }
                             event.respondWithPing("TenJava judges: " + builder.toString());
                             return true;
@@ -115,7 +115,7 @@ public class TenJavaCommand extends CommandModule {
                         String judgeName = event.getArgs()[1];
                         if (judgeNamesList.contains(judgeName)) {
                             TenJavaJudge judge = judges[judgeNamesList.indexOf(judgeName)];
-                            event.respond("Judging stats ({0}): {0}/{1} ({2} remaining) - {3}", StringUtil.removePing(judge.getGithubUserName()), judge.getCompletedItems() + "", judge.getAssignedItems() + "", judge.getRemainingItems() + "", judge.getPercentComplete() + "%");
+                            event.respond("Judging stats ({0}): {1}/{2} ({3} remaining) - {4}", StringUtil.removePing(judge.getGithubUserName()), judge.getCompletedItems() + "", judge.getAssignedItems() + "", judge.getRemainingItems() + "", judge.getPercentComplete() + "%");
                         } else {
                             event.errorWithPing("Judge not found: {0}. Use {1} for a list of judges", judgeName, event.getCommandPrefix() + event.getCommand() + " judge list");
                         }
@@ -127,7 +127,7 @@ public class TenJavaCommand extends CommandModule {
                             total += judge.getAssignedItems();
                             completed += judge.getCompletedItems();
                         }
-                        int percentCompleted = (completed / total) * 100;
+                        int percentCompleted = (int) ((double) (completed / total)) * 100;
                         event.respondWithPing("TenJava Judging stats: {0}/{1} items completed ({2})", completed + "", total + "", percentCompleted + "%");
                         return true;
                     }
