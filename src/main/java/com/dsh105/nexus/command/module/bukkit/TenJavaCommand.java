@@ -86,10 +86,7 @@ public class TenJavaCommand extends CommandModule {
                     StringBuilder builder = new StringBuilder();
                     for (int i = 0; i < limit; i++) {
                         TenJavaDonor donor = donors[i];
-                        builder.append(Colors.BOLD + StringUtil.removePing(donor.getUsername()) + Colors.BOLD + " (" + donor.getAmount() + ")");
-                        if (i != limit) {
-                            builder.append(", ");
-                        }
+                        builder.append(Colors.BOLD).append(StringUtil.removePing(donor.getUsername())).append(Colors.BOLD).append(" (").append(donor.getAmount()).append(")").append(", ");
                     }
 
                     event.respondWithPing("Top " + limit + " donors:" + Colors.NORMAL + " " + builder.toString());
@@ -108,11 +105,8 @@ public class TenJavaCommand extends CommandModule {
                     if (event.getArgs().length == 2) {
                         if (event.getArgs()[1].equalsIgnoreCase("list")) {
                             StringBuilder builder = new StringBuilder();
-                            for (int i = 0; i < judgeNames.length; i++) {
-                                builder.append(Colors.BOLD + StringUtil.removePing(judgeNames[i]));
-                                if (i != judgeNames.length) {
-                                    builder.append(", ");
-                                }
+                            for (String judgeName : judgeNames) {
+                                builder.append(Colors.BOLD).append(StringUtil.removePing(judgeName)).append(", ");
                             }
                             event.respondWithPing("TenJava judges: " + builder.toString());
                             return true;
@@ -121,8 +115,8 @@ public class TenJavaCommand extends CommandModule {
                         String judgeName = event.getArgs()[1];
                         if (judgeNamesList.contains(judgeName)) {
                             TenJavaJudge judge = judges[judgeNamesList.indexOf(judgeName)];
-                            event.respondWithPing("Judging stats ({0}):", StringUtil.removePing(judge.getGithubUserName()));
-                            event.respondWithPing("Items: {0}/{1} ({2} remaining) - {3}", judge.getAssignedItems() + "", judge.getCompletedItems() + "", judge.getRemainingItems() + "", judge.getPercentComplete() + "%");
+                            event.respond("Judging stats ({0}):", StringUtil.removePing(judge.getGithubUserName()));
+                            event.respond("Items: {0}/{1} ({2} remaining) - {3}", judge.getAssignedItems() + "", judge.getCompletedItems() + "", judge.getRemainingItems() + "", judge.getPercentComplete() + "%");
                         } else {
                             event.errorWithPing("Judge not found: {0}. Use {1} for a list of judges", judgeName, event.getCommandPrefix() + event.getCommand() + " judge list");
                         }
