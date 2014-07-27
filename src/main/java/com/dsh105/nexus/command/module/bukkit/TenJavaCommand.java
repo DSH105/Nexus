@@ -23,15 +23,15 @@ import com.dsh105.nexus.command.CommandPerformEvent;
 import com.dsh105.nexus.exception.bukkit.TenJavaDataLookupException;
 import com.dsh105.nexus.util.JsonUtil;
 import com.dsh105.nexus.util.StringUtil;
+import com.google.gson.annotations.SerializedName;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
+import com.mashape.unirest.http.exceptions.UnirestException;
 import org.ocpsoft.prettytime.PrettyTime;
 import org.pircbotx.Colors;
-import com.google.gson.annotations.SerializedName;
 
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -98,37 +98,41 @@ public class TenJavaCommand extends CommandModule {
                     throw new TenJavaDataLookupException("An error occurred in the lookup process", e);
                 }
             } else if (event.getArgs()[0].equalsIgnoreCase("judge")) {
-                TenJavaJudge[] judges = JsonUtil.read(Unirest.get(TEN_JAVA_TEAM_STATS_URL).header("accept", "application/json"), "judges", TenJavaJudge[].class);
-                String[] judgeNames = new String[judges.length];
-                for (int i = 0; i < judgeNames.length; i++) {
-                    judgeNames[i] = judges[i].getGithubUserName();
-                }
-                List<String> judgeNamesList = Arrays.asList(judgeNames);
-                if (event.getArgs().length == 2) {
-                    if (event.getArgs()[1].equalsIgnoreCase("list")) {
-                        event.respondWithPing("TenJava judges: " + StringUtil.buildSentenceList(judgeNames));
+                try {
+                    TenJavaJudge[] judges = JsonUtil.read(Unirest.get(TEN_JAVA_TEAM_STATS_URL).header("accept", "application/json"), "judges", TenJavaJudge[].class);
+                    String[] judgeNames = new String[judges.length];
+                    for (int i = 0; i < judgeNames.length; i++) {
+                        judgeNames[i] = judges[i].getGithubUserName();
+                    }
+                    List<String> judgeNamesList = Arrays.asList(judgeNames);
+                    if (event.getArgs().length == 2) {
+                        if (event.getArgs()[1].equalsIgnoreCase("list")) {
+                            event.respondWithPing("TenJava judges: " + StringUtil.buildSentenceList(judgeNames));
+                            return true;
+                        }
+
+                        String judgeName = event.getArgs()[1];
+                        if (judgeNamesList.contains(judgeName)) {
+                            TenJavaJudge judge = judges[judgeNamesList.indexOf(judgeName)];
+                            event.respondWithPing("Judging stats ({0}):" + judge.getGithubUserName());
+                            event.respondWithPing("Items: {0}/{1} ({2} remaining) - {3}", judge.getAssignedItems() + "", judge.getCompletedItems() + "", judge.getRemainingItems() + "", judge.getPercentComplete() + "%");
+                        } else {
+                            event.errorWithPing("Judge not found: {0}. Use {1} for a list of judges", judgeName, event.getCommandPrefix() + event.getCommand() + " judge list");
+                        }
+                        return true;
+                    } else {
+                        int total = 0;
+                        int completed = 0;
+                        for (TenJavaJudge judge : judges) {
+                            total += judge.getAssignedItems();
+                            completed += judge.getCompletedItems();
+                        }
+                        int percentCompleted = (total / completed) * 100;
+                        event.respondWithPing("TenJava Judging stats: {0}/{1} items completed ({2})", completed + "", total + "", percentCompleted + "%");
                         return true;
                     }
-
-                    String judgeName = event.getArgs()[1];
-                    if (judgeNamesList.contains(judgeName)) {
-                        TenJavaJudge judge = judges[judgeNamesList.indexOf(judgeName)];
-                        event.respondWithPing("Judging stats ({0}):" + judge.getGithubUserName());
-                        event.respondWithPing("Items: {0}/{1} ({2} remaining) - {3}", judge.getAssignedItems() + "", judge.getCompletedItems() + "", judge.getRemainingItems() + "", judge.getPercentComplete() + "%");
-                    } else {
-                        event.errorWithPing("Judge not found: {0}. Use {1} for a list of judges", judgeName, event.getCommandPrefix() + event.getCommand() + " judge list");
-                    }
-                    return true;
-                } else {
-                    int total = 0;
-                    int completed = 0;
-                    for (TenJavaJudge judge : judges) {
-                        total += judge.getAssignedItems();
-                        completed += judge.getCompletedItems();
-                    }
-                    int percentCompleted = (total / completed) * 100;
-                    event.respondWithPing("TenJava Judging stats: {0}/{1} items completed ({2})", completed + "", total + "", percentCompleted + "%");
-                    return true;
+                } catch (UnirestException e) {
+                    throw new TenJavaDataLookupException("An error occurred in the lookup process", e);
                 }
             }
         }
