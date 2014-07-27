@@ -107,7 +107,14 @@ public class TenJavaCommand extends CommandModule {
                     List<String> judgeNamesList = Arrays.asList(judgeNames);
                     if (event.getArgs().length == 2) {
                         if (event.getArgs()[1].equalsIgnoreCase("list")) {
-                            event.respondWithPing("TenJava judges: " + StringUtil.buildSentenceList(judgeNames));
+                            StringBuilder builder = new StringBuilder();
+                            for (int i = 0; i < judgeNames.length; i++) {
+                                builder.append(Colors.BOLD + StringUtil.removePing(judgeNames[i]));
+                                if (i != judgeNames.length) {
+                                    builder.append(", ");
+                                }
+                            }
+                            event.respondWithPing("TenJava judges: " + builder.toString());
                             return true;
                         }
 
