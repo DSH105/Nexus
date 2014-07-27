@@ -109,7 +109,7 @@ public class TenJavaCommand extends CommandModule {
                                 builder.append(StringUtil.removePing(judgeName)).append(", ");
                             }
                             String judgeList = builder.substring(0, builder.length() - 1);
-                            event.respondWithPing("TenJava judges: " + judgeList);
+                            event.respondWithPing("ten.java judges: " + judgeList);
                             return true;
                         }
 
@@ -130,7 +130,7 @@ public class TenJavaCommand extends CommandModule {
                             completed += judge.getCompletedItems();
                             totalPercentCompleted += judge.getPercentComplete();
                         }
-                        event.respondWithPing("TenJava Judging stats: {0}/{1} items completed ({2})", completed + "", total + "", (totalPercentCompleted / judges.length) + "%");
+                        event.respondWithPing("ten.java Judging stats: {0}/{1} items completed ({2})", completed + "", total + "", (totalPercentCompleted / judges.length) + "%");
                         return true;
                     }
                 } catch (UnirestException e) {
