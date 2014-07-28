@@ -41,7 +41,7 @@ public class StringUtil {
         }
 
         for (User user : channel.getUsers()) {
-            entireMessage = entireMessage.replace(user.getNick(), StringUtil.munge(user.getNick())).replace(user.getNick().toLowerCase(), StringUtil.munge(user.getNick().toLowerCase()))
+            entireMessage = entireMessage.replace(user.getNick(), StringUtil.munge(user.getNick())).replace(user.getNick().toLowerCase(), StringUtil.munge(user.getNick().toLowerCase()));
         }
         return entireMessage;
     }
