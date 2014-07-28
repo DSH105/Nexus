@@ -17,6 +17,7 @@
 
 package com.dsh105.nexus.command.module.irc;
 
+import com.dsh105.nexus.Nexus;
 import com.dsh105.nexus.command.Command;
 import com.dsh105.nexus.command.CommandModule;
 import com.dsh105.nexus.command.CommandPerformEvent;
@@ -31,7 +32,17 @@ import org.pircbotx.Channel;
 public class ChannelStatsCommand extends CommandModule {
     @Override
     public boolean onCommand(CommandPerformEvent event) {
-        Channel chan = event.getChannel();
+        Channel chan = null;
+        if (event.getArgs().length >= 1) {
+            chan = Nexus.getInstance().getChannel(event.getArgs()[0]);
+            if (chan == null) {
+                event.errorWithPing("{0} is not a valid channel (or I'm not in there).", event.getArgs()[0]);
+                return true;
+            }
+        }
+        if (chan == null) {
+            chan = event.getChannel();
+        }
         String chanName = chan.getName();
         int numUsers = chan.getUsers().size();
         int numOpped = chan.getOps().size();
