@@ -278,12 +278,12 @@ public class Nexus extends PircBotX {
                         sendIRC().joinChannel(channel);
                     }
                 }
+
+                if (!getConfig().getStartupMessage().isEmpty()) {
+                    sendIRC().message(getConfig().getAdminChannel(), getConfig().getStartupMessage());
+                }
             }
         }).start();
-
-        if (!getConfig().getStartupMessage().isEmpty()) {
-            sendIRC().message(getConfig().getAdminChannel(), getConfig().getStartupMessage());
-        }
     }
 
     private void prepareConsoleReader() {
