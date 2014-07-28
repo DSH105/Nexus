@@ -290,14 +290,12 @@
                                         <include>**</include>
                                     </includes>
                                 </filter>
-                                <!--
                                 <filter>
                                     <artifact>org.scala</artifact>
                                     <includes>
                                         <include>**</include>
                                     </includes>
                                 </filter>
-                                -->
                             </filters>
                         </configuration>
                     </execution>
