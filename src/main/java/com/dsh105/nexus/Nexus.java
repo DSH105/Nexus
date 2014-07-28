@@ -30,7 +30,6 @@ import com.dsh105.nexus.hook.github.GitHub;
 import com.dsh105.nexus.hook.jenkins.Jenkins;
 import com.dsh105.nexus.listener.EventManager;
 import com.dsh105.nexus.response.ResponseManager;
-import com.dsh105.nexus.script.ScriptManager;
 import com.dsh105.nexus.util.ColorUtil;
 import com.dsh105.nexus.util.ShortLoggerFormatter;
 import com.dsh105.nexus.util.TimeUtil;
@@ -62,8 +61,6 @@ public class Nexus extends PircBotX {
     private OptionsConfig config;
     private GitHubConfig githubConfig;
     private NicksConfig nicksConfig;
-
-    private ScriptManager scriptManager;
 
     private CommandManager commandManager;
     private ResponseManager responseManager;
