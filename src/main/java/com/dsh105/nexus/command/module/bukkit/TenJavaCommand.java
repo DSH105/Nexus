@@ -124,14 +124,13 @@ public class TenJavaCommand extends CommandModule {
                     } else {
                         int total = 0;
                         int completed = 0;
-                        int totalPercentCompleted = 0;
+                        double totalPercentCompleted = 0;
                         for (TenJavaJudge judge : judges) {
                             total += judge.getAssignedItems();
                             completed += judge.getCompletedItems();
                         }
-                        totalPercentCompleted = (int)(((double) completed) / total);
-                        totalPercentCompleted *= 100;
-                        event.respondWithPing("ten.java Judging stats: {0}/{1} items completed ({2})", completed + "", total + "", (totalPercentCompleted / judges.length) + "%");
+                        totalPercentCompleted = 100 * completed / (double)total;
+                        event.respondWithPing("ten.java Judging stats: {0}/{1} items completed ({2})", completed + "", total + "", df.format(totalPercentCompleted / judges.length) + "%");
                         return true;
                     }
                 } catch (UnirestException e) {
