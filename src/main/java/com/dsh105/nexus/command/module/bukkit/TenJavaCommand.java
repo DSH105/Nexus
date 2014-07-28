@@ -86,7 +86,7 @@ public class TenJavaCommand extends CommandModule {
                     StringBuilder builder = new StringBuilder();
                     for (int i = 0; i < limit; i++) {
                         TenJavaDonor donor = donors[i];
-                        builder.append(Colors.BOLD).append(StringUtil.removePing(donor.getUsername())).append(Colors.BOLD).append(" (").append(donor.getAmount()).append(")").append(", ");
+                        builder.append(Colors.BOLD).append(StringUtil.munge(donor.getUsername())).append(Colors.BOLD).append(" (").append(donor.getAmount()).append(")").append(", ");
                     }
 
                     event.respondWithPing("Top " + limit + " donors:" + Colors.NORMAL + " " + builder.toString());
@@ -106,7 +106,7 @@ public class TenJavaCommand extends CommandModule {
                         if (event.getArgs()[1].equalsIgnoreCase("list")) {
                             StringBuilder builder = new StringBuilder();
                             for (String judgeName : judgeNames) {
-                                builder.append(StringUtil.removePing(judgeName)).append(", ");
+                                builder.append(StringUtil.munge(judgeName)).append(", ");
                             }
                             String judgeList = builder.substring(0, builder.length() - 1);
                             event.respondWithPing("ten.java judges: " + judgeList);
@@ -116,7 +116,7 @@ public class TenJavaCommand extends CommandModule {
                         String judgeName = event.getArgs()[1];
                         if (judgeNamesList.contains(judgeName)) {
                             TenJavaJudge judge = judges[judgeNamesList.indexOf(judgeName)];
-                            event.respond("Judging stats ({0}): {1}/{2} ({3} remaining) - {4}", StringUtil.removePing(judge.getGithubUserName()), judge.getCompletedItems() + "", judge.getAssignedItems() + "", judge.getRemainingItems() + "", judge.getPercentComplete() + "%");
+                            event.respond("Judging stats ({0}): {1}/{2} ({3} remaining) - {4}", StringUtil.munge(judge.getGithubUserName()), judge.getCompletedItems() + "", judge.getAssignedItems() + "", judge.getRemainingItems() + "", judge.getPercentComplete() + "%");
                         } else {
                             event.errorWithPing("Judge not found: {0}. Use {1} for a list of judges", judgeName, event.getCommandPrefix() + event.getCommand() + " judge list");
                         }

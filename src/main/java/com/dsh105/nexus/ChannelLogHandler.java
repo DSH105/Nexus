@@ -20,15 +20,16 @@ package com.dsh105.nexus;
 import com.dsh105.nexus.util.StringUtil;
 import org.pircbotx.User;
 
-import java.util.Iterator;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.logging.Handler;
 import java.util.logging.LogRecord;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class ChannelLogHandler extends Handler {
 
     private static final String[] EXCLUSIONS = new String[] {"Received notice:", "Received PM from"};
+
+    private ArrayList<LogRecord> messageQueue = new ArrayList<>();
 
     private String channelName;
 
@@ -38,28 +39,24 @@ public class ChannelLogHandler extends Handler {
 
     @Override
     public void publish(LogRecord record) {
-        if (Nexus.getInstance() == null || this.channelName == null) {
-            return;
-        }
-        if (Nexus.getInstance().getChannel(this.channelName) == null) {
+        if (Nexus.getInstance() == null || this.channelName == null || Nexus.getInstance().getChannel(this.channelName) == null) {
+            messageQueue.add(record);
             return;
         }
         if (!isLoggable(record)) {
             return;
         }
+
+        ArrayList<LogRecord> queue = new ArrayList<>();
+        Collections.copy(queue, messageQueue);
+        messageQueue.clear();
+        for (LogRecord queuedRecord :  queue) {
+            publish(queuedRecord);
+        }
+
         String[] parts = record.getMessage().split(" ");
         for (int i = 0; i < parts.length; i++) {
-            String part = parts[i];
-            for (User u : Nexus.getInstance().getChannel(this.channelName).getUsers()) {
-                /*StringBuffer buffer = new StringBuffer();
-                Matcher nameMatcher = Pattern.compile(u.getNick(), Pattern.CASE_INSENSITIVE).matcher(part);
-                while (nameMatcher.find()) {
-                    nameMatcher.appendReplacement(buffer, StringUtil.removePing(nameMatcher.group()));
-                }
-                part = buffer.toString();*/
-                part = part.replace(u.getNick(), StringUtil.removePing(u.getNick())).replace(u.getNick().toLowerCase(), StringUtil.removePing(u.getNick().toLowerCase()));
-            }
-            parts[i] = part;
+            parts[i] = StringUtil.mungeMessage(this.channelName, parts[i]);
         }
         String message = StringUtil.join(parts, " ");
         for (String exc : EXCLUSIONS) {

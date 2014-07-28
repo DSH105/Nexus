@@ -24,7 +24,7 @@ public class StringUtilTest {
 
     @Test
     public void testRemovePing() {
-        Assert.assertNotEquals("Nicks are appropriately modified to prevent pings.", "lol768", StringUtil.removePing("lol768"));
+        Assert.assertNotEquals("Nicks are appropriately modified to prevent pings.", "lol768", StringUtil.munge("lol768"));
     }
 
     @Test

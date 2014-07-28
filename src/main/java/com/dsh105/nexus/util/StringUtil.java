@@ -17,7 +17,10 @@
 
 package com.dsh105.nexus.util;
 
+import com.dsh105.nexus.Nexus;
 import org.apache.commons.lang3.Validate;
+import org.pircbotx.Channel;
+import org.pircbotx.User;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -27,8 +30,20 @@ public class StringUtil {
 
     private static final String EMPTY = "";
 
-    public static String removePing(String nick) {
+    public static String munge(String nick) {
         return nick == null ? null : (nick.substring(0, 1) + '\u200b' + (nick.length() >= 2 ? nick.substring(1, nick.length()) : ""));
+    }
+
+    public static String mungeMessage(String destination, String entireMessage) {
+        Channel channel = Nexus.getInstance().getChannel(destination);
+        if (channel == null) {
+            return entireMessage.replace(destination, StringUtil.munge(destination)).replace(destination.toLowerCase(), StringUtil.munge(destination.toLowerCase()));
+        }
+
+        for (User user : channel.getUsers()) {
+            entireMessage = entireMessage.replace(user.getNick(), StringUtil.munge(user.getNick())).replace(user.getNick().toLowerCase(), StringUtil.munge(user.getNick().toLowerCase()))
+        }
+        return entireMessage;
     }
 
     /**

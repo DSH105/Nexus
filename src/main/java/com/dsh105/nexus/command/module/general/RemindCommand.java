@@ -213,7 +213,7 @@ public class RemindCommand extends CommandModule {
 
         @Override
         public void run() {
-            Nexus.getInstance().sendIRC().message(channelName.isEmpty() ? userToRemind : channelName, "I have a reminder for you, " + userToRemind + "! \"" + Colors.BOLD + reminder + Colors.NORMAL + "\"" + (from.equals(userToRemind) ? "" : " (from " + StringUtil.removePing(from) + ")"));
+            Nexus.getInstance().sendIRC().message(channelName.isEmpty() ? userToRemind : channelName, "I have a reminder for you, " + userToRemind + "! \"" + Colors.BOLD + reminder + Colors.NORMAL + "\"" + (from.equals(userToRemind) ? "" : " (from " + StringUtil.munge(from) + ")"));
             this.cancel(true);
         }
 
