@@ -34,7 +34,11 @@ public class ChannelStatsCommand extends CommandModule {
     public boolean onCommand(CommandPerformEvent event) {
         Channel chan = null;
         if (event.getArgs().length >= 1) {
-            chan = Nexus.getInstance().getChannel(event.getArgs()[0]);
+            String chanName = event.getArgs()[0];
+            if (!chanName.startsWith("#")) {
+                chanName = "#" + chanName;
+            }
+            chan = Nexus.getInstance().getChannel(chanName);
             if (chan == null) {
                 event.errorWithPing("{0} is not a valid channel (or I'm not in there).", event.getArgs()[0]);
                 return true;
