@@ -48,7 +48,7 @@ public class ChannelLogHandler extends Handler {
         }
 
         ArrayList<LogRecord> queue = new ArrayList<>();
-        Collections.copy(queue, messageQueue);
+        Collections.addAll(queue, messageQueue.toArray(new LogRecord[0]));
         messageQueue.clear();
         for (LogRecord queuedRecord :  queue) {
             publish(queuedRecord);
