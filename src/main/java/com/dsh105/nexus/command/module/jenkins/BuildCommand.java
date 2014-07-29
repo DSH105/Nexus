@@ -42,6 +42,11 @@ public class BuildCommand extends CommandModule {
 
     @Override
     public boolean onCommand(CommandPerformEvent event) {
+        if (!Nexus.getInstance().initiateJenkinsConnection()) {
+            event.errorWithPing("Jenkins connection could not be established. Maybe it's offline?");
+            return true;
+        }
+
         if (event.getArgs().length == 0) {
             event.respondWithPing("Usage: {0}", event.getCommandPrefix() + this.info().command() + " <job_name>");
             return true;

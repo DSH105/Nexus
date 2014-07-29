@@ -26,6 +26,7 @@ import com.dsh105.nexus.config.ChannelConfiguration;
 import com.dsh105.nexus.config.GitHubConfig;
 import com.dsh105.nexus.config.NicksConfig;
 import com.dsh105.nexus.config.OptionsConfig;
+import com.dsh105.nexus.exception.jenkins.JenkinsException;
 import com.dsh105.nexus.hook.github.GitHub;
 import com.dsh105.nexus.hook.jenkins.Jenkins;
 import com.dsh105.nexus.listener.EventManager;
@@ -35,6 +36,7 @@ import com.dsh105.nexus.util.ShortLoggerFormatter;
 import com.dsh105.nexus.util.TimeUtil;
 import com.dsh105.nexus.util.TimeoutUtil;
 import com.mashape.unirest.http.Unirest;
+import com.mashape.unirest.http.exceptions.UnirestException;
 import org.ocpsoft.prettytime.PrettyTime;
 import org.pircbotx.Channel;
 import org.pircbotx.Configuration;
@@ -235,9 +237,15 @@ public class Nexus extends PircBotX {
         responseManager = new ResponseManager();
         responseManager.load();
 
-        if (!this.config.getJenkinsUrl().isEmpty()) {
+        String jenkinsUrl = this.config.getJenkinsUrl();
+        if (!jenkinsUrl.isEmpty()) {
             LOGGER.info("Initiating Jenkins hook");
-            this.jenkins = new Jenkins();
+            try {
+                Unirest.get(jenkinsUrl + "api/json").asJson();
+                this.jenkins = new Jenkins(jenkinsUrl);
+            } catch (UnirestException e) {
+                LOGGER.severe("Jenkins appears to be offline!");
+            }
         }
         LOGGER.info("Initiating GitHub hook");
         this.github = new GitHub();
@@ -362,6 +370,21 @@ public class Nexus extends PircBotX {
 
     public CommandManager getCommandManager() {
         return commandManager;
+    }
+
+    public boolean initiateJenkinsConnection() {
+        return initiateJenkinsConnection(this.config.getJenkinsUrl());
+    }
+
+    public boolean initiateJenkinsConnection(String jenkinsUrl) {
+        if (Jenkins.getJenkins() != null) {
+            return true;
+        }
+        if (!Jenkins.testConnection()) {
+            return false;
+        }
+        this.jenkins = new Jenkins(jenkinsUrl);
+        return true;
     }
 
     public Jenkins getJenkins() {

@@ -34,10 +34,23 @@ public class Jenkins {
     private HashMap<String, JenkinsJobEntry> jobEntries = new HashMap<>();
     public final RefreshTask TASK;
 
-    public Jenkins() {
-        this.JENKINS_URL = Nexus.getInstance().getConfig().getJenkinsUrl();
+    public Jenkins(String jenkinsBaseUrl) {
+        this.JENKINS_URL = jenkinsBaseUrl;
         TASK = new RefreshTask();
         new Timer(true).schedule(TASK, 0, 150000);
+    }
+
+    public static boolean testConnection() {
+        return testConnection(Nexus.getInstance().getConfig().getJenkinsUrl());
+    }
+
+    public static boolean testConnection(String jenkinsUrl) {
+        try {
+            Unirest.get(jenkinsUrl + "api/json").asJson();
+            return true;
+        } catch (UnirestException e) {
+            return false;
+        }
     }
 
     public static Jenkins getJenkins() {
