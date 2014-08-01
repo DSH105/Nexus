@@ -121,8 +121,11 @@ public class CommandManager {
             }
 
             for (String alias : module.info().aliases()) {
-                if (commandArguments.equalsIgnoreCase(alias) || alias.startsWith(commandArguments)) {
+                if (commandArguments.equalsIgnoreCase(alias)) {
                     return module;
+                }
+                if (alias.startsWith(commandArguments)) {
+                    possibleMatch = module;
                 }
             }
 
@@ -130,7 +133,8 @@ public class CommandManager {
                 possibleMatch = module;
             }
         }
-        return possibleMatch;
+        //return possibleMatch;
+        return null;
     }
 
     public ArrayList<CommandModule> matchGroup(String commandArguments) {
