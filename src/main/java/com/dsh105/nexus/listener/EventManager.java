@@ -60,8 +60,8 @@ public class EventManager extends ListenerAdapter<Nexus> {
                                 break cache;
                             }
                         }
+                        channelConfig.getMessagesCache().put(realName, message);
                     }
-                    channelConfig.getMessagesCache().put(realName, message);
                 }
             }
 
