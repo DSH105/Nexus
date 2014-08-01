@@ -19,13 +19,13 @@ package com.dsh105.nexus.config;
 
 import com.dsh105.nexus.Nexus;
 
-import java.util.ArrayList;
-import java.util.Map;
+import java.util.*;
 
 public class OptionsConfig extends YamlConfig {
 
     private ArrayList<String> channels = new ArrayList<>();
     private ArrayList<String> admins = new ArrayList<>();
+    private ArrayList<String> commandPrefixes = new ArrayList<>();
 
     public OptionsConfig() {
         super(Nexus.CONFIG_FILE_NAME);
@@ -41,7 +41,6 @@ public class OptionsConfig extends YamlConfig {
         this.options.put("server-password", "");
         this.options.put("startup-message", "Hi, I'm back!");
         this.options.put("nickserv-password", "");
-        this.options.put("command-prefix", new String[] {"\\"});
         this.options.put("nick", "Nexus");
         this.options.put("admin-channel", "");
         this.options.put("log-channel", "");
@@ -55,11 +54,14 @@ public class OptionsConfig extends YamlConfig {
         if (this.getAdminChannel() != null && !this.getAdminChannel().isEmpty()) {
             channels.add(this.getAdminChannel());
         }
+        commandPrefixes.add("\\");
         admins.add("DSH105");
         this.channels = this.get("channels", channels);
         this.admins = this.get("admins", admins);
+        this.commandPrefixes = this.get("command-prefixes", commandPrefixes);
         this.options.put("channels", channels);
         this.options.put("admins", admins);
+        this.options.put("command-prefixes", commandPrefixes);
     }
 
     @Override
@@ -67,8 +69,10 @@ public class OptionsConfig extends YamlConfig {
         super.loadData(loadedData);
         this.channels = this.get("channels", channels);
         this.admins = this.get("admins", admins);
+        this.commandPrefixes = this.get("command-prefixes", commandPrefixes);
         this.options.put("channels", channels);
         this.options.put("admins", admins);
+        this.options.put("command-prefixes", commandPrefixes);
     }
 
     @Override
@@ -103,11 +107,11 @@ public class OptionsConfig extends YamlConfig {
     }
 
     public String getCommandPrefix() {
-        return getCommandPrefixes()[0];
+        return getCommandPrefixes().get(0);
     }
 
-    public String[] getCommandPrefixes() {
-        return get("command-prefix", new String[] {"\\"});
+    public List<String> getCommandPrefixes() {
+        return Collections.unmodifiableList(commandPrefixes);
     }
 
     public String getNick() {
