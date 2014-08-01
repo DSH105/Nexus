@@ -55,7 +55,7 @@ public class ChannelCommand extends CommandModule {
         }
         channel = channelConfig.getChannelName();
 
-        if (event.getArgs()[1].equalsIgnoreCase("option")) {
+        if (event.getArgs().length == 3 && event.getArgs()[1].equalsIgnoreCase("option")) {
             String option = event.getArgs()[2];
             String value = StringUtil.combineSplit(3, event.getArgs(), " ");
             if (channelConfig.get(option) == null) {
