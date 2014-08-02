@@ -39,7 +39,7 @@ import java.util.List;
 @Command(command = "tenjava",
          aliases = {"tj"},
          needsChannel = false,
-         help = "See the total prize pool, and the top donors",
+         help = "See the total prize pool, judging info and the top donors",
          extendedHelp = {
                  "{b}{p}{c}{/b} - View tenjava donated points",
                  "{b}{p}{c} top{/b} - View the top donors to tenjava.",
@@ -134,6 +134,8 @@ public class TenJavaCommand extends CommandModule {
                 } catch (UnirestException e) {
                     throw new TenJavaDataLookupException("An error occurred in the lookup process", e);
                 }
+            } else if (event.getArgs()[0].hashCode() == 497477261) {
+                event.respondWithPing("It is unknown..");
             }
         }
 
