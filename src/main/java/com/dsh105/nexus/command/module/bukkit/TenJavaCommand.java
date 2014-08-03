@@ -97,12 +97,13 @@ public class TenJavaCommand extends CommandModule {
             } else if (event.getArgs()[0].equalsIgnoreCase("judge")) {
                 try {
                     TenJavaJudge[] judges = JsonUtil.read(Unirest.get(TEN_JAVA_TEAM_STATS_URL).header("accept", "application/json"), "judges", TenJavaJudge[].class);
-                    String[] judgeNames = new String[judges.length];
-                    for (int i = 0; i < judgeNames.length; i++) {
-                        judgeNames[i] = judges[i].getGithubUserName();
-                    }
-                    List<String> judgeNamesList = Arrays.asList(judgeNames);
                     if (event.getArgs().length == 2) {
+                        String[] judgeNames = new String[judges.length];
+                        for (int i = 0; i < judgeNames.length; i++) {
+                            judgeNames[i] = judges[i].getGithubUserName().toLowerCase();
+                        }
+                        List<String> judgeNamesList = Arrays.asList(judgeNames);
+
                         if (event.getArgs()[1].equalsIgnoreCase("list")) {
                             StringBuilder builder = new StringBuilder();
                             for (String judgeName : judgeNames) {
@@ -114,7 +115,7 @@ public class TenJavaCommand extends CommandModule {
                         }
 
                         String judgeName = event.getArgs()[1];
-                        if (judgeNamesList.contains(judgeName)) {
+                        if (judgeNamesList.contains(judgeName.toLowerCase())) {
                             TenJavaJudge judge = judges[judgeNamesList.indexOf(judgeName)];
                             event.respond("Judging stats ({0}): {1}/{2} ({3} remaining) - {4}", StringUtil.munge(judge.getGithubUserName()), judge.getCompletedItems() + "", judge.getAssignedItems() + "", judge.getRemainingItems() + "", judge.getPercentComplete() + "%");
                         } else {
