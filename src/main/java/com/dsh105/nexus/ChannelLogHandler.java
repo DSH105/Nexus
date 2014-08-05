@@ -22,6 +22,8 @@ import org.pircbotx.User;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.logging.Handler;
 import java.util.logging.LogRecord;
 
@@ -29,7 +31,7 @@ public class ChannelLogHandler extends Handler {
 
     private static final String[] EXCLUSIONS = new String[] {"Received notice:", "Received PM from"};
 
-    private ArrayList<LogRecord> messageQueue = new ArrayList<>();
+    private Set<LogRecord> messageQueue = new HashSet<>();
 
     private String channelName;
 
