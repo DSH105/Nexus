@@ -108,7 +108,9 @@ public class EventManager extends ListenerAdapter<Nexus> {
     public void onJoin(JoinEvent<Nexus> event) throws Exception {
         if (event.getUser().getNick().equals(event.getBot().getUserBot().getNick())) {
             event.getBot().saveChannels();
-            Nexus.LOGGER.info("Joined channel: " + event.getChannel().getName());
+            if (!event.getChannel().isChannelPrivate() && !event.getChannel().isSecret()) {
+                Nexus.LOGGER.info("Joined channel: " + event.getChannel().getName());
+            }
         }
     }
 

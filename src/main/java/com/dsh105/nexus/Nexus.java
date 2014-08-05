@@ -282,7 +282,6 @@ public class Nexus extends PircBotX {
             public void run() {
                 for (String channel : getConfig().getChannels()) {
                     if (getChannel(channel) == null) {
-                        LOGGER.info("Auto-joining channel: " + channel);
                         sendIRC().joinChannel(channel);
                     }
                 }
