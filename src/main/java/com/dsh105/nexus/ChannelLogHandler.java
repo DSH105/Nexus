@@ -20,10 +20,7 @@ package com.dsh105.nexus;
 import com.dsh105.nexus.util.StringUtil;
 import org.pircbotx.User;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.logging.Handler;
 import java.util.logging.LogRecord;
 
@@ -31,7 +28,7 @@ public class ChannelLogHandler extends Handler {
 
     private static final String[] EXCLUSIONS = new String[] {"Received notice:", "Received PM from"};
 
-    private Set<LogRecord> messageQueue = new HashSet<>();
+    private List<LogRecord> messageQueue = new ArrayList<>();
 
     private String channelName;
 
@@ -58,7 +55,8 @@ public class ChannelLogHandler extends Handler {
 
         String[] parts = record.getMessage().split(" ");
         for (int i = 0; i < parts.length; i++) {
-            parts[i] = StringUtil.mungeMessage(this.channelName, parts[i]);
+            String part = parts[i];
+            parts[i] = StringUtil.mungeMessage(this.channelName, part);
         }
         String message = StringUtil.join(parts, " ");
         for (String exc : EXCLUSIONS) {
