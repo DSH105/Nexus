@@ -118,7 +118,9 @@ public class EventManager extends ListenerAdapter<Nexus> {
     public void onPart(PartEvent<Nexus> event) throws Exception {
         if (event.getUser().getNick().equals(event.getBot().getUserBot().getNick())) {
             event.getBot().saveChannels();
-            Nexus.LOGGER.info("Parted channel: " + event.getChannel().getName());
+            if (!event.getChannel().isChannelPrivate() && !event.getChannel().isSecret()) {
+                Nexus.LOGGER.info("Parted channel: " + event.getChannel().getName());
+            }
         }
     }
 
@@ -137,14 +139,18 @@ public class EventManager extends ListenerAdapter<Nexus> {
     public void onKick(KickEvent<Nexus> event) throws Exception {
         event.getBot().saveChannels();
         if (event.getRecipient().getNick().equalsIgnoreCase(event.getBot().getNick())) {
-            Nexus.LOGGER.info("Kicked from " + event.getChannel().getName() + " by " + event.getUser().getNick());
+            if (!event.getChannel().isChannelPrivate() && !event.getChannel().isSecret()) {
+                Nexus.LOGGER.info("Kicked from " + event.getChannel().getName() + " by " + event.getUser().getNick());
+            }
         }
     }
 
     @Override
     public void onVoice(VoiceEvent<Nexus> event) throws Exception {
         if (event.getRecipient().getNick().equalsIgnoreCase(event.getBot().getNick())) {
-            Nexus.LOGGER.info("Voice" + (event.hasVoice() ? " given to " : " removed from ") + event.getRecipient().getNick() + " by " + event.getUser().getNick() + " in " + event.getChannel().getName());
+            if (!event.getChannel().isChannelPrivate() && !event.getChannel().isSecret()) {
+                Nexus.LOGGER.info("Voice" + (event.hasVoice() ? " given to " : " removed from ") + event.getRecipient().getNick() + " by " + event.getUser().getNick() + " in " + event.getChannel().getName());
+            }
         }
     }
 }
