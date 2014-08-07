@@ -130,7 +130,7 @@ public class DynamicCommand extends CommandModule {
         }
 
         Matcher mungifyMatcher = Pattern.compile("%m(.+)%m").matcher(response);
-        while (matcher.find()) {
+        while (mungifyMatcher.find()) {
             response = response.replace(mungifyMatcher.group(0), StringUtil.munge(mungifyMatcher.group(1)));
         }
 
