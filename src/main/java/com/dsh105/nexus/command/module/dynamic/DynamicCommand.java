@@ -131,7 +131,7 @@ public class DynamicCommand extends CommandModule {
 
         Matcher mungifyMatcher = Pattern.compile("%m(.+)%m").matcher(response);
         while (matcher.find()) {
-            response = response.replace(matcher.group(0), StringUtil.munge(mungifyMatcher.group(0)));
+            response = response.replace(matcher.group(0), StringUtil.munge(mungifyMatcher.group(1)));
         }
 
         return event.getManager().format(null, response);
