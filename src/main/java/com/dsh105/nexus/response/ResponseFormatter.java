@@ -17,6 +17,7 @@
 
 package com.dsh105.nexus.response;
 
+import com.dsh105.nexus.util.ColorUtil;
 import org.pircbotx.Channel;
 import org.pircbotx.Colors;
 import org.pircbotx.User;
@@ -24,10 +25,10 @@ import org.pircbotx.User;
 public class ResponseFormatter {
 
     public static String appendReplacements(String original, User sender, Channel channel) {
-        return original
+        return ColorUtil.deserialise(original
                 .replace("%s", sender == null ? "" : sender.getNick())
                 .replace("%c", channel == null ? "PM" : channel.getName())
                 .replace("%b", Colors.BOLD)
-                .replace("%u", Colors.UNDERLINE);
+                .replace("%u", Colors.UNDERLINE));
     }
 }
