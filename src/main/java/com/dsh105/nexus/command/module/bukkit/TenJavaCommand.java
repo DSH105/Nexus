@@ -116,7 +116,7 @@ public class TenJavaCommand extends CommandModule {
 
                         String judgeName = event.getArgs()[1];
                         if (judgeNamesList.contains(judgeName.toLowerCase())) {
-                            TenJavaJudge judge = judges[judgeNamesList.indexOf(judgeName)];
+                            TenJavaJudge judge = judges[judgeNamesList.indexOf(judgeName.toLowerCase())];
                             event.respond("Judging stats ({0}): {1}/{2} ({3} remaining) - {4}", StringUtil.munge(judge.getGithubUserName()), judge.getCompletedItems() + "", judge.getAssignedItems() + "", judge.getRemainingItems() + "", judge.getPercentComplete() + "%");
                         } else {
                             event.errorWithPing("Judge not found: {0}. Use {1} for a list of judges", judgeName, event.getCommandPrefix() + event.getCommand() + " judge list");
