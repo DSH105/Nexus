@@ -39,7 +39,7 @@ public class TalkCommand extends CommandModule {
             return false;
         } else {
             String message = StringUtil.combineSplit(1, event.getArgs(), " ");
-            Nexus.getInstance().sendIRC().message(event.getArgs()[0], "(" + event.getSender() + ") " + message);
+            Nexus.getInstance().sendIRC().message(event.getArgs()[0], "(" + event.getSender().getNick() + ") " + message);
             return true;
         }
     }
