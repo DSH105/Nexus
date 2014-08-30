@@ -136,7 +136,7 @@ public class TenJavaCommand extends CommandModule {
                     throw new TenJavaDataLookupException("An error occurred in the lookup process", e);
                 }
             } else if (event.getArgs()[0].hashCode() == 497477261) {
-                event.respondWithPing("It is unknown..");
+                event.respondWithPing("YES!");
             }
         }
 
