@@ -47,23 +47,32 @@ public class MinecraftUserCommand extends CommandModule {
                 return true;
             }
 
-            String uuid = "N/A";
-            boolean isValid;
-            boolean hasPaid;
+            if (username.length() > 16) {
+                event.respondWithPing(Colors.RED + "Username too long (max length: 16)");
+                return true;
+            }
+
+            if (username.length() < 2) {
+                event.respondWithPing(Colors.RED + "Username too short (min length: 2)");
+                return true;
+            }
+
             try {
                 UserProfile[] profiles = getProfiles(username);
                 if (profiles.length > 0) {
-                    uuid = profiles[0].id;
+                    String uuid = profiles[0].id;
+
+                    boolean hasPaid = getPageContents("https://minecraft.net/haspaid.jsp?user=" + username).equalsIgnoreCase("TRUE");
+                    String paid = hasPaid ? "a " + Colors.GREEN + "paid" + Colors.NORMAL : Colors.RED + "not a paid" + Colors.NORMAL;
+
+                    event.respond("Minecraft username {0} ({1}) " + Colors.GREEN + "exists" + Colors.NORMAL + " and is " + paid + " account", username, uuid);
+                } else {
+                    event.respond("Minecraft username {0} " + Colors.RED + "does not exist", username);
                 }
-                isValid = getPageContents("https://account.minecraft.net/buy/frame/checkName/" + username).equalsIgnoreCase("TAKEN");
-                hasPaid = getPageContents("https://minecraft.net/haspaid.jsp?user=" + username).equalsIgnoreCase("TRUE");
             } catch (UnirestException e) {
                 throw new GenericUrlConnectionException("Failed to fetch data on Minecraft username (" + username + ").", e);
             }
 
-            String valid = isValid ? Colors.RED + "not valid" + Colors.NORMAL + " (does not exist)" : Colors.GREEN + "valid" + Colors.NORMAL + " (exists)";
-            String paid = hasPaid ? "a " + Colors.GREEN + "paid" + Colors.NORMAL : Colors.RED + "not a paid" + Colors.NORMAL;
-            event.respond("Minecraft account {0} ({1}) is " + valid + " and is " + paid + " account", username, uuid);
             return true;
         }
         return false;
