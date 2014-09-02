@@ -109,11 +109,16 @@ public class Nexus extends PircBotX {
                 .setServerPort(config.getPort())
                 .setShutdownHookEnabled(false)
                 .setEncoding(Charset.forName("UTF-8"));
+                
         if (!config.getNickServPassword().isEmpty()) {
             builder.setNickservPassword(config.getNickServPassword());
         }
         if (!config.getServerPassword().isEmpty()) {
             builder.setServerPassword(config.getServerPassword());
+        }
+        
+        for (String channel : config.getChannels()) {
+            builder.addAutoJoinChannel(channel);
         }
 
         Nexus bot = new Nexus(builder.buildConfiguration());
@@ -276,21 +281,10 @@ public class Nexus extends PircBotX {
 
     public void onConnect() {
         registerChannelLogger();
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                for (String channel : getConfig().getChannels()) {
-                    if (getChannel(channel) == null) {
-                        sendIRC().joinChannel(channel);
-                    }
-                }
-
-                if (!getConfig().getStartupMessage().isEmpty()) {
-                    sendIRC().message(getConfig().getAdminChannel(), getConfig().getStartupMessage());
-                }
-            }
-        }).start();
+        
+        if (!getConfig().getStartupMessage().isEmpty()) {
+            sendIRC().message(getConfig().getAdminChannel(), getConfig().getStartupMessage());
+        }
     }
 
     private void prepareConsoleReader() {
