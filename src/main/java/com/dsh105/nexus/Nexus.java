@@ -228,7 +228,7 @@ public class Nexus extends PircBotX {
     }
 
     private void prepare() {
-        Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler());
+        //Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler());
         Unirest.setTimeouts(10000, 10000);
         Unirest.setDefaultHeader("user-agent", getConfig().get("user-agent", "Nexus"));
 
