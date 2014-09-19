@@ -51,7 +51,7 @@ public class ChannelStatsCommand extends CommandModule {
         int numUsers = chan.getUsers().size();
         int numOpped = chan.getOps().size();
         int numVoiced = chan.getVoices().size();
-
+        numUsers = numUsers - numOpped;
         int opPercentage = Math.round(((float) numOpped / numUsers) * 100);
         int voicePercentage = Math.round(((float) numVoiced / numUsers) * 100);
 
