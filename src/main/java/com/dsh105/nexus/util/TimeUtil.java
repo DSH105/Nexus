@@ -35,14 +35,22 @@ public class TimeUtil {
     public static long parse(String input) {
         long result = 0;
         String number = "";
+        String unit = "";
         for (int i = 0; i < input.length(); i++) {
             char c = input.charAt(i);
             if (c >= '0' && c <= '9') {
+                if (!unit.isEmpty() && !number.isEmpty()) {
+                    result += convert((int) StringUtil.toDouble(number), unit);
+                    number = "";
+                    unit = "";
+                }
                 number += c;
             } else if (Character.isLetter(c) && !number.isEmpty()) {
-                result += convert((int) StringUtil.toDouble(number), c);
-                number = "";
+                unit += c;
             }
+        }
+        if (!unit.isEmpty() && !number.isEmpty()) {
+            result += convert((int) StringUtil.toDouble(number), unit);
         }
         return result;
     }
@@ -54,19 +62,21 @@ public class TimeUtil {
      * @param unit  the specified time unit
      * @return converted value
      */
-    public static long convert(int value, char unit) {
+    public static long convert(int value, String unit) {
         switch (unit) {
-            case 'y':
-                return (long) (value * 1000 * 60 * 60 * 24 * 7 * 364.25);
-            case 'w':
+            case "y":
+                return (long) (value * 1000 * 60 * 60 * 24 * 364.25);
+            case "mo":
+                return (long) (value * 1000 * 60 * 60 * 24 * 30.42);
+            case "w":
                 return value * 1000 * 60 * 60 * 24 * 7;
-            case 'd':
+            case "d":
                 return value * 1000 * 60 * 60 * 24;
-            case 'h':
+            case "h":
                 return value * 1000 * 60 * 60;
-            case 'm':
+            case "m":
                 return value * 1000 * 60;
-            case 's':
+            case "s":
                 return value * 1000;
         }
         return 0;

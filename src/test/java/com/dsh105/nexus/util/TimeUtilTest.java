@@ -48,6 +48,16 @@ public class TimeUtilTest {
     }
 
     @Test
+    public void testParseMonths() {
+        Assert.assertEquals("Months time string is correctly parsed into milliseconds.", (long) (2000 * 60 * 60 * 24 * 30.42), TimeUtil.parse("2mo"));
+    }
+
+    @Test
+    public void testParseYears() {
+        Assert.assertEquals("Years time string is correctly parsed into milliseconds.", (long) (2000 * 60 * 60 * 24 * 364.25), TimeUtil.parse("2y"));
+    }
+
+    @Test
     public void testParseMultiple() {
         int result = 2000 * 60 * 60 * 24 * 7 + 2000 * 60 * 60 * 24 + 2000 * 60 * 60 + 2000 * 60 + 2000;
         Assert.assertEquals("Combination time string is correctly parsed into milliseconds.", result, TimeUtil.parse("2s2m2h2d2w"));
