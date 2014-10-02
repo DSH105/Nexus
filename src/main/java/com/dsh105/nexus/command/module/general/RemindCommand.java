@@ -76,7 +76,7 @@ public class RemindCommand extends CommandModule {
             Reminder reminder = new Reminder(event.isInPrivateMessage() ? "" : event.getChannel().getName(), userToRemind, event.getSender().getNick(), reminderMessage);
             new Timer(true).schedule(reminder, timePeriod);
             reminders.add(reminder);
-            event.respondWithPing("Reminder scheduled for {0}", Nexus.PRETTY_TIME.format(new Date(timePeriod)));
+            event.respondWithPing("Reminder scheduled for {0}", Nexus.PRETTY_TIME.format(new Date(System.currentTimeMillis() + timePeriod)));
             return true;
         } else if (event.getArgs().length == 1) {
             if (event.getArgs()[0].equalsIgnoreCase("clear")) {
