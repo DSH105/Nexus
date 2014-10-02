@@ -69,28 +69,26 @@ public class RemindCommand extends CommandModule {
                 }
             }
             if (timePeriod <= 0 || timeString.contains("-")) {
-                event.errorWithPing("Invalid time period entered: {0}. Examples: {1} (1 day), {2} (2 hours), {3} (5 minutes, 30 seconds), {4} (1 week, 3 days)", event.getArgs()[0], "1d", "2h", "5m30s", "1w3d");
+                event.errorWithPing("Invalid time period entered: {0}. Examples: {1} (1 day), {2} (2 hours), {3} (5 minutes, 30 seconds), {4} (1 week, 3 days), {5} (2 months, 5 days)", event.getArgs()[0], "1d", "2h", "5m30s", "1w3d", "2mo5d");
                 return true;
             }
             String reminderMessage = StringUtil.combineSplit(forOtherUser ? 2 : 1, event.getArgs(), " ");
             Reminder reminder = new Reminder(event.isInPrivateMessage() ? "" : event.getChannel().getName(), userToRemind, event.getSender().getNick(), reminderMessage);
             new Timer(true).schedule(reminder, timePeriod);
             reminders.add(reminder);
-            event.respondWithPing("Reminder scheduled for {0}", event.getArgs()[forOtherUser ? 1 : 0]);
+            event.respondWithPing("Reminder scheduled for {0}", Nexus.PRETTY_TIME.format(new Date(timePeriod)));
             return true;
         } else if (event.getArgs().length == 1) {
             if (event.getArgs()[0].equalsIgnoreCase("clear")) {
                 int count = 0;
-                Iterator<Reminder> i = reminders.iterator();
-                while (i.hasNext()) {
-                    Reminder reminder = i.next();
-                    if (reminder.from.equalsIgnoreCase(event.getSender().getNick()) || reminder.userToRemind.equalsIgnoreCase(event.getSender().getNick())) {
+                for (Reminder reminder : reminders) {
+                    if (reminder.userToRemind.equalsIgnoreCase(event.getSender().getNick())) {
                         reminder.cancel(true);
-                        count ++;
+                        count++;
                     }
                 }
 
-                event.respondWithPing("Removed {0} reminder" + (count == 1 ? "" : "s") + " for {1}.", String.valueOf(count), event.getSender().getNick());
+                event.respondWithPing("Removed {0} reminder(s)" + (count == 1 ? "" : "s") + " for {1}.", String.valueOf(count), event.getSender().getNick());
             }
         }
         return false;
