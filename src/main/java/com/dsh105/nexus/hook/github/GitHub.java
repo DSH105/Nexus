@@ -328,7 +328,7 @@ public class GitHub {
     protected GitHubUser[] getCollaborators(String name, String userLogin) {
         try {
             HttpResponse<JsonNode> response = makeRequest(getCollaboratorsUrl(name), userLogin, true);
-            if (response.getBody().getObject().getString("message") != null) {
+            if (response.getBody().getObject() != null && response.getBody().getObject().getString("message") != null) {
                 return new GitHubUser[0];
             }
             return JsonUtil.read(response.getRawBody(), GitHubUser[].class);

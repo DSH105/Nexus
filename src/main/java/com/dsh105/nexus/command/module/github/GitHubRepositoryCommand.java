@@ -301,9 +301,13 @@ public class GitHubRepositoryCommand extends CommandModule {
                 languages += (languages.isEmpty() ? "" : ", ") + l.getName() + " (" + Math.round(((double) l.getBytes() / (double) total) * 100) + "%)";
             }
             event.respond(Colors.BOLD + "GitHub" + Colors.NORMAL + " - " + Colors.BOLD + Colors.BLUE + repo.getName() + Colors.NORMAL + " (" + Colors.BOLD + event.removePing(repo.getRepoOwner().getLogin()) + Colors.NORMAL + ") - " + languages + " - (" + URLShortener.shortenGit(repo.getUrl()) + ")", sendPm);
-            event.respond("By {0}", sendPm, StringUtil.combineSplit(0, activeCollaborators.toArray(new String[activeCollaborators.size()]), ", "));
             event.respond("Forks: {0} | Issues: {1} | Stars: {2}", sendPm, String.valueOf(repo.getForksCount()), String.valueOf(repo.getOpenIssuesCount()), String.valueOf(repo.getStargazers()));
             event.respond("Created: {0} | Last Pushed: {1}", sendPm, repo.getDateCreated(), repo.getDateLastPushedTo());
+            if (activeCollaborators.isEmpty()) {
+                event.respond("A valid token is required to view collaborator information.");
+            } else {
+                event.respond("Collaborators: {0}", sendPm, StringUtil.combineSplit(0, activeCollaborators.toArray(new String[activeCollaborators.size()]), ", "));
+            }
             return true;
         }
         return false;
