@@ -304,7 +304,7 @@ public class GitHubRepositoryCommand extends CommandModule {
             event.respond("Forks: {0} | Issues: {1} | Stars: {2}", sendPm, String.valueOf(repo.getForksCount()), String.valueOf(repo.getOpenIssuesCount()), String.valueOf(repo.getStargazers()));
             event.respond("Created: {0} | Last Pushed: {1}", sendPm, repo.getDateCreated(), repo.getDateLastPushedTo());
             if (activeCollaborators.isEmpty()) {
-                event.respond("A valid token is required to view collaborator information.");
+                event.respond("A valid token is required to view collaborator information.", sendPm);
             } else {
                 event.respond("Collaborators: {0}", sendPm, StringUtil.combineSplit(0, activeCollaborators.toArray(new String[activeCollaborators.size()]), ", "));
             }
