@@ -327,7 +327,11 @@ public class GitHub {
 
     protected GitHubUser[] getCollaborators(String name, String userLogin) {
         try {
-            return JsonUtil.read(makeRequest(getCollaboratorsUrl(name), userLogin, true).getRawBody(), GitHubUser[].class);
+            HttpResponse<JsonNode> response = makeRequest(getCollaboratorsUrl(name), userLogin, true);
+            if (response.getBody().getObject().getString("message") != null) {
+                return new GitHubUser[0];
+            }
+            return JsonUtil.read(response.getRawBody(), GitHubUser[].class);
         } catch (UnirestException e) {
             if (e.getCause() instanceof FileNotFoundException) {
                 throw new GitHubNotFoundException("Failed to locate GitHub Repo: " + name, e);
