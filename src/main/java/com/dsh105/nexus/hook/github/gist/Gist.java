@@ -66,13 +66,13 @@ public class Gist {
     public String create() {
         try {
             JsonObject gistJson = new JsonObject();
-            gistJson.addProperty("description", this.getDescription());
-            gistJson.addProperty("public", this.isPublic());
+            gistJson.addProperty("description", description);
+            gistJson.addProperty("public", isPublic);
 
             JsonObject filesJson = new JsonObject();
 
-            for (int i = 0; i < getFiles().length; i++) {
-                GistFile gistFile = getFiles()[i];
+            for (int i = 0; i < files.length; i++) {
+                GistFile gistFile = files[i];
                 JsonObject file = new JsonObject();
                 file.addProperty("content", gistFile.getContent());
                 String name = gistFile.getFileName();

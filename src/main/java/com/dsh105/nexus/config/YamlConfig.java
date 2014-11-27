@@ -46,7 +46,7 @@ public class YamlConfig {
     public void save() {
         PrintWriter writer = null;
         try {
-            File file = new File(this.getFileName());
+            File file = new File(fileName);
             if (file.exists()) {
                 file.delete();
             }

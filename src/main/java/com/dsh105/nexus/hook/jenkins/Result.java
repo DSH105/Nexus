@@ -36,7 +36,7 @@ public enum Result {
 
     public static Result getByIdent(String ident) {
         for (Result r : Result.values()) {
-            if (r.getIdent().equals(ident)) {
+            if (r.ident.equals(ident)) {
                 return r;
             }
         }
@@ -45,7 +45,7 @@ public enum Result {
 
     public String format(String toFormat) {
         StringBuilder builder = new StringBuilder();
-        for (String s : getColours()) {
+        for (String s : colours) {
             builder.append(s);
         }
         return builder.append(toFormat).toString();

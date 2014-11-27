@@ -34,7 +34,7 @@ public enum IssueState {
 
     public static IssueState getByIdent(String ident) {
         for (IssueState s : IssueState.values()) {
-            if (s.getIdent().equals(ident)) {
+            if (s.ident.equals(ident)) {
                 return s;
             }
         }
@@ -43,7 +43,7 @@ public enum IssueState {
 
     public String format(String toFormat) {
         StringBuilder builder = new StringBuilder();
-        for (String s : getColours()) {
+        for (String s : colours) {
             builder.append(s);
         }
         return builder.append(toFormat).toString();

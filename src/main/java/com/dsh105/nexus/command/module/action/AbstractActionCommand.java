@@ -84,7 +84,7 @@ public abstract class AbstractActionCommand extends CommandModule {
         if (args.length > 1) {
             additional += StringUtil.join(Arrays.copyOfRange(args, 1, args.length), " ");
         }
-        return verb + (isOverriden() ? " " : "s ") + sentenceList + (args.length > 1 ? prefix : "") + additional;
+        return verb + (override ? " " : "s ") + sentenceList + (args.length > 1 ? prefix : "") + additional;
     }
 
     @Override

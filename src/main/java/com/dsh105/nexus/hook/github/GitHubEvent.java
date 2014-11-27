@@ -52,7 +52,7 @@ public enum GitHubEvent {
 
     public static GitHubEvent getByJsonName(String name) {
         for (GitHubEvent event : GitHubEvent.values()) {
-            if (event.getJsonName().equalsIgnoreCase(name)) {
+            if (event.jsonName.equalsIgnoreCase(name)) {
                 return event;
             }
         }

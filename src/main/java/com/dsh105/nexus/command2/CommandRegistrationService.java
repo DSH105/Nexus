@@ -67,8 +67,8 @@ public class CommandRegistrationService {
     }
 
     protected List<Command> registerMethods(Class<?> clazz, Method parent) {
-        if (getInstantiator() != null) {
-            return registerMethods(clazz, parent, getInstantiator().instantiate(clazz));
+        if (this.objectInstantiator != null) {
+            return registerMethods(clazz, parent, this.objectInstantiator.instantiate(clazz));
         } else {
             return registerMethods(clazz, parent, null);
         }

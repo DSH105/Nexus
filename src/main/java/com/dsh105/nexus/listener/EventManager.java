@@ -33,7 +33,7 @@ import java.util.regex.Pattern;
 
 public class EventManager extends ListenerAdapter<Nexus> {
 
-    public static final Pattern CORRECTION_PATTERN = Pattern.compile("s/([^/]+)/([^/]+)");
+    /*public static final Pattern CORRECTION_PATTERN = Pattern.compile("s/([^/]+)/([^/]+)");
 
     @Override
     public void onMessage(MessageEvent<Nexus> event) throws Exception {
@@ -67,7 +67,7 @@ public class EventManager extends ListenerAdapter<Nexus> {
 
             event.getBot().getResponseManager().trigger(event.getChannel(), event.getUser(), message);
         }
-    }
+    }*/
 
     @Override
     public void onInvite(InviteEvent<Nexus> event) throws Exception {

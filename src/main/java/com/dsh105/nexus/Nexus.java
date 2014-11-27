@@ -214,7 +214,7 @@ public class Nexus extends PircBotX {
         if (channelLogHandler != null) {
             return;
         }
-        String logChannel = getConfig().getLogChannel();
+        String logChannel = config.getLogChannel();
         if (logChannel.isEmpty()) {
             return;
         }
@@ -230,7 +230,7 @@ public class Nexus extends PircBotX {
     private void prepare() {
         //Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler());
         Unirest.setTimeouts(10000, 10000);
-        Unirest.setDefaultHeader("user-agent", getConfig().get("user-agent", "Nexus"));
+        Unirest.setDefaultHeader("user-agent", config.get("user-agent", "Nexus"));
 
         this.registerLogger();
 
@@ -254,7 +254,7 @@ public class Nexus extends PircBotX {
         }
         LOGGER.info("Initiating GitHub hook");
         this.github = new GitHub();
-        RemindCommand remindCommand = this.getCommandManager().getModuleOfType(RemindCommand.class);
+        RemindCommand remindCommand = commandManager.getModuleOfType(RemindCommand.class);
         if (remindCommand != null) {
             LOGGER.info("Loading saved reminders");
             remindCommand.loadReminders();
@@ -281,9 +281,9 @@ public class Nexus extends PircBotX {
 
     public void onConnect() {
         registerChannelLogger();
-        
-        if (!getConfig().getStartupMessage().isEmpty()) {
-            sendIRC().message(getConfig().getAdminChannel(), getConfig().getStartupMessage());
+
+        if (!config.getStartupMessage().isEmpty()) {
+            sendIRC().message(config.getAdminChannel(), config.getStartupMessage());
         }
     }
 
@@ -295,21 +295,21 @@ public class Nexus extends PircBotX {
 
     public void saveAll() {
         LOGGER.info("Saving config files");
-        this.getConfig().save();
-        this.getNicksConfig().save();
-        this.getGitHubConfig().save();
+        config.save();
+        nicksConfig.save();
+        githubConfig.save();
 
         //LOGGER.info("Saving channels");
         //this.saveChannels();
-        RemindCommand remindCommand = this.getCommandManager().getModuleOfType(RemindCommand.class);
+        RemindCommand remindCommand = commandManager.getModuleOfType(RemindCommand.class);
         if (remindCommand != null) {
             LOGGER.info("Saving reminders");
             remindCommand.saveReminders();
         }
 
         LOGGER.info("Saving dynamic commands");
-        if (this.getCommandManager().getGroupsMap().get(CommandGroup.DYNAMIC) != null) {
-            for (CommandModule module : this.getCommandManager().getGroupsMap().get(CommandGroup.DYNAMIC)) {
+        if (commandManager.getGroupsMap().get(CommandGroup.DYNAMIC) != null) {
+            for (CommandModule module : commandManager.getGroupsMap().get(CommandGroup.DYNAMIC)) {
                 if (module instanceof DynamicCommand) {
                     ((DynamicCommand) module).save();
                 }
@@ -330,7 +330,7 @@ public class Nexus extends PircBotX {
     }
 
     public String appendNick(String nick, String message) {
-        if (getConfig().appendNicks()) {
+        if (config.appendNicks()) {
             message = "(" + nick + ") " + message;
         }
         return message;
@@ -401,7 +401,7 @@ public class Nexus extends PircBotX {
     }
 
     public boolean isChannelAdmin(String userNick) {
-        Channel adminChannel = this.getChannel(this.getConfig().getAdminChannel());
+        Channel adminChannel = this.getChannel(config.getAdminChannel());
         if (adminChannel != null) {
             for (User u : adminChannel.getOps()) {
                 if (u.getNick().equalsIgnoreCase(userNick)) {
@@ -413,11 +413,11 @@ public class Nexus extends PircBotX {
     }
 
     public boolean isNexusAdmin(User user) {
-        return this.getConfig().getAdmins().contains(user.getNick());
+        return config.getAdmins().contains(user.getNick());
     }
 
     public boolean isNexusAdmin(String userNick) {
-        return this.getConfig().getAdmins().contains(userNick);
+        return config.getAdmins().contains(userNick);
     }
 
     public ResponseManager getResponseManager() {
