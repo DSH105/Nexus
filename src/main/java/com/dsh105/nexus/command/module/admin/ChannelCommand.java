@@ -19,9 +19,9 @@ package com.dsh105.nexus.command.module.admin;
 
 import com.dsh105.nexus.Nexus;
 import com.dsh105.nexus.command.Command;
+import com.dsh105.nexus.command.CommandGroup;
 import com.dsh105.nexus.command.CommandModule;
 import com.dsh105.nexus.command.CommandPerformEvent;
-import com.dsh105.nexus.command.CommandGroup;
 import com.dsh105.nexus.config.ChannelConfig;
 import com.dsh105.nexus.util.StringUtil;
 import org.apache.commons.lang3.BooleanUtils;

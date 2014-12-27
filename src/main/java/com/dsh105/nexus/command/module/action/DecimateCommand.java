@@ -28,6 +28,7 @@ import com.dsh105.nexus.command.CommandGroup;
                 "{b}{p}{c} <user>{/b} - decimate someone!"
         })
 public class DecimateCommand extends AbstractActionCommand {
+
     public DecimateCommand() {
         this.setVerb("decimate");
     }

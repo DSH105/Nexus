@@ -19,9 +19,9 @@ package com.dsh105.nexus.command.module.github;
 
 import com.dsh105.nexus.Nexus;
 import com.dsh105.nexus.command.Command;
+import com.dsh105.nexus.command.CommandGroup;
 import com.dsh105.nexus.command.CommandModule;
 import com.dsh105.nexus.command.CommandPerformEvent;
-import com.dsh105.nexus.command.CommandGroup;
 import com.dsh105.nexus.exception.general.GenericUrlConnectionException;
 import com.dsh105.nexus.util.shorten.URLShortener;
 import com.mashape.unirest.http.HttpResponse;
@@ -54,9 +54,9 @@ public class GitHubKeyCommand extends CommandModule {
         if (event.getArgs().length == 0) {
             event.respond("Please follow the following instructions:", true);
             event.respond("- Visit " + URLShortener.shortenGit(AUTHORISE
-                    .replace("{client_id}", Nexus.getInstance().getGitHubConfig().getGitHubOauthAppClientId())
-                    .replace("{scope}", Nexus.getInstance().getGitHubConfig().getGitHubOauthAppScope())
-                    .replace("{state}", Nexus.getInstance().getGitHubConfig().getGitHubOauthAppState())), true);
+                                                                       .replace("{client_id}", Nexus.getInstance().getGitHubConfig().getGitHubOauthAppClientId())
+                                                                       .replace("{scope}", Nexus.getInstance().getGitHubConfig().getGitHubOauthAppScope())
+                                                                       .replace("{state}", Nexus.getInstance().getGitHubConfig().getGitHubOauthAppState())), true);
             event.respond("- Allow Nexus access.", true);
             event.respond("- Copy the URL you are redirected to (the code information in this is important, so don't change anything!).", true);
             event.respond("- Perform {0}, where <code> is the URL you copied above.", true, Nexus.getInstance().getConfig().getCommandPrefix() + this.info().command() + " <code>");
@@ -73,9 +73,9 @@ public class GitHubKeyCommand extends CommandModule {
                 String state = params.get("state");
                 if (code != null && state != null && state.equals(Nexus.getInstance().getGitHubConfig().getGitHubOauthAppState())) {
                     HttpResponse<JsonNode> response = Unirest.get(ACCESS_TOKEN
-                            .replace("{client_id}", Nexus.getInstance().getGitHubConfig().getGitHubOauthAppClientId())
-                            .replace("{client_secret}", Nexus.getInstance().getGitHubConfig().getGitHubOauthAppClientSecret())
-                            .replace("{code}", code))
+                                                                          .replace("{client_id}", Nexus.getInstance().getGitHubConfig().getGitHubOauthAppClientId())
+                                                                          .replace("{client_secret}", Nexus.getInstance().getGitHubConfig().getGitHubOauthAppClientSecret())
+                                                                          .replace("{code}", code))
                             .header("accept", "application/json")
                             .asJson();
 

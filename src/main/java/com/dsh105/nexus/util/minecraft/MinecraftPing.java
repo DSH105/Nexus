@@ -40,8 +40,7 @@ import java.net.Socket;
 public class MinecraftPing {
 
     /**
-     * Fetches a {@link MinecraftPingReply} for the supplied hostname.
-     * <b>Assumed timeout of 2s and port of 25565.</b>
+     * Fetches a {@link MinecraftPingReply} for the supplied hostname. <b>Assumed timeout of 2s and port of 25565.</b>
      *
      * @param hostname - a valid String hostname
      * @return {@link MinecraftPingReply}

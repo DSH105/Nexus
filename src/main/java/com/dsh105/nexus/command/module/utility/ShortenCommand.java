@@ -21,6 +21,7 @@ import com.dsh105.nexus.command.Command;
 import com.dsh105.nexus.command.CommandModule;
 import com.dsh105.nexus.command.CommandPerformEvent;
 import com.dsh105.nexus.util.shorten.URLShortener;
+
 import java.util.regex.Pattern;
 
 @Command(command = "shorten",

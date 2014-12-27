@@ -6,7 +6,7 @@ public abstract class Attachment<T> {
 
     @Override
     public String toString() {
-       return get().toString();
+        return get().toString();
     }
 
     @Override

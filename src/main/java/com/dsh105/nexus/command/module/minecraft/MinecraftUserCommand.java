@@ -88,6 +88,7 @@ public class MinecraftUserCommand extends CommandModule {
     }
 
     private class UserProfile {
+
         private String id;
         private String name;
     }

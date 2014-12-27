@@ -28,6 +28,7 @@ import com.dsh105.nexus.command.CommandGroup;
                 "{b}{p}{c} <user>{/b} - smash someone!"
         })
 public class SmashCommand extends AbstractActionCommand {
+
     public SmashCommand() {
         this.setVerb("smashe");
     }

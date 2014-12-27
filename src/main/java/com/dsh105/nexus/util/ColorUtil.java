@@ -17,19 +17,17 @@
 
 package com.dsh105.nexus.util;
 
-import com.dsh105.nexus.Nexus;
 import org.pircbotx.Colors;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Collection;
 
 public class ColorUtil {
 
     private static ArrayList<String> COLOURS;
 
     public static String serialise(String toSerialise) {
-        return StringUtil.combineSplit(0, serialise(new String[] {toSerialise}), " ");
+        return StringUtil.combineSplit(0, serialise(new String[]{toSerialise}), " ");
     }
 
     public static String[] serialise(String[] toSerialise) {
@@ -46,7 +44,7 @@ public class ColorUtil {
     }
 
     public static String deserialise(String toDeserialise) {
-        return StringUtil.combineSplit(0, deserialise(new String[] {toDeserialise}), " ");
+        return StringUtil.combineSplit(0, deserialise(new String[]{toDeserialise}), " ");
     }
 
     public static String[] deserialise(String[] toDeserialise) {

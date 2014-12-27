@@ -26,9 +26,9 @@ public class ResponseFormatter {
 
     public static String appendReplacements(String original, User sender, Channel channel) {
         return ColorUtil.deserialise(original
-                .replace("%s", sender == null ? "" : sender.getNick())
-                .replace("%c", channel == null ? "PM" : channel.getName())
-                .replace("%b", Colors.BOLD)
-                .replace("%u", Colors.UNDERLINE));
+                                             .replace("%s", sender == null ? "" : sender.getNick())
+                                             .replace("%c", channel == null ? "PM" : channel.getName())
+                                             .replace("%b", Colors.BOLD)
+                                             .replace("%u", Colors.UNDERLINE));
     }
 }

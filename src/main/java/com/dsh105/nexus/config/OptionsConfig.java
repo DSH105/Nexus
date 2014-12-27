@@ -19,7 +19,10 @@ package com.dsh105.nexus.config;
 
 import com.dsh105.nexus.Nexus;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 public class OptionsConfig extends YamlConfig {
 

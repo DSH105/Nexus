@@ -18,16 +18,9 @@
 package com.dsh105.nexus.listener;
 
 import com.dsh105.nexus.Nexus;
-import com.dsh105.nexus.config.ChannelConfig;
-import com.dsh105.nexus.util.StringUtil;
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
-import org.pircbotx.Colors;
 import org.pircbotx.hooks.ListenerAdapter;
 import org.pircbotx.hooks.events.*;
 
-import java.util.HashMap;
-import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 

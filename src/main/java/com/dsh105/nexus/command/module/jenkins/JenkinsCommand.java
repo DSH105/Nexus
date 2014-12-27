@@ -64,7 +64,7 @@ public class JenkinsCommand extends CommandModule {
         if (job != null) {
             Result result = job.getJobEntry().getResult();
             event.respond(Colors.BOLD + "Jenkins" + Colors.NORMAL + " - " + Colors.BLUE + Colors.BOLD + job.getJobName() + Colors.NORMAL + " - " + job.getJobEntry().getUrl());
-            if (job.getHealth() != null ) {
+            if (job.getHealth() != null) {
                 event.respond(job.getHealth().getDescription() + " ({0}%)", String.valueOf(job.getHealth().getScore()));
             }
             if (result == null || job.getLatestBuild() == null) {

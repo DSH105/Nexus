@@ -16,8 +16,9 @@ public class ScriptCommand extends CommandModule {
 
     @Override
     public boolean onCommand(CommandPerformEvent event) {
-        if (event.getArgs().length <= 0)
+        if (event.getArgs().length <= 0) {
             return false;
+        }
 
         return true;
     }

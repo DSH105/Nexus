@@ -28,6 +28,7 @@ import com.dsh105.nexus.command.CommandGroup;
                 "{b}{p}{c} <user>{/b} - glare at someone!"
         })
 public class GlareCommand extends AbstractActionCommand {
+
     public GlareCommand() {
         this.setVerb("glares at");
         this.setOverride(true);

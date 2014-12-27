@@ -28,6 +28,7 @@ import com.dsh105.nexus.command.CommandGroup;
                 "{b}{p}{c} <user>{/b} - punch someone!"
         })
 public class PunchCommand extends AbstractActionCommand {
+
     public PunchCommand() {
         this.setVerb("punche");
     }

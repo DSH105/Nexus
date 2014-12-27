@@ -29,6 +29,7 @@ import com.dsh105.nexus.command.CommandGroup;
                 "{b}{p}{c} <user>{/b} - Whip someone!"
         })
 public class WhipCommand extends AbstractActionCommand {
+
     public WhipCommand() {
         this.setVerb("whip");
         this.setPrefix("for");

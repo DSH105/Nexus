@@ -18,6 +18,7 @@
 package com.dsh105.nexus.hook.github;
 
 public class Octocat {
+
     private String name;
     private String page;
     private String image;

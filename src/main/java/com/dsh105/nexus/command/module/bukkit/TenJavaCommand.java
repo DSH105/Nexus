@@ -37,16 +37,16 @@ import java.util.Date;
 import java.util.List;
 
 @Command(command = "tenjava",
-         aliases = {"tj"},
-         needsChannel = false,
-         help = "See the total prize pool, judging info and the top donors",
-         extendedHelp = {
-                 "{b}{p}{c}{/b} - View tenjava donated points",
-                 "{b}{p}{c} top{/b} - View the top donors to tenjava.",
-                 "{b}{p}{c} top <number>{/b} - View the top donors to tenjava.",
-                 "{b}{p}{c} judge{/b} - View judging stats.",
-                 "{b}{p}{c} judge <judge_name>{/b} - View stats for a certain judge."
-         })
+        aliases = {"tj"},
+        needsChannel = false,
+        help = "See the total prize pool, judging info and the top donors",
+        extendedHelp = {
+                "{b}{p}{c}{/b} - View tenjava donated points",
+                "{b}{p}{c} top{/b} - View the top donors to tenjava.",
+                "{b}{p}{c} top <number>{/b} - View the top donors to tenjava.",
+                "{b}{p}{c} judge{/b} - View judging stats.",
+                "{b}{p}{c} judge <judge_name>{/b} - View stats for a certain judge."
+        })
 public class TenJavaCommand extends CommandModule {
 
     public static final String TEN_JAVA_URL = "https://tenjava.com/api/points";
@@ -59,8 +59,8 @@ public class TenJavaCommand extends CommandModule {
         if (event.getArgs().length == 0) {
             try {
                 HttpResponse<JsonNode> jsonResponse = Unirest.get(TEN_JAVA_URL)
-                                                             .header("accept", "application/json")
-                                                             .asJson();
+                        .header("accept", "application/json")
+                        .asJson();
                 int points = jsonResponse.getBody().getObject().getInt("points");
                 long time = jsonResponse.getBody().getObject().getLong("last_update");
                 PrettyTime pt = new PrettyTime();
@@ -129,7 +129,7 @@ public class TenJavaCommand extends CommandModule {
                             total += judge.getAssignedItems();
                             completed += judge.getCompletedItems();
                         }
-                        event.respondWithPing("ten.java Judging stats: {0}/{1} items completed ({2})", completed + "", total + "", df.format(100 * completed / (double)total) + "%");
+                        event.respondWithPing("ten.java Judging stats: {0}/{1} items completed ({2})", completed + "", total + "", df.format(100 * completed / (double) total) + "%");
                         return true;
                     }
                 } catch (UnirestException e) {

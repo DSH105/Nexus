@@ -26,15 +26,12 @@ import com.dsh105.nexus.config.ChannelConfiguration;
 import com.dsh105.nexus.config.GitHubConfig;
 import com.dsh105.nexus.config.NicksConfig;
 import com.dsh105.nexus.config.OptionsConfig;
-import com.dsh105.nexus.exception.jenkins.JenkinsException;
 import com.dsh105.nexus.hook.github.GitHub;
 import com.dsh105.nexus.hook.jenkins.Jenkins;
 import com.dsh105.nexus.listener.EventManager;
 import com.dsh105.nexus.response.ResponseManager;
 import com.dsh105.nexus.util.ColorUtil;
 import com.dsh105.nexus.util.ShortLoggerFormatter;
-import com.dsh105.nexus.util.TimeUtil;
-import com.dsh105.nexus.util.TimeoutUtil;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import org.ocpsoft.prettytime.PrettyTime;
@@ -109,14 +106,14 @@ public class Nexus extends PircBotX {
                 .setServerPort(config.getPort())
                 .setShutdownHookEnabled(false)
                 .setEncoding(Charset.forName("UTF-8"));
-                
+
         if (!config.getNickServPassword().isEmpty()) {
             builder.setNickservPassword(config.getNickServPassword());
         }
         if (!config.getServerPassword().isEmpty()) {
             builder.setServerPassword(config.getServerPassword());
         }
-        
+
         for (String channel : config.getChannels()) {
             builder.addAutoJoinChannel(channel);
         }
@@ -158,7 +155,10 @@ public class Nexus extends PircBotX {
                     e.printStackTrace();
                 }
                 INSTANCE.consoleReader.setRunning(false);
-                INSTANCE.shutdown(true);
+                try {
+                    INSTANCE.shutdown(true);
+                } catch (Exception ignored) {
+                }
                 INSTANCE = null;
                 LOGGER.info("System exiting...");
             } catch (Exception e) {

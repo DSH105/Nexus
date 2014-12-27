@@ -29,6 +29,7 @@ import org.pircbotx.Colors;
                 "{b}{p}{c} <temp>[F/C]{/b} - Converts the entered temperature to either celsius or fahrenheit"
         })
 public class TempCommand extends CommandModule {
+
     public static double cTof(double c) {
         c = c * 9;
         c = c / 5;

@@ -28,6 +28,7 @@ import com.dsh105.nexus.command.CommandGroup;
                 "{b}{p}{c} <user>{/b} - kiss someone!"
         })
 public class KissCommand extends AbstractActionCommand {
+
     public KissCommand() {
         this.setVerb("kisse");
     }

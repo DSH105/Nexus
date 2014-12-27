@@ -18,15 +18,16 @@
 package com.dsh105.nexus;
 
 import com.dsh105.nexus.util.StringUtil;
-import org.pircbotx.User;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.logging.Handler;
 import java.util.logging.LogRecord;
 
 public class ChannelLogHandler extends Handler {
 
-    private static final String[] EXCLUSIONS = new String[] {"Received notice:", "Received PM from"};
+    private static final String[] EXCLUSIONS = new String[]{"Received notice:", "Received PM from"};
 
     private List<LogRecord> messageQueue = new ArrayList<>();
 
@@ -49,7 +50,7 @@ public class ChannelLogHandler extends Handler {
         ArrayList<LogRecord> queue = new ArrayList<>();
         Collections.addAll(queue, messageQueue.toArray(new LogRecord[0]));
         messageQueue.clear();
-        for (LogRecord queuedRecord :  queue) {
+        for (LogRecord queuedRecord : queue) {
             publish(queuedRecord);
         }
 

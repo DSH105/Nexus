@@ -31,7 +31,7 @@ import com.dsh105.nexus.util.StringUtil;
                 "{b}{p}{c} <user> [to_fix]{/b} - Make someone fix it!"
         })
 public class FixCommand extends CommandModule {
-    
+
     @Override
     public boolean onCommand(CommandPerformEvent event) {
         String toFix = "it";
@@ -39,7 +39,7 @@ public class FixCommand extends CommandModule {
         if (event.getArgs().length > 1) {
             toFix = StringUtil.combineSplit(1, event.getArgs(), " ");
         }
-        
+
         event.respond("Fix " + toFix + user + "!");
         return true;
     }

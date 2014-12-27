@@ -22,6 +22,7 @@ import com.dsh105.nexus.command2.exceptions.CommandException;
 import java.util.*;
 
 public class CommandContext {
+
     protected final String command;
     protected final List<String> parsedArgs;
     protected final List<Integer> originalArgIndices;

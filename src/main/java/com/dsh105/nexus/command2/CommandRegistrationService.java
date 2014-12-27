@@ -299,7 +299,7 @@ public class CommandRegistrationService {
         if (executeNested) {
             if (argsCount == 0) {
                 throw new MissingNestedCommandException("Sub-command required.",
-                        getNestedUsage(args, level, method, user));
+                                                        getNestedUsage(args, level, method, user));
             } else {
                 executeMethod(method, args, user, channel, level + 1);
             }

@@ -28,6 +28,7 @@ import com.dsh105.nexus.command.CommandGroup;
                 "{b}{p}{c} <user>{/b} - poke someone!"
         })
 public class PokeCommand extends AbstractActionCommand {
+
     public PokeCommand() {
         this.setVerb("poke");
     }

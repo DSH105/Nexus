@@ -28,6 +28,7 @@ import com.dsh105.nexus.command.CommandGroup;
                 "{b}{p}{c} <user>{/b} - Hug someone!"
         })
 public class HugCommand extends AbstractActionCommand {
+
     public HugCommand() {
         this.setVerb("hug");
     }

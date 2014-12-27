@@ -28,6 +28,7 @@ import com.dsh105.nexus.command.CommandGroup;
                 "{b}{p}{c} <user>{/b} - bully someone!"
         })
 public class BullyCommand extends AbstractActionCommand {
+
     public BullyCommand() {
         this.setVerb("bullie");
     }

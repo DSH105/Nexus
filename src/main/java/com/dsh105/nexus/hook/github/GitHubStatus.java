@@ -18,6 +18,7 @@
 package com.dsh105.nexus.hook.github;
 
 public class GitHubStatus {
+
     private String status;
     private String body;
     private String created_on;

@@ -28,6 +28,7 @@ import com.dsh105.nexus.command.CommandGroup;
                 "{b}{p}{c} <user>{/b} - slap someone!"
         })
 public class SlapCommand extends AbstractActionCommand {
+
     public SlapCommand() {
         this.setVerb("slap");
     }

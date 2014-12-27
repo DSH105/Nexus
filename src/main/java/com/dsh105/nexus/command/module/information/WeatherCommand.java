@@ -36,6 +36,7 @@ import org.pircbotx.Colors;
                 "{b}{p}{c} <location>{/b} - Allows you to get the weather of a location"
         })
 public class WeatherCommand extends CommandModule {
+
     public static final String WEATHER_URL = "http://api.openweathermap.org/data/2.5/weather?q=";
 
     public static double kToC(double k) {

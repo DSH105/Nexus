@@ -28,6 +28,7 @@ import com.dsh105.nexus.command.CommandGroup;
                 "{b}{p}{c}<user>{/b} - applaud someone!"
         })
 public class ClapCommand extends AbstractActionCommand {
+
     public ClapCommand() {
         this.setVerb("clap");
     }

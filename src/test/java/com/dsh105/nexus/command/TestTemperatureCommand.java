@@ -24,6 +24,7 @@ import org.junit.Test;
 
 
 public class TestTemperatureCommand {
+
     @Test
     public void testFarenheitToCelsius() {
         Assert.assertEquals(69d, TempCommand.fToC(156.2), 0.01d);

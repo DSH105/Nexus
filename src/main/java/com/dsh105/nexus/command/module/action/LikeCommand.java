@@ -28,6 +28,7 @@ import com.dsh105.nexus.command.CommandGroup;
                 "{b}{p}{c} <user>{/b} - like someone!"
         })
 public class LikeCommand extends AbstractActionCommand {
+
     public LikeCommand() {
         this.setVerb("like");
     }

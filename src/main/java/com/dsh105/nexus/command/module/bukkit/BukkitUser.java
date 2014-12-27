@@ -44,6 +44,7 @@ import java.util.Date;
                 "{b}{p}{c} <user>{/b} - Shows a Bukkit user's profile information"
         })
 public class BukkitUser extends CommandModule {
+
     @Override
     public boolean onCommand(CommandPerformEvent event) {
         String name;

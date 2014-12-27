@@ -12,6 +12,7 @@ import com.dsh105.nexus.command.CommandPerformEvent;
                 "{b}{p}{c} <target>{/b} - Tells the target to stop bullying you."
         })
 public class StopIRCBullyCommand extends CommandModule {
+
     @Override
     public boolean onCommand(CommandPerformEvent event) {
         if (event.getArgs().length == 1) {

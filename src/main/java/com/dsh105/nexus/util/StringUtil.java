@@ -53,7 +53,7 @@ public class StringUtil {
      * @return Integer.MIN_VALUE if unable to convert
      * @throws java.lang.NumberFormatException
      */
-    public static int toInteger(String string) throws NumberFormatException{
+    public static int toInteger(String string) throws NumberFormatException {
         try {
             return Integer.parseInt(string.replaceAll("[^\\d]", ""));
         } catch (NumberFormatException e) {
@@ -102,8 +102,7 @@ public class StringUtil {
     }
 
     /**
-     * Builds a sentence list from an array of strings.
-     * Example: {"one", "two", "three"} returns "one, two and three".
+     * Builds a sentence list from an array of strings. Example: {"one", "two", "three"} returns "one, two and three".
      *
      * @param words The string array to build into a list,
      * @return String representing the list.

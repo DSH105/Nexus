@@ -31,9 +31,7 @@ package com.dsh105.nexus.util.minecraft;
 import java.util.List;
 
 /**
- * References:
- * http://wiki.vg/Server_List_Ping
- * https://gist.github.com/thinkofdeath/6927216
+ * References: http://wiki.vg/Server_List_Ping https://gist.github.com/thinkofdeath/6927216
  */
 public class MinecraftPingReply {
 
@@ -71,6 +69,7 @@ public class MinecraftPingReply {
     }
 
     public class Players {
+
         private int max;
         private int online;
         private List<Player> sample;
@@ -98,6 +97,7 @@ public class MinecraftPingReply {
     }
 
     public class Player {
+
         private String name;
         private String id;
 
@@ -118,6 +118,7 @@ public class MinecraftPingReply {
     }
 
     public class Version {
+
         private String name;
         private int protocol;
 

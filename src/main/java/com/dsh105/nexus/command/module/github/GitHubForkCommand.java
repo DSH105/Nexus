@@ -18,9 +18,9 @@
 package com.dsh105.nexus.command.module.github;
 
 import com.dsh105.nexus.command.Command;
+import com.dsh105.nexus.command.CommandGroup;
 import com.dsh105.nexus.command.CommandModule;
 import com.dsh105.nexus.command.CommandPerformEvent;
-import com.dsh105.nexus.command.CommandGroup;
 
 @Command(command = "fork",
         groups = CommandGroup.GITHUB,
@@ -31,6 +31,7 @@ import com.dsh105.nexus.command.CommandGroup;
                 "This command is simply an alias of {b}{p}repo <name> fork{/b}"
         })
 public class GitHubForkCommand extends CommandModule {
+
     @Override
     public boolean onCommand(CommandPerformEvent event) {
         if (event.getArgs().length == 1 || event.getArgs().length == 2) {

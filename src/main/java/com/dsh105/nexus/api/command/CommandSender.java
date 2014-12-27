@@ -22,8 +22,9 @@ public abstract class CommandSender {
     }
 
     public Map<String, Attachment<?>> getAttachments() {
-        if (!hasAttachments())
+        if (!hasAttachments()) {
             return null;
+        }
         return this.attachments;
     }
 
@@ -32,11 +33,13 @@ public abstract class CommandSender {
     }
 
     public void setAttachment(final String key, final Attachment<?> attachment) {
-        if (!hasAttachments())
+        if (!hasAttachments()) {
             this.attachments.put(key, attachment);
+        }
 
-        if (getAttachments().containsKey(key))
+        if (getAttachments().containsKey(key)) {
             throw new RuntimeException("Already registered an attachment with name: " + key);
+        }
 
         this.attachments.put(key, attachment);
     }

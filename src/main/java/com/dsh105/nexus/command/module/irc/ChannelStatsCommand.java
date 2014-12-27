@@ -30,6 +30,7 @@ import org.pircbotx.Channel;
                 "{b}{p}{c}{/b} - Gives the number of users connected plus some useful metrics on voiced/opped users."
         })
 public class ChannelStatsCommand extends CommandModule {
+
     @Override
     public boolean onCommand(CommandPerformEvent event) {
         Channel chan = null;

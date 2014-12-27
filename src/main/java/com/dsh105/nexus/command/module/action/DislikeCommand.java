@@ -28,6 +28,7 @@ import com.dsh105.nexus.command.CommandGroup;
                 "{b}{p}{c} <user>{/b} - dislike someone!"
         })
 public class DislikeCommand extends AbstractActionCommand {
+
     public DislikeCommand() {
         this.setVerb("dislike");
     }

@@ -28,6 +28,7 @@ import com.dsh105.nexus.command.CommandGroup;
                 "{b}{p}{c} <user>{/b} - touch someone!"
         })
 public class TouchCommand extends AbstractActionCommand {
+
     public TouchCommand() {
         this.setVerb("touche");
     }

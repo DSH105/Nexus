@@ -39,6 +39,7 @@ import java.util.Date;
                 "{b}{p}{c} <location>{/b} - Allows you to get the weather forecast of a location"
         })
 public class WeatherForecastCommand extends CommandModule {
+
     public static final String WEATHER_URL = "http://api.openweathermap.org/data/2.5/forecast/daily?mode=json&q=";
 
     public static double kToC(double k) {
