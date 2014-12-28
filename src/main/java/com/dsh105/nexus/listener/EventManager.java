@@ -26,7 +26,7 @@ import java.util.regex.Pattern;
 
 public class EventManager extends ListenerAdapter<Nexus> {
 
-    /*public static final Pattern CORRECTION_PATTERN = Pattern.compile("s/([^/]+)/([^/]+)");
+    public static final Pattern CORRECTION_PATTERN = Pattern.compile("s/([^/]+)/([^/]+)");
 
     @Override
     public void onMessage(MessageEvent<Nexus> event) throws Exception {
@@ -34,7 +34,8 @@ public class EventManager extends ListenerAdapter<Nexus> {
         String realName = event.getUser().getRealName();
         if (!event.getBot().getCommandManager().onCommand(event.getChannel(), event.getUser(), message, true)) {
 
-            ChannelConfig channelConfig = event.getBot().getChannelConfiguration().getChannel(event.getChannel().getName());
+            // TODO: fixit
+            /*ChannelConfig channelConfig = event.getBot().getChannelConfiguration().getChannel(event.getChannel().getName());
             if (channelConfig != null) {
                 Matcher matcher = CORRECTION_PATTERN.matcher(message);
                 if (matcher.matches()) {
@@ -56,11 +57,11 @@ public class EventManager extends ListenerAdapter<Nexus> {
                         channelConfig.getMessagesCache().put(realName, message);
                     }
                 }
-            }
+            }*/
 
             event.getBot().getResponseManager().trigger(event.getChannel(), event.getUser(), message);
         }
-    }*/
+    }
 
     @Override
     public void onInvite(InviteEvent<Nexus> event) throws Exception {
